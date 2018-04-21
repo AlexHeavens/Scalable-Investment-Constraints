@@ -3,8 +3,8 @@
 
 namespace sic {
 
-typedef value float;
-typedef price float;
+typedef float value;
+typedef float price;
 
 } // namespace sic
 
