@@ -11,7 +11,7 @@ public:
 
 TEST_F(AssetTest, CreateValid) {
 
-  const sic::price price = 100.00;
+  const sic::Price price = 100.00;
   sic::Asset validAsset(price);
 
   ASSERT_EQ(price, validAsset.getReferencePrice());

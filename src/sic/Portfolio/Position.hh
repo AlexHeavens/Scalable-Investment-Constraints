@@ -15,13 +15,13 @@ class Position {
 
 private:
   sic::Asset &asset;
-  sic::value referenceValue;
+  sic::Value referenceValue;
 
 public:
   /**
    * Create a position of a specific asset.
    */
-  Position(sic::Asset &asset, sic::value referenceValue)
+  Position(sic::Asset &asset, sic::Value referenceValue)
       : asset(asset), referenceValue(referenceValue) {}
 
   /**
@@ -32,7 +32,7 @@ public:
   /**
    * The value in the (unspecified) reference currency.
    */
-  sic::value getReferenceValue() const { return referenceValue; }
+  sic::Value getReferenceValue() const { return referenceValue; }
 };
 
 } // namespace sic

@@ -12,19 +12,19 @@ public:
 
 TEST_F(PositionTest, CreateValid) {
 
-  static const sic::price price = 100.00;
+  static const sic::Price price = 100.00;
 
   class MockAsset : public sic::Asset {
 
   public:
-    explicit MockAsset(sic::price price) : sic::Asset(price) {}
+    explicit MockAsset(sic::Price price) : sic::Asset(price) {}
 
-    sic::price getReferencePrice() const { return price; }
+    sic::Price getReferencePrice() const { return price; }
   };
 
   MockAsset asset(price);
 
-  const sic::value value = 333.33;
+  const sic::Value value = 333.33;
   sic::Position validPosition(asset, value);
 
   ASSERT_EQ(&asset, &validPosition.getAsset());

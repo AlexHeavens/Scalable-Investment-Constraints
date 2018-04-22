@@ -14,7 +14,7 @@ namespace sic {
 class Asset {
 
 private:
-  sic::price referencePrice;
+  sic::Price referencePrice;
 
 public:
   /**
@@ -23,12 +23,12 @@ public:
    * @param referencePrice the price of the Asset in the (unspecified) reference
    * currency.
    */
-  Asset(sic::value referencePrice) : referencePrice(referencePrice) {}
+  Asset(sic::Price referencePrice) : referencePrice(referencePrice) {}
 
   /**
    * The price of the Asset in the (unspecified) reference currency.
    */
-  sic::price getReferencePrice() const { return referencePrice; }
+  sic::Price getReferencePrice() const { return referencePrice; }
 };
 
 } // namespace sic
