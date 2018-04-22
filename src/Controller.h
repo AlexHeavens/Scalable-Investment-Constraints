@@ -7,22 +7,17 @@ namespace project {
 
 class Controller {
 private:
-
-  bool hasExecuted = false;
+	bool hasExecuted = false;
 
 public:
+	inline void run() {
+		std::cout << "Controller executed.\n";
+		hasExecuted = true;
+	}
 
-  inline void run() {
-    std::cout << "Controller executed.\n";
-    hasExecuted = true;
-  }
-
-  inline bool getHasExecuted() {
-    return hasExecuted;
-  }
-
+	inline bool getHasExecuted() { return hasExecuted; }
 };
 
-}
+} // namespace project
 
 #endif // PROJECT_CONTROLLER_H
