@@ -6,14 +6,25 @@
 
 namespace sic {
 
+/**
+ * An instance of a financial asset within a client's portfolio.
+ *
+ * @see sic::Asset
+ */
 class Position {
 
 private:
   sic::Asset &asset;
 
 public:
+  /**
+   * Create a position of a specific asset.
+   */
   Position(sic::Asset &asset) : asset(asset) {}
 
+  /**
+   * The financial asset the position represents a quantity of.
+   */
   sic::Asset &getAsset() const { return asset; }
 };
 
