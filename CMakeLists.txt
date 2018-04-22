@@ -6,6 +6,8 @@ set(SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 set(BIN_DIR "${PROJECT_SOURCE_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BIN_DIR}")
 set(TEST_DIR "${PROJECT_SOURCE_DIR}/test")
+set(DOC_DIR "${PROJECT_SOURCE_DIR}/doc")
+set(DOXYGEN_CONFIG "${DOC_DIR}/doxygen-config")
 
 # Build Properties
 set(PROJECT_EXE "project_prog")
@@ -40,6 +42,16 @@ else ()
             "-header-filter=\"${SRC_DIR}\""
             "-quiet"
             )
+endif ()
+
+find_package(Doxygen 1.8.11)
+if (DOXYGEN_FOUND)
+    option(BUILD_DOC "Build documentation" ON)
+    add_custom_target( doc_doxygen ALL
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_CONFIG}
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+    )
 endif ()
 
 # Source Files
