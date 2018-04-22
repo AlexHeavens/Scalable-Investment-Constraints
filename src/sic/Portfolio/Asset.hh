@@ -1,5 +1,5 @@
-#ifndef SIC_PORTFOLIO_ASSET_H
-#define SIC_PORTFOLIO_ASSET_H
+#ifndef SIC_PORTFOLIO_ASSET_H_
+#define SIC_PORTFOLIO_ASSET_H_
 
 #include "sic/Base/Types.hh"
 
@@ -18,4 +18,4 @@ public:
 
 } // namespace sic
 
-#endif // SIC_PORTFOLIO_ASSET_H
+#endif // SIC_PORTFOLIO_ASSET_H_
