@@ -24,9 +24,11 @@ TEST_F(PositionTest, CreateValid) {
 
   MockAsset asset(price);
 
-  sic::Position validPosition(asset);
+  const sic::value value = 333.33;
+  sic::Position validPosition(asset, value);
 
   ASSERT_EQ(&asset, &validPosition.getAsset());
+  ASSERT_EQ(value, validPosition.getReferenceValue());
 }
 
 } // namespace
