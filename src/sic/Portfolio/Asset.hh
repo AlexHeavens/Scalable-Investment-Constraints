@@ -5,14 +5,29 @@
 
 namespace sic {
 
+/**
+ * A financial instrument that can be held by a client.
+ *
+ * Assets define the general properties of the Positions a client holds in their
+ * portfolio.
+ */
 class Asset {
 
 private:
   sic::price referencePrice;
 
 public:
+  /**
+   * Create an Asset.
+   *
+   * @param referencePrice the price of the Asset in the (unspecified) reference
+   * currency.
+   */
   Asset(sic::value referencePrice) : referencePrice(referencePrice) {}
 
+  /**
+   * The price of the Asset in the (unspecified) reference currency.
+   */
   sic::price getReferencePrice() const { return referencePrice; }
 };
 
