@@ -1,6 +1,10 @@
 #ifndef SIC_PORTFOLIO_ASSET_H_
 #define SIC_PORTFOLIO_ASSET_H_
 
+#include <experimental/optional>
+#include <utility>
+#include <vector>
+
 #include "sic/Base/Types.hh"
 
 namespace sic {
@@ -13,22 +17,43 @@ namespace sic {
  */
 class Asset {
 
+public:
+	typedef unsigned Class;
+	typedef std::vector<sic::Asset::Class> ClassVector;
+	typedef sic::Asset::ClassVector::iterator ClassIterator;
+
 private:
-  sic::Price referencePrice;
+	sic::Price referencePrice;
+	sic::Asset::ClassVector classes;
 
 public:
-  /**
-   * Create an Asset.
-   *
-   * @param referencePrice the price of the Asset in the (unspecified) reference
-   * currency.
-   */
-  Asset(sic::Price referencePrice) : referencePrice(referencePrice) {}
+	/**
+	 * Create an Asset.
+	 *
+	 * @param referencePrice the price of the Asset in the (unspecified)
+	 * reference currency.
+	 */
+	Asset(sic::Price referencePrice,
+		  std::experimental::optional<const ClassVector *> classes = {})
+		: referencePrice(referencePrice) {
 
-  /**
-   * The price of the Asset in the (unspecified) reference currency.
-   */
-  sic::Price getReferencePrice() const { return referencePrice; }
+		if (classes) {
+			this->classes = *(classes.value());
+		}
+	}
+
+	/**
+	 * The price of the Asset in the (unspecified) reference currency.
+	 */
+	sic::Price getReferencePrice() const { return referencePrice; }
+
+	/**
+	 * The begin and end iterators of the Asset's class vector.
+	 *
+	 * @returns Begin and end as the first and second sides of a pair.
+	 */
+	std::pair<sic::Asset::ClassIterator, sic::Asset::ClassIterator>
+	getClassIterators();
 };
 
 } // namespace sic
