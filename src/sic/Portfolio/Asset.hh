@@ -38,13 +38,7 @@ public:
 	 */
 	Asset(
 		sic::Price referencePrice,
-		std::experimental::optional<std::unique_ptr<ClassVector>> classes = {})
-		: referencePrice(referencePrice) {
-
-		if (classes) {
-			this->classes = std::move(*classes);
-		}
-	}
+		std::experimental::optional<std::unique_ptr<ClassVector>> classes = {});
 
 	/**
 	 * The price of the Asset in the (unspecified) reference currency.
