@@ -32,6 +32,8 @@ public:
 	 *
 	 * @param referencePrice the price of the Asset in the (unspecified)
 	 * reference currency.
+	 * @param classes vector of bank-specific classes the Asset matches.  For
+	 * example, market category.
 	 */
 	Asset(sic::Price referencePrice,
 		  std::experimental::optional<const ClassVector *> classes = {})
