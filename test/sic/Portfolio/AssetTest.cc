@@ -19,15 +19,22 @@ TEST_F(AssetTest, CreateValid) {
 	std::uniform_int_distribution<unsigned> distr(0, 500000);
 	std::mt19937 randomGen(seed);
 	const int expClassCount = 100;
-	sic::Asset::ClassVector expClasses;
-	expClasses.reserve(expClassCount);
-	for (int i = 0; i < expClassCount; i++) {
-		expClasses.push_back(distr(randomGen));
-	}
-	std::experimental::optional<const sic::Asset::ClassVector *> optExpClasses(
-		&expClasses);
 
-	sic::Asset validAsset(price, optExpClasses);
+	// Store reference to underlying ClassVector for assertion comparison as
+	// address as moving will empty the unique_ptr.
+	std::unique_ptr<sic::Asset::ClassVector> expClasses(
+		new sic::Asset::ClassVector);
+	const sic::Asset::ClassVector &expClassesRef = *expClasses;
+
+	expClasses->reserve(expClassCount);
+	for (int i = 0; i < expClassCount; i++) {
+		expClasses->push_back(distr(randomGen));
+	}
+	std::experimental::optional<std::unique_ptr<sic::Asset::ClassVector>>
+		optExpClasses(std::move(expClasses));
+
+	// Create Asset
+	sic::Asset validAsset(price, std::move(optExpClasses));
 
 	ASSERT_EQ(price, validAsset.getReferencePrice());
 
@@ -39,7 +46,7 @@ TEST_F(AssetTest, CreateValid) {
 	while (classIterator.first != classIterator.second) {
 
 		ASSERT_TRUE(expClassIndex < expClassCount);
-		ASSERT_EQ(expClasses.at(expClassIndex), *(classIterator.first));
+		ASSERT_EQ(expClassesRef.at(expClassIndex), *(classIterator.first));
 		classIterator.first++;
 		expClassIndex++;
 	}

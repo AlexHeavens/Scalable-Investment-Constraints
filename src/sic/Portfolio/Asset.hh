@@ -2,6 +2,7 @@
 #define SIC_PORTFOLIO_ASSET_H_
 
 #include <experimental/optional>
+#include <memory>
 #include <utility>
 #include <vector>
 
@@ -24,7 +25,7 @@ public:
 
 private:
 	sic::Price referencePrice;
-	sic::Asset::ClassVector classes;
+	std::unique_ptr<sic::Asset::ClassVector> classes;
 
 public:
 	/**
@@ -33,14 +34,15 @@ public:
 	 * @param referencePrice the price of the Asset in the (unspecified)
 	 * reference currency.
 	 * @param classes vector of bank-specific classes the Asset matches.  For
-	 * example, market category.
+	 * example, market category.  The Asset takes ownership of this vector.
 	 */
-	Asset(sic::Price referencePrice,
-		  std::experimental::optional<const ClassVector *> classes = {})
+	Asset(
+		sic::Price referencePrice,
+		std::experimental::optional<std::unique_ptr<ClassVector>> classes = {})
 		: referencePrice(referencePrice) {
 
 		if (classes) {
-			this->classes = *(classes.value());
+			this->classes = std::move(*classes);
 		}
 	}
 
