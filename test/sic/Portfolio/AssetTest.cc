@@ -10,7 +10,7 @@ public:
 	void SetUp() override {}
 };
 
-TEST_F(AssetTest, CreateValid) {
+TEST_F(AssetTest, CreateValidAsset) {
 
 	const sic::Price price = 100.00;
 
