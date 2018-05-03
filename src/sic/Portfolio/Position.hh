@@ -16,7 +16,9 @@ namespace sic {
 class Position {
 
 public:
+	/// Vector of Positions
 	typedef std::vector<sic::Position> Vector;
+	/// Iterator over a vector of Positions.
 	typedef sic::Position::Vector::iterator VectorIterator;
 
 private:
