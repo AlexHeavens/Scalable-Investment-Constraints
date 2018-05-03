@@ -13,11 +13,12 @@ TEST_F(PortfolioTest, CreateValidPortfolio) {
 
 	// Mock Classes
 	static constexpr sic::Price mockPrice = 100.00;
+	static constexpr sic::External::ID externalAssetID = 43765l;
 
 	class MockAsset : public sic::Asset {
 
 	public:
-		MockAsset() : sic::Asset(mockPrice){};
+		MockAsset() : sic::Asset(mockPrice, externalAssetID){};
 	};
 
 	static MockAsset mockAsset;

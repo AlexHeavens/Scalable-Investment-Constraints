@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "sic/Base/Types.hh"
+#include "sic/External.hh"
 
 namespace sic {
 
@@ -16,7 +17,7 @@ namespace sic {
  * Assets define the general properties of the Positions a client holds in their
  * portfolio.
  */
-class Asset {
+class Asset : public sic::External {
 
 public:
 	typedef unsigned Class;
@@ -33,11 +34,15 @@ public:
 	 *
 	 * @param referencePrice the price of the Asset in the (unspecified)
 	 * reference currency.
+	 * @param externalID ID of the Asset as represented by the external system
+	 * using the SIC Engine.  In the results the engine provides, this will be
+	 * the identifier used to ensure the external system can match their Asset
+	 * to these results.
 	 * @param classes vector of bank-specific classes the Asset matches.  For
 	 * example, market category.  The Asset takes ownership of this vector.
 	 */
 	Asset(
-		sic::Price referencePrice,
+		sic::Price referencePrice, sic::External::ID externalID,
 		std::experimental::optional<std::unique_ptr<ClassVector>> classes = {});
 
 	/**

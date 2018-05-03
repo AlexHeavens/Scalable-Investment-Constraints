@@ -13,16 +13,18 @@ public:
 TEST_F(PositionTest, CreateValidPosition) {
 
 	static const sic::Price price = 100.00;
+	static const sic::External::ID externalAssetID = 43985543l;
 
 	class MockAsset : public sic::Asset {
 
 	public:
-		explicit MockAsset(sic::Price price) : sic::Asset(price) {}
+		explicit MockAsset(sic::Price price, sic::External::ID externalID)
+			: sic::Asset(price, externalID) {}
 
 		sic::Price getReferencePrice() const { return price; }
 	};
 
-	MockAsset asset(price);
+	MockAsset asset(price, externalAssetID);
 
 	const sic::Value value = 333.33;
 	sic::Position validPosition(asset, value);

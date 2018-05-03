@@ -13,6 +13,7 @@ public:
 TEST_F(AssetTest, CreateValidAsset) {
 
 	const sic::Price price = 100.00;
+	const sic::External::ID expExternalID = 43543653l;
 
 	// Random selection of Asset classes.
 	const unsigned seed = 39487;
@@ -34,9 +35,10 @@ TEST_F(AssetTest, CreateValidAsset) {
 		optExpClasses(std::move(expClasses));
 
 	// Create Asset
-	sic::Asset validAsset(price, std::move(optExpClasses));
+	sic::Asset validAsset(price, expExternalID, std::move(optExpClasses));
 
 	ASSERT_EQ(price, validAsset.getReferencePrice());
+	ASSERT_EQ(expExternalID, validAsset.getExternalID());
 
 	// Test asset class iteration.
 	std::pair<sic::Asset::ClassIterator, sic::Asset::ClassIterator>

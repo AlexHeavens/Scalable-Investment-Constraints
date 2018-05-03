@@ -1,9 +1,9 @@
 #include "sic/Portfolio/Asset.hh"
 
 sic::Asset::Asset(
-	sic::Price referencePrice,
+	sic::Price referencePrice, sic::External::ID externalID,
 	std::experimental::optional<std::unique_ptr<ClassVector>> classes)
-	: referencePrice(referencePrice) {
+	: sic::External(externalID), referencePrice(referencePrice) {
 
 	if (classes) {
 		this->classes = std::move(*classes);
