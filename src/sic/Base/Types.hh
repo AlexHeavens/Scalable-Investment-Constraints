@@ -7,7 +7,7 @@ namespace sic {
 typedef float Value;
 
 /// Monetary price, without currency specified.
-typedef float Price;
+typedef sic::Value Price;
 
 } // namespace sic
 
