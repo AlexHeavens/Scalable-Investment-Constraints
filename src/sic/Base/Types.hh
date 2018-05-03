@@ -3,7 +3,10 @@
 
 namespace sic {
 
+/// Monetary value, without currency specified.
 typedef float Value;
+
+/// Monetary price, without currency specified.
 typedef float Price;
 
 } // namespace sic
