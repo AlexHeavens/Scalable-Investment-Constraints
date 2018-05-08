@@ -27,10 +27,12 @@ TEST_F(PositionTest, CreateValidPosition) {
 	MockAsset asset(price, externalAssetID);
 
 	const sic::Value value = 333.33;
-	sic::Position validPosition(asset, value);
+	const sic::External::ID expExternalID = 943875l;
+	sic::Position validPosition(asset, value, expExternalID);
 
 	ASSERT_EQ(&asset, &validPosition.getAsset());
 	ASSERT_EQ(value, validPosition.getReferenceValue());
+	ASSERT_EQ(expExternalID, validPosition.getExternalID());
 }
 
 } // namespace

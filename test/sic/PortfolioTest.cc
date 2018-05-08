@@ -22,11 +22,14 @@ TEST_F(PortfolioTest, CreateValidPortfolio) {
 	};
 
 	static MockAsset mockAsset;
+	static sic::External::ID externalPositionIDCounter = 43765l;
+
 	class MockPosition : public sic::Position {
 
 	public:
 		explicit MockPosition(sic::Value referenceValue)
-			: sic::Position(mockAsset, referenceValue) {}
+			: sic::Position(mockAsset, referenceValue,
+							externalPositionIDCounter++) {}
 
 		sic::Value getReferenceValue() const { return 123.00; }
 	};
@@ -37,9 +40,12 @@ TEST_F(PortfolioTest, CreateValidPortfolio) {
 		new std::vector<sic::Position>);
 	std::vector<sic::Position *> expPositionAddresses;
 
-	// Addtionally, store the addresses of the mock positions.
+	// Store the addresses of the mock positions to compare after
+	// intiialisation.  Warning: must be careful to reserve vector space to
+	// avoid re-addressing due to dynamic vector expansion.
 	expPositions->reserve(expPositionCount);
 	expPositionAddresses.reserve(expPositionCount);
+
 	for (int i = 0; i < expPositionCount; i++) {
 		expPositions->push_back(MockPosition(123.00));
 		expPositionAddresses.push_back(&expPositions->at(i));

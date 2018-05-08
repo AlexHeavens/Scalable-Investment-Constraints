@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "sic/Base/Types.hh"
+#include "sic/External.hh"
 #include "sic/Portfolio/Asset.hh"
 
 namespace sic {
@@ -13,7 +14,7 @@ namespace sic {
  *
  * @see sic::Asset
  */
-class Position {
+class Position : public sic::External {
 
 public:
 	/// Vector of Positions
@@ -29,8 +30,10 @@ public:
 	/**
 	 * Create a position of a specific asset.
 	 */
-	Position(sic::Asset &asset, sic::Value referenceValue)
-		: asset(asset), referenceValue(referenceValue) {}
+	Position(sic::Asset &asset, sic::Value referenceValue,
+			 sic::External::ID externalID)
+		: sic::External(externalID), asset(asset),
+		  referenceValue(referenceValue) {}
 
 	/**
 	 * The financial asset the position represents a quantity of.
