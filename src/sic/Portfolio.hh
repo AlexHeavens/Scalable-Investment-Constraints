@@ -5,6 +5,7 @@
 #include <utility>
 #include <vector>
 
+#include "sic/External.hh"
 #include "sic/Portfolio/Position.hh"
 
 namespace sic {
@@ -14,7 +15,7 @@ namespace sic {
  *
  * @see sic::Position
  */
-class Portfolio {
+class Portfolio : public sic::External {
 private:
 	std::unique_ptr<std::vector<sic::Position>> positions;
 
@@ -25,8 +26,9 @@ public:
 	 * @param positions a vector of positions that will be moved to the
 	 * Portfolio.
 	 */
-	Portfolio(std::unique_ptr<std::vector<sic::Position>> positions)
-		: positions(std::move(positions)) {}
+	Portfolio(std::unique_ptr<std::vector<sic::Position>> positions,
+			  sic::External::ID externalID)
+		: sic::External(externalID), positions(std::move(positions)) {}
 
 	/**
 	 * The begin and end iterators of the Portfolio's position vector.

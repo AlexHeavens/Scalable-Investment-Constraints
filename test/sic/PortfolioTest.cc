@@ -52,7 +52,9 @@ TEST_F(PortfolioTest, CreateValidPortfolio) {
 	}
 
 	// Create Portfolio
-	sic::Portfolio validPortfolio(std::move(expPositions));
+	constexpr sic::External::ID expExternalID = 34345l;
+
+	sic::Portfolio validPortfolio(std::move(expPositions), expExternalID);
 
 	// Check Portolio Positions
 	auto positionIterators = validPortfolio.getPositionIterators();
@@ -67,6 +69,7 @@ TEST_F(PortfolioTest, CreateValidPortfolio) {
 		positionIterators.first++;
 	}
 	ASSERT_EQ(expPositionCount, expPositionIndex);
+	ASSERT_EQ(expExternalID, validPortfolio.getExternalID());
 }
 
 } // namespace
