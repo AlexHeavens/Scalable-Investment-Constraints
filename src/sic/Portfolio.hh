@@ -25,10 +25,11 @@ public:
 	 *
 	 * @param positions a vector of positions that will be moved to the
 	 * Portfolio.
+	 *
+	 * @throws invalid_argument if input positions have a duplicate external ID.
 	 */
 	Portfolio(std::unique_ptr<std::vector<sic::Position>> positions,
-			  sic::External::ID externalID)
-		: sic::External(externalID), positions(std::move(positions)) {}
+			  sic::External::ID externalID);
 
 	/**
 	 * The begin and end iterators of the Portfolio's position vector.
