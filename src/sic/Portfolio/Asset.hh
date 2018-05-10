@@ -3,8 +3,8 @@
 
 #include <experimental/optional>
 #include <memory>
+#include <unordered_set>
 #include <utility>
-#include <vector>
 
 #include "sic/Base/Types.hh"
 #include "sic/External.hh"
@@ -21,12 +21,12 @@ class Asset : public sic::External {
 
 public:
 	typedef unsigned Class;
-	typedef std::vector<sic::Asset::Class> ClassVector;
-	typedef sic::Asset::ClassVector::iterator ClassIterator;
+	typedef std::unordered_set<sic::Asset::Class> ClassSet;
+	typedef sic::Asset::ClassSet::iterator ClassIterator;
 
 private:
 	sic::Price referencePrice;
-	std::unique_ptr<sic::Asset::ClassVector> classes;
+	std::unique_ptr<sic::Asset::ClassSet> classes;
 
 public:
 	/**
@@ -38,12 +38,11 @@ public:
 	 * using the SIC Engine.  In the results the engine provides, this will be
 	 * the identifier used to ensure the external system can match their Asset
 	 * to these results.
-	 * @param classes vector of bank-specific classes the Asset matches.  For
-	 * example, market category.  The Asset takes ownership of this vector.
+	 * @param classes set of bank-specific classes the Asset matches.  For
+	 * example, market category.  The Asset takes ownership of this set.
 	 */
-	Asset(
-		sic::Price referencePrice, sic::External::ID externalID,
-		std::experimental::optional<std::unique_ptr<ClassVector>> classes = {});
+	Asset(sic::Price referencePrice, sic::External::ID externalID,
+		  std::experimental::optional<std::unique_ptr<ClassSet>> classes = {});
 
 	/**
 	 * The price of the Asset in the (unspecified) reference currency.
@@ -51,7 +50,7 @@ public:
 	sic::Price getReferencePrice() const { return referencePrice; }
 
 	/**
-	 * The begin and end iterators of the Asset's class vector.
+	 * The begin and end iterators of the Asset's class set.
 	 *
 	 * @returns Begin and end as the first and second sides of a pair.
 	 */

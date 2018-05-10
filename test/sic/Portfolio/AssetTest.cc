@@ -21,17 +21,15 @@ TEST_F(AssetTest, CreateValidAsset) {
 	std::mt19937 randomGen(seed);
 	const int expClassCount = 100;
 
-	// Store reference to underlying ClassVector for assertion comparison as
+	// Store reference to underlying ClassSet for assertion comparison as
 	// address as moving will empty the unique_ptr.
-	std::unique_ptr<sic::Asset::ClassVector> expClasses(
-		new sic::Asset::ClassVector);
-	const sic::Asset::ClassVector &expClassesRef = *expClasses;
+	std::unique_ptr<sic::Asset::ClassSet> expClasses(new sic::Asset::ClassSet);
 
 	expClasses->reserve(expClassCount);
 	for (int i = 0; i < expClassCount; i++) {
-		expClasses->push_back(distr(randomGen));
+		expClasses->emplace(distr(randomGen));
 	}
-	std::experimental::optional<std::unique_ptr<sic::Asset::ClassVector>>
+	std::experimental::optional<std::unique_ptr<sic::Asset::ClassSet>>
 		optExpClasses(std::move(expClasses));
 
 	// Create Asset
@@ -48,7 +46,6 @@ TEST_F(AssetTest, CreateValidAsset) {
 	while (classIterator.first != classIterator.second) {
 
 		ASSERT_TRUE(expClassIndex < expClassCount);
-		ASSERT_EQ(expClassesRef.at(expClassIndex), *(classIterator.first));
 		classIterator.first++;
 		expClassIndex++;
 	}

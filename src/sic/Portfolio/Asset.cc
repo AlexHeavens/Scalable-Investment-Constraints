@@ -2,7 +2,7 @@
 
 sic::Asset::Asset(
 	sic::Price referencePrice, sic::External::ID externalID,
-	std::experimental::optional<std::unique_ptr<ClassVector>> classes)
+	std::experimental::optional<std::unique_ptr<ClassSet>> classes)
 	: sic::External(externalID), referencePrice(referencePrice) {
 
 	if (classes) {
