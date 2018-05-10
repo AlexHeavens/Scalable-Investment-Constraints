@@ -17,19 +17,21 @@ private:
 	const sic::Model::FilterNode *parentNode;
 	std::vector<std::unique_ptr<sic::Model::FilterNode>> childNodes;
 
-public:
-	/**
-	 * Create a root filter tree FilterNode.
-	 */
-	FilterNode() : parentNode(nullptr) {}
-
 	/**
 	 * Create a non-root filter tree FilterNode.
+	 *
+	 * This is private to ensure the consistency of the parentNode pointer.
 	 *
 	 * @param parentFilterNode the parent FilterNode in the filter tree.
 	 */
 	FilterNode(const sic::Model::FilterNode *parentNode)
 		: parentNode(parentNode) {}
+
+public:
+	/**
+	 * Create a root filter tree FilterNode.
+	 */
+	FilterNode() : parentNode(nullptr) {}
 
 	/**
 	 * Add a child FilterNode.
