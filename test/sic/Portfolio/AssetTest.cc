@@ -46,6 +46,8 @@ TEST_F(AssetTest, CreateValidAsset) {
 	while (classIterator.first != classIterator.second) {
 
 		ASSERT_TRUE(expClassIndex < expClassCount);
+		ASSERT_TRUE(validAsset.hasClass(*classIterator.first));
+
 		classIterator.first++;
 		expClassIndex++;
 	}

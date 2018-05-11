@@ -15,3 +15,8 @@ sic::Asset::getClassIterators() {
 
 	return std::make_pair(std::begin(*classes), std::end(*classes));
 }
+
+bool sic::Asset::hasClass(sic::Asset::Class assetClass) const {
+	const auto search = classes->find(assetClass);
+	return search != classes->end();
+}

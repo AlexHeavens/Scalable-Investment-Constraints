@@ -56,6 +56,11 @@ public:
 	 */
 	std::pair<sic::Asset::ClassIterator, sic::Asset::ClassIterator>
 	getClassIterators();
+
+	/**
+	 * If the Asset has a given Asset Class.
+	 */
+	bool hasClass(sic::Asset::Class assetClass) const;
 };
 
 } // namespace sic
