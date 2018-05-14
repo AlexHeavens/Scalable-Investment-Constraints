@@ -55,4 +55,27 @@ TEST_F(AssetTest, CreateValidAsset) {
 	ASSERT_EQ(expClassCount, expClassIndex);
 }
 
+TEST_F(AssetTest, EmptyAssetClassList) {
+
+	const sic::Price expPrice = 100.00;
+	const sic::External::ID expExternalID = 43543653l;
+
+	// Create Asset, default empty class list.
+	sic::Asset assetA(expPrice, expExternalID);
+
+	ASSERT_FALSE(assetA.hasClass(3534));
+
+	auto assetClassItsA = assetA.getClassIterators();
+	ASSERT_EQ(assetClassItsA.first, assetClassItsA.second);
+
+	// Create Asset, explicitly empty class list.
+	auto expClassSet = std::make_unique<sic::Asset::ClassSet>();
+	sic::Asset assetB(expPrice, expExternalID, std::move(expClassSet));
+
+	ASSERT_FALSE(assetA.hasClass(3534));
+
+	auto assetClassItsB = assetB.getClassIterators();
+	ASSERT_EQ(assetClassItsB.first, assetClassItsB.second);
+}
+
 } // namespace

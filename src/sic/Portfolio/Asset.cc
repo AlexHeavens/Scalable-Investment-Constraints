@@ -7,6 +7,8 @@ sic::Asset::Asset(
 
 	if (classes) {
 		this->classes = std::move(*classes);
+	} else {
+		this->classes = std::make_unique<sic::Asset::ClassSet>();
 	}
 }
 
