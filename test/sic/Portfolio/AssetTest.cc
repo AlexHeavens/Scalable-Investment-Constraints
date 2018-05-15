@@ -52,6 +52,10 @@ TEST_F(AssetTest, CreateValidAsset) {
 		expClassIndex++;
 	}
 
+	// Known random seed, this class is not added.
+	const sic::Asset::Class nonAddedClass = 54367;
+	ASSERT_FALSE(validAsset.hasClass(nonAddedClass));
+
 	ASSERT_EQ(expClassCount, expClassIndex);
 }
 

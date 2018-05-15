@@ -17,9 +17,13 @@ public:
 
 	const static FilterTest::MockAsset assetA, assetB, assetC, assetD;
 
-	static bool passAssetsAC(const sic::Asset &asset) {
-		return &asset == &assetA or &asset == &assetC;
-	}
+	class MockFilter : public sic::Model::Filter {
+
+	public:
+		bool evaluate(const sic::Asset &asset) const override {
+			return &asset == &assetA or &asset == &assetC;
+		}
+	};
 };
 
 const FilterTest::MockAsset FilterTest::assetA;
@@ -28,7 +32,7 @@ const FilterTest::MockAsset FilterTest::assetC;
 const FilterTest::MockAsset FilterTest::assetD;
 
 TEST_F(FilterTest, CreateValidFilter) {
-	sic::Model::Filter validFilter(FilterTest::passAssetsAC);
+	MockFilter validFilter;
 
 	ASSERT_TRUE(validFilter.evaluate(assetA));
 	ASSERT_TRUE(validFilter.evaluate(assetC));

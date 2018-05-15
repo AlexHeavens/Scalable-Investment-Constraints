@@ -60,7 +60,7 @@ public:
 	/**
 	 * If the Asset has a given Asset Class.
 	 */
-	bool hasClass(sic::Asset::Class assetClass) const;
+	virtual bool hasClass(sic::Asset::Class assetClass) const;
 };
 
 } // namespace sic

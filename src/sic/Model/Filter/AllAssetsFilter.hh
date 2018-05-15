@@ -10,18 +10,11 @@ namespace sic::Model {
  */
 class AllAssetsFilter : public sic::Model::Filter {
 
-private:
-	static bool passAllAssets(const sic::Asset &asset) {
+public:
+	bool evaluate(const sic::Asset &asset) const override {
 #pragma unused(asset)
 		return true;
 	}
-
-public:
-	/**
-	 * Create a filter that passes for all assets.
-	 */
-	AllAssetsFilter()
-		: sic::Model::Filter(sic::Model::AllAssetsFilter::passAllAssets) {}
 };
 
 } // namespace sic::Model
