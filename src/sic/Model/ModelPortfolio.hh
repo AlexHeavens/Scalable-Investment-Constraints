@@ -20,6 +20,10 @@ public:
 	typedef std::unordered_map<std::shared_ptr<sic::Asset>, sic::Weight>
 		AssetWeightMap;
 
+	/// Iterator for a ModelPortfolio's Asset/Weight pairs.
+	typedef sic::Model::ModelPortfolio::AssetWeightMap::iterator
+		AssetWeightIterator;
+
 private:
 	std::unique_ptr<sic::Model::ModelPortfolio::AssetWeightMap> assetWeights;
 
@@ -37,6 +41,15 @@ public:
 	ModelPortfolio(std::unique_ptr<sic::Model::ModelPortfolio::AssetWeightMap>
 					   assetWeights,
 				   sic::External::ID externalID);
+
+	/**
+	 * The begin and end iterators of the ModelPortfolio's Asset/Weight pairs.
+	 *
+	 * @returns Begin and end as the first and second sides of a pair.
+	 */
+	std::pair<sic::Model::ModelPortfolio::AssetWeightIterator,
+			  sic::Model::ModelPortfolio::AssetWeightIterator>
+	getAssetWeightIterators();
 
 	/**
 	 * Get the number of Assets stored in the MPF.

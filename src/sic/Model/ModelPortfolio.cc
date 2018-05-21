@@ -40,6 +40,13 @@ sic::Model::ModelPortfolio::ModelPortfolio(
 	this->assetWeights = std::move(assetWeights);
 }
 
+std::pair<sic::Model::ModelPortfolio::AssetWeightIterator,
+		  sic::Model::ModelPortfolio::AssetWeightIterator>
+sic::Model::ModelPortfolio::getAssetWeightIterators() {
+
+	return std::make_pair(std::begin(*assetWeights), std::end(*assetWeights));
+}
+
 size_t sic::Model::ModelPortfolio::getAssetCount() const {
 	return assetWeights->size();
 }

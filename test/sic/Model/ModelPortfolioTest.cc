@@ -19,6 +19,7 @@ public:
 TEST_F(ModelPortfolioTest, CreateValid) {
 
 	auto assetList = new sic::Model::ModelPortfolio::AssetWeightMap();
+	const auto &assetListRef = *assetList;
 	std::unique_ptr<sic::Model::ModelPortfolio::AssetWeightMap>
 		assetWeightsMapPtr(assetList);
 
@@ -53,11 +54,16 @@ TEST_F(ModelPortfolioTest, CreateValid) {
 
 	const sic::External::ID expExternalID = 43534l;
 
-	const sic::Model::ModelPortfolio validMPF(std::move(assetWeightsMapPtr),
-											  expExternalID);
+	sic::Model::ModelPortfolio validMPF(std::move(assetWeightsMapPtr),
+										expExternalID);
 
 	ASSERT_EQ(expExternalID, validMPF.getExternalID());
 	ASSERT_EQ(expAssetCount, validMPF.getAssetCount());
+
+	// Check we can iterate through the items correctly.
+	auto assetWeightIterators = validMPF.getAssetWeightIterators();
+	ASSERT_EQ(assetListRef.begin(), assetWeightIterators.first);
+	ASSERT_EQ(assetListRef.end(), assetWeightIterators.second);
 }
 
 TEST_F(ModelPortfolioTest, CreateInvalidEmptyAssetsList) {
