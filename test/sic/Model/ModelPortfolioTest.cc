@@ -8,7 +8,8 @@ class ModelPortfolioTest : public testing::Test {
 public:
 	class MockAsset : public sic::Asset {
 	public:
-		MockAsset() : sic::Asset(1.00, 1) {}
+		explicit MockAsset(sic::External::ID externalID)
+			: sic::Asset(1.00, externalID) {}
 
 		virtual ~MockAsset() = default;
 	};
@@ -43,7 +44,9 @@ TEST_F(ModelPortfolioTest, CreateValid) {
 	}
 
 	for (int i = 0; i < expAssetCount; i++) {
-		std::shared_ptr<sic::Asset> assetPtr(new MockAsset());
+		const auto assetID = static_cast<sic::External::ID>(i);
+
+		std::shared_ptr<sic::Asset> assetPtr(new MockAsset(assetID));
 		assetWeightsMapPtr->insert({std::move(assetPtr), assetWeights.at(i)});
 	}
 
@@ -70,6 +73,42 @@ TEST_F(ModelPortfolioTest, CreateInvalidEmptyAssetsList) {
 		const sic::Model::ModelPortfolio invalidMPF(
 			std::move(assetWeightsMapPtr), expExternalID);
 		FAIL() << "Able to create MPF with empty assets map.";
+	} catch (std::invalid_argument &e) {
+		ASSERT_EQ(expError, e.what());
+	} catch (...) {
+		FAIL() << "Unexpected exception.";
+	}
+}
+
+TEST_F(ModelPortfolioTest, CreateInvalidDuplicateAssets) {
+
+	auto assetList = new sic::Model::ModelPortfolio::AssetWeightMap();
+	std::unique_ptr<sic::Model::ModelPortfolio::AssetWeightMap>
+		assetWeightsMapPtr(assetList);
+
+	constexpr int expAssetCount = 20;
+	constexpr int expDuplicateAssetCount = 2;
+	const sic::Weight perAssetWeight =
+		1.0 / static_cast<sic::Weight>(expAssetCount);
+	const sic::External::ID duplicateID = 432344;
+
+	for (int i = 0; i < expAssetCount; i++) {
+		const sic::External::ID assetID =
+			(i < expDuplicateAssetCount) ? duplicateID
+										 : static_cast<sic::External::ID>(i);
+
+		std::shared_ptr<sic::Asset> newAsset(new MockAsset(assetID));
+		assetWeightsMapPtr->insert({newAsset, perAssetWeight});
+	}
+
+	constexpr sic::External::ID expExternalID = 43534l;
+	const std::string expError =
+		"assetWeightMap must not contain duplicate Assets.";
+
+	try {
+		const sic::Model::ModelPortfolio invalidMPF(
+			std::move(assetWeightsMapPtr), expExternalID);
+		FAIL() << "Able to create MPF with duplicate Assets.";
 	} catch (std::invalid_argument &e) {
 		ASSERT_EQ(expError, e.what());
 	} catch (...) {
