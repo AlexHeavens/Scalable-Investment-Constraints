@@ -39,4 +39,15 @@ TEST_F(IteratorsTest, CreateValidFull) {
 		<< "Unexpected number of items iterated through.";
 }
 
+TEST_F(IteratorsTest, CreateValidEmpty) {
+
+	std::vector<int> intVector;
+
+	sic::Iterators validIterators(intVector.begin(), intVector.end());
+
+	ASSERT_EQ(validIterators.current(), intVector.begin());
+	ASSERT_EQ(validIterators.end(), intVector.end());
+	ASSERT_EQ(validIterators.current(), validIterators.end());
+}
+
 } // namespace
