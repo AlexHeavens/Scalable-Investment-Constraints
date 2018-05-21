@@ -6,9 +6,9 @@
 namespace sic {
 
 /// Maximum tolerance in a measurement to be considered the same.
-template <typename Type> Type Tolerance();
+template <typename Type> constexpr Type Tolerance();
 
-template <> sic::Weight Tolerance() { return 0.00001; }
+template <> constexpr sic::Weight Tolerance() { return 0.00001; }
 
 } // namespace sic
 

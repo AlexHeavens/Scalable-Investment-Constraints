@@ -30,7 +30,8 @@ public:
 	 * @param assetWeights Non empty weighted list of Assets the MPF will take
 	 * ownership of.  This is a list of shared pointers to ensure calculations
 	 * based on the  MPF remain valid if the AssetCache is destroyed.  An Asset
-	 * cannot appear twice in the list.
+	 * cannot appear twice in the list and all weights must sum to 1.0, within a
+	 * tolerance of sic::Tolerance<sic::Weight>().
 	 * @param externalID ID of the MPF in the external system.
 	 */
 	ModelPortfolio(std::unique_ptr<sic::Model::ModelPortfolio::AssetWeightMap>
