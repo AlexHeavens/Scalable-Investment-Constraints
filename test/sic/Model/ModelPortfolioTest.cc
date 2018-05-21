@@ -134,7 +134,8 @@ TEST_F(ModelPortfolioTest, CreateValidAssetsSum100Percent) {
 
 		// Offset one Asset weight by the maximum tolerance allowed.
 		const sic::Weight assetWeight =
-			(i == 0) ? perAssetWeight + sic::Tolerance::Weight : perAssetWeight;
+			(i == 0) ? perAssetWeight + sic::Tolerance<sic::Weight>()
+					 : perAssetWeight;
 
 		std::shared_ptr<sic::Asset> newAsset(new MockAsset(assetID));
 		validOverAssetWeightsMapPtr->insert({newAsset, assetWeight});
@@ -153,7 +154,8 @@ TEST_F(ModelPortfolioTest, CreateValidAssetsSum100Percent) {
 
 		// Offset one Asset weight by the maximum tolerance allowed.
 		const sic::Weight assetWeight =
-			(i == 0) ? perAssetWeight - sic::Tolerance::Weight : perAssetWeight;
+			(i == 0) ? perAssetWeight - sic::Tolerance<sic::Weight>()
+					 : perAssetWeight;
 
 		std::shared_ptr<sic::Asset> newAsset(new MockAsset(assetID));
 		validUnderAssetWeightsMapPtr->insert({newAsset, assetWeight});

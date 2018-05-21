@@ -3,10 +3,13 @@
 
 #include "sic/Base/Types.hh"
 
-namespace sic::Tolerance {
+namespace sic {
 
-/// Maximum tolerance in weights to be considered the same.
-constexpr sic::Weight Weight = 0.00001;
-} // namespace sic::Tolerance
+/// Maximum tolerance in a measurement to be considered the same.
+template <typename Type> Type Tolerance();
+
+template <> sic::Weight Tolerance() { return 0.00001; }
+
+} // namespace sic
 
 #endif // SIC_TOLERANCES_H_
