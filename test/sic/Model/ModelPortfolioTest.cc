@@ -47,8 +47,12 @@ TEST_F(ModelPortfolioTest, CreateValid) {
 		assetWeightsMapPtr->insert({std::move(assetPtr), assetWeights.at(i)});
 	}
 
-	sic::Model::ModelPortfolio validMPF(std::move(assetWeightsMapPtr));
+	const sic::External::ID expExternalID = 43534l;
 
+	const sic::Model::ModelPortfolio validMPF(std::move(assetWeightsMapPtr),
+											  expExternalID);
+
+	ASSERT_EQ(expExternalID, validMPF.getExternalID());
 	ASSERT_EQ(expAssetCount, validMPF.getAssetCount());
 }
 
