@@ -27,15 +27,14 @@ public:
 	/**
 	 * Create an MPF with a given list of weighted Assets.
 	 *
-	 * @param assetWeights Weighted list of Assets the MPF will take ownership
-	 * of.  This is a list of shared pointers to ensure calculations based on
-	 * the  MPF remain valid if the AssetCache is destroyed.
+	 * @param assetWeights Non empty weighted list of Assets the MPF will take
+	 * ownership of.  This is a list of shared pointers to ensure calculations
+	 * based on the  MPF remain valid if the AssetCache is destroyed.
 	 * @param externalID ID of the MPF in the external system.
 	 */
 	ModelPortfolio(std::unique_ptr<sic::Model::ModelPortfolio::AssetWeightMap>
 					   assetWeights,
-				   sic::External::ID externalID)
-		: sic::External(externalID), assetWeights(std::move(assetWeights)) {}
+				   sic::External::ID externalID);
 
 	/**
 	 * Get the number of Assets stored in the MPF.

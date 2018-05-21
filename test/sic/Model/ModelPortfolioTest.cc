@@ -56,4 +56,25 @@ TEST_F(ModelPortfolioTest, CreateValid) {
 	ASSERT_EQ(expAssetCount, validMPF.getAssetCount());
 }
 
+TEST_F(ModelPortfolioTest, CreateInvalidEmptyAssetsList) {
+
+	auto assetList = new sic::Model::ModelPortfolio::AssetWeightMap();
+	std::unique_ptr<sic::Model::ModelPortfolio::AssetWeightMap>
+		assetWeightsMapPtr(assetList);
+
+	constexpr sic::External::ID expExternalID = 43534l;
+	const std::string expError =
+		"assetWeightMap must contain at least one entry.";
+
+	try {
+		const sic::Model::ModelPortfolio invalidMPF(
+			std::move(assetWeightsMapPtr), expExternalID);
+		FAIL() << "Able to create MPF with empty assets map.";
+	} catch (std::invalid_argument &e) {
+		ASSERT_EQ(expError, e.what());
+	} catch (...) {
+		FAIL() << "Unexpected exception.";
+	}
+}
+
 } // namespace
