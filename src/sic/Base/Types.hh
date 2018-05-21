@@ -9,6 +9,9 @@ typedef float Value;
 /// Monetary price, without currency specified.
 typedef sic::Value Price;
 
+/// Model weight (i.e. percentage).
+typedef float Weight;
+
 } // namespace sic
 
 #endif // SIC_BASE_TYPES_H_
