@@ -4,6 +4,7 @@
 #include <memory>
 #include <unordered_map>
 
+#include "sic/Base/Iterators.hh"
 #include "sic/Base/Types.hh"
 #include "sic/External.hh"
 #include "sic/Portfolio/Asset.hh"
@@ -45,10 +46,9 @@ public:
 	/**
 	 * The begin and end iterators of the ModelPortfolio's Asset/Weight pairs.
 	 *
-	 * @returns Begin and end as the first and second sides of a pair.
+	 * @returns Current and end iterators.
 	 */
-	std::pair<sic::Model::ModelPortfolio::AssetWeightIterator,
-			  sic::Model::ModelPortfolio::AssetWeightIterator>
+	sic::Iterators<sic::Model::ModelPortfolio::AssetWeightIterator>
 	getAssetWeightIterators();
 
 	/**

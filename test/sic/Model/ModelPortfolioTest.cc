@@ -62,8 +62,8 @@ TEST_F(ModelPortfolioTest, CreateValid) {
 
 	// Check we can iterate through the items correctly.
 	auto assetWeightIterators = validMPF.getAssetWeightIterators();
-	ASSERT_EQ(assetListRef.begin(), assetWeightIterators.first);
-	ASSERT_EQ(assetListRef.end(), assetWeightIterators.second);
+	ASSERT_EQ(assetListRef.begin(), assetWeightIterators.current());
+	ASSERT_EQ(assetListRef.end(), assetWeightIterators.end());
 }
 
 TEST_F(ModelPortfolioTest, CreateInvalidEmptyAssetsList) {
