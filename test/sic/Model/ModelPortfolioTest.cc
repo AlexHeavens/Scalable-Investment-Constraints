@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "sic/Base/Tolerances.hh"
 #include "sic/Model/ModelPortfolio.hh"
 
 namespace {
@@ -114,6 +115,52 @@ TEST_F(ModelPortfolioTest, CreateInvalidDuplicateAssets) {
 	} catch (...) {
 		FAIL() << "Unexpected exception.";
 	}
+}
+
+TEST_F(ModelPortfolioTest, CreateValidAssetsSum100Percent) {
+
+	constexpr int expAssetCount = 5;
+	constexpr sic::Weight perAssetWeight =
+		1.0 / static_cast<sic::Weight>(expAssetCount);
+	constexpr sic::External::ID expExternalID = 435354;
+
+	// Overweight, still valid.
+	auto validOverAssetList = new sic::Model::ModelPortfolio::AssetWeightMap();
+	std::unique_ptr<sic::Model::ModelPortfolio::AssetWeightMap>
+		validOverAssetWeightsMapPtr(validOverAssetList);
+
+	for (int i = 0; i < expAssetCount; i++) {
+		const auto assetID = static_cast<sic::External::ID>(i);
+
+		// Offset one Asset weight by the maximum tolerance allowed.
+		const sic::Weight assetWeight =
+			(i == 0) ? perAssetWeight + sic::Tolerance::Weight : perAssetWeight;
+
+		std::shared_ptr<sic::Asset> newAsset(new MockAsset(assetID));
+		validOverAssetWeightsMapPtr->insert({newAsset, assetWeight});
+	}
+
+	const sic::Model::ModelPortfolio validOverMPF(
+		std::move(validOverAssetWeightsMapPtr), expExternalID);
+
+	// Overweight, still valid.
+	auto validUnderAssetList = new sic::Model::ModelPortfolio::AssetWeightMap();
+	std::unique_ptr<sic::Model::ModelPortfolio::AssetWeightMap>
+		validUnderAssetWeightsMapPtr(validUnderAssetList);
+
+	for (int i = 0; i < expAssetCount; i++) {
+		const auto assetID = static_cast<sic::External::ID>(i);
+
+		// Offset one Asset weight by the maximum tolerance allowed.
+		const sic::Weight assetWeight =
+			(i == 0) ? perAssetWeight - sic::Tolerance::Weight : perAssetWeight;
+
+		std::shared_ptr<sic::Asset> newAsset(new MockAsset(assetID));
+		validUnderAssetWeightsMapPtr->insert({newAsset, assetWeight});
+	}
+
+	const sic::Model::ModelPortfolio validUnderMPF(
+		std::move(validUnderAssetWeightsMapPtr), expExternalID);
 }
 
 } // namespace
