@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include <utility>
 
+#include "sic/Base/Iterators.hh"
 #include "sic/Base/Types.hh"
 #include "sic/External.hh"
 
@@ -50,12 +51,11 @@ public:
 	sic::Price getReferencePrice() const { return referencePrice; }
 
 	/**
-	 * The begin and end iterators of the Asset's class set.
+	 * The current and end iterators of the Asset's class set.
 	 *
-	 * @returns Begin and end as the first and second sides of a pair.
+	 * @returns Current and end Asset classes iterators.
 	 */
-	std::pair<sic::Asset::ClassIterator, sic::Asset::ClassIterator>
-	getClassIterators();
+	sic::Iterators<sic::Asset::ClassIterator> getClassIterators();
 
 	/**
 	 * If the Asset has a given Asset Class.

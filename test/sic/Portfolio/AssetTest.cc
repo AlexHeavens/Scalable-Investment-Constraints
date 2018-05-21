@@ -39,16 +39,15 @@ TEST_F(AssetTest, CreateValidAsset) {
 	ASSERT_EQ(expExternalID, validAsset.getExternalID());
 
 	// Test asset class iteration.
-	std::pair<sic::Asset::ClassIterator, sic::Asset::ClassIterator>
-		classIterator = validAsset.getClassIterators();
+	auto classIterator = validAsset.getClassIterators();
 
 	int expClassIndex = 0;
-	while (classIterator.first != classIterator.second) {
+	while (classIterator.current() != classIterator.end()) {
 
 		ASSERT_TRUE(expClassIndex < expClassCount);
-		ASSERT_TRUE(validAsset.hasClass(*classIterator.first));
+		ASSERT_TRUE(validAsset.hasClass(*classIterator.current()));
 
-		classIterator.first++;
+		classIterator.current()++;
 		expClassIndex++;
 	}
 
@@ -70,7 +69,7 @@ TEST_F(AssetTest, EmptyAssetClassList) {
 	ASSERT_FALSE(assetA.hasClass(3534));
 
 	auto assetClassItsA = assetA.getClassIterators();
-	ASSERT_EQ(assetClassItsA.first, assetClassItsA.second);
+	ASSERT_EQ(assetClassItsA.current(), assetClassItsA.end());
 
 	// Create Asset, explicitly empty class list.
 	auto expClassSet = std::make_unique<sic::Asset::ClassSet>();
@@ -79,7 +78,7 @@ TEST_F(AssetTest, EmptyAssetClassList) {
 	ASSERT_FALSE(assetA.hasClass(3534));
 
 	auto assetClassItsB = assetB.getClassIterators();
-	ASSERT_EQ(assetClassItsB.first, assetClassItsB.second);
+	ASSERT_EQ(assetClassItsB.current(), assetClassItsB.end());
 }
 
 } // namespace
