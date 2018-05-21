@@ -23,8 +23,9 @@ sic::Portfolio::Portfolio(std::unique_ptr<std::vector<sic::Position>> positions,
 	this->positions = std::move(positions);
 }
 
-std::pair<sic::Position::VectorIterator, sic::Position::VectorIterator>
+sic::Iterators<sic::Position::VectorIterator>
 sic::Portfolio::getPositionIterators() {
 
-	return std::make_pair(std::begin(*positions), std::end(*positions));
+	return sic::Iterators<sic::Position::VectorIterator>(std::begin(*positions),
+														 std::end(*positions));
 }

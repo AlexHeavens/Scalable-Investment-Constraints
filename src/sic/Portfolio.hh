@@ -5,6 +5,7 @@
 #include <utility>
 #include <vector>
 
+#include "sic/Base/Iterators.hh"
 #include "sic/External.hh"
 #include "sic/Portfolio/Position.hh"
 
@@ -32,12 +33,11 @@ public:
 			  sic::External::ID externalID);
 
 	/**
-	 * The begin and end iterators of the Portfolio's position vector.
+	 * The current and end iterators of the Portfolio's position vector.
 	 *
-	 * @returns Begin and end as the first and second sides of a pair.
+	 * @returns Current and end iterators.
 	 */
-	std::pair<sic::Position::VectorIterator, sic::Position::VectorIterator>
-	getPositionIterators();
+	sic::Iterators<sic::Position::VectorIterator> getPositionIterators();
 };
 
 } // namespace sic

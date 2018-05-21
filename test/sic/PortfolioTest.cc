@@ -68,14 +68,14 @@ TEST_F(PortfolioTest, CreateValidPortfolio) {
 	// Check Portolio Positions
 	auto positionIterators = validPortfolio.getPositionIterators();
 	int expPositionIndex = 0;
-	while (positionIterators.first != positionIterators.second) {
+	while (positionIterators.current() != positionIterators.end()) {
 
 		ASSERT_TRUE(expPositionIndex < expPositionCount);
 
 		ASSERT_EQ(expPositionAddresses.at(expPositionIndex),
-				  &(*positionIterators.first));
+				  &(*positionIterators.current()));
 		expPositionIndex++;
-		positionIterators.first++;
+		positionIterators.current()++;
 	}
 	ASSERT_EQ(expPositionCount, expPositionIndex);
 	ASSERT_EQ(expExternalID, validPortfolio.getExternalID());
