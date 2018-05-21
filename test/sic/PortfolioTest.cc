@@ -100,11 +100,11 @@ TEST_F(PortfolioTest, CreatePortfolioWithDuplicatePositions) {
 	try {
 		sic::Portfolio duplicatePositionPortfolio(
 			std::move(inputPositionVector), expExternalID);
-		FAIL();
+		FAIL() << "Able to create Portfolio with duplicate Position.";
 	} catch (const std::invalid_argument &e) {
 		ASSERT_EQ(expExceptionString, e.what());
 	} catch (...) {
-		FAIL(); // Unexpected exception type.
+		FAIL() << "Unexpected  error."; // Unexpected exception type.
 	}
 }
 
