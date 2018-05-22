@@ -23,26 +23,44 @@ TEST_F(ModelPortfolioTest, CreateValid) {
 	std::unique_ptr<sic::Model::ModelPortfolio::AssetWeightMap>
 		assetWeightsMapPtr(assetList);
 
-	const int expAssetCount = 19;
+	constexpr int expAssetCount = 19;
 	assetWeightsMapPtr->reserve(expAssetCount);
-	std::vector<sic::Weight> assetWeights;
+	std::vector<sic::WeightRange> assetWeights;
 	assetWeights.reserve(expAssetCount);
 
-	// First set of Asset get 10% weighting.
-	const int tenPercentAssetCount = 9;
-	const sic::Weight tenPercentWeight = 0.1;
-	for (int i = 0; i < tenPercentAssetCount; i++) {
-		assetWeights.push_back(tenPercentWeight);
+	// First set of Asset get 10% weighting, min/max -1/+1.
+	constexpr int largePercentAssetCount = 9;
+	constexpr sic::Weight largePercentTargetWeight = 0.1;
+	constexpr sic::Weight largePercentMinWeight =
+		largePercentTargetWeight - 0.01;
+	constexpr sic::Weight largePercentMaxWeight =
+		largePercentTargetWeight + 0.01;
+	const sic::WeightRange largeWeightRange(
+		largePercentMinWeight, largePercentTargetWeight, largePercentMaxWeight);
+
+	for (int i = 0; i < largePercentAssetCount; i++) {
+		assetWeights.push_back(largeWeightRange);
 	}
 
 	// Remaining Assets split the remainder of the weight.
-	const int remainingAssetCount = expAssetCount - tenPercentAssetCount;
-	const sic::Weight remainingWeight =
-		1.0 - static_cast<sic::Weight>(tenPercentAssetCount) * tenPercentWeight;
-	const sic::Weight remainingPerAssetWeight =
+	constexpr int remainingAssetCount = expAssetCount - largePercentAssetCount;
+	constexpr sic::Weight remainingWeight =
+		1.0 - static_cast<sic::Weight>(largePercentAssetCount) *
+				  largePercentTargetWeight;
+	constexpr sic::Weight remainingPercentTargetWeight =
 		remainingWeight / static_cast<sic::Weight>(remainingAssetCount);
+
+	constexpr sic::Weight remainingPercentMinWeight =
+		remainingPercentTargetWeight - 0.01;
+	constexpr sic::Weight remainingPercentMaxWeight =
+		remainingPercentTargetWeight + 0.01;
+
+	const sic::WeightRange remainingWeightRange(remainingPercentMinWeight,
+												remainingPercentTargetWeight,
+												remainingPercentMaxWeight);
+
 	for (int i = 0; i < remainingAssetCount; i++) {
-		assetWeights.push_back(remainingPerAssetWeight);
+		assetWeights.push_back(remainingWeightRange);
 	}
 
 	for (int i = 0; i < expAssetCount; i++) {
@@ -52,7 +70,7 @@ TEST_F(ModelPortfolioTest, CreateValid) {
 		assetWeightsMapPtr->insert({std::move(assetPtr), assetWeights.at(i)});
 	}
 
-	const sic::External::ID expExternalID = 43534l;
+	constexpr sic::External::ID expExternalID = 43534l;
 
 	sic::Model::ModelPortfolio validMPF(std::move(assetWeightsMapPtr),
 										expExternalID);
@@ -95,9 +113,16 @@ TEST_F(ModelPortfolioTest, CreateInvalidDuplicateAssets) {
 
 	constexpr int expAssetCount = 20;
 	constexpr int expDuplicateAssetCount = 2;
-	const sic::Weight perAssetWeight =
+	constexpr sic::External::ID expExternalID = 43534;
+
+	constexpr sic::Weight perAssetTargetWeight =
 		1.0 / static_cast<sic::Weight>(expAssetCount);
-	const sic::External::ID duplicateID = 432344;
+	constexpr sic::Weight perAssetMinWeight = perAssetTargetWeight - 0.01;
+	constexpr sic::Weight perAssetMaxWeight = perAssetTargetWeight + 0.01;
+	const sic::WeightRange perAssetWeightRange(
+		perAssetMinWeight, perAssetTargetWeight, perAssetMaxWeight);
+
+	constexpr sic::External::ID duplicateID = 432344;
 
 	for (int i = 0; i < expAssetCount; i++) {
 		const sic::External::ID assetID =
@@ -105,10 +130,9 @@ TEST_F(ModelPortfolioTest, CreateInvalidDuplicateAssets) {
 										 : static_cast<sic::External::ID>(i);
 
 		std::shared_ptr<sic::Asset> newAsset(new MockAsset(assetID));
-		assetWeightsMapPtr->insert({newAsset, perAssetWeight});
+		assetWeightsMapPtr->insert({newAsset, perAssetWeightRange});
 	}
 
-	constexpr sic::External::ID expExternalID = 43534l;
 	const std::string expError =
 		"assetWeightMap must not contain duplicate Assets.";
 
@@ -126,8 +150,11 @@ TEST_F(ModelPortfolioTest, CreateInvalidDuplicateAssets) {
 TEST_F(ModelPortfolioTest, CreateValidAssetsSum100Percent) {
 
 	constexpr int expAssetCount = 5;
-	constexpr sic::Weight perAssetWeight =
+	constexpr sic::Weight perAssetTargetWeight =
 		1.0 / static_cast<sic::Weight>(expAssetCount);
+	constexpr sic::Weight perAssetMinWeight = perAssetTargetWeight - 0.01;
+	constexpr sic::Weight perAssetMaxWeight = perAssetTargetWeight + 0.01;
+
 	constexpr sic::External::ID expExternalID = 435354;
 
 	// Overweight, still valid.
@@ -140,11 +167,13 @@ TEST_F(ModelPortfolioTest, CreateValidAssetsSum100Percent) {
 
 		// Offset one Asset weight by the maximum tolerance allowed.
 		const sic::Weight assetWeight =
-			(i == 0) ? perAssetWeight + sic::Tolerance<sic::Weight>()
-					 : perAssetWeight;
+			(i == 0) ? perAssetTargetWeight + sic::Tolerance<sic::Weight>()
+					 : perAssetTargetWeight;
+		const sic::WeightRange adjustedWeightRange(
+			perAssetMinWeight, assetWeight, perAssetMaxWeight);
 
 		std::shared_ptr<sic::Asset> newAsset(new MockAsset(assetID));
-		validOverAssetWeightsMapPtr->insert({newAsset, assetWeight});
+		validOverAssetWeightsMapPtr->insert({newAsset, adjustedWeightRange});
 	}
 
 	const sic::Model::ModelPortfolio validOverMPF(
@@ -160,11 +189,13 @@ TEST_F(ModelPortfolioTest, CreateValidAssetsSum100Percent) {
 
 		// Offset one Asset weight by the maximum tolerance allowed.
 		const sic::Weight assetWeight =
-			(i == 0) ? perAssetWeight - sic::Tolerance<sic::Weight>()
-					 : perAssetWeight;
+			(i == 0) ? perAssetTargetWeight - sic::Tolerance<sic::Weight>()
+					 : perAssetTargetWeight;
+		const sic::WeightRange adjustedWeightRange(
+			perAssetMinWeight, assetWeight, perAssetMaxWeight);
 
 		std::shared_ptr<sic::Asset> newAsset(new MockAsset(assetID));
-		validUnderAssetWeightsMapPtr->insert({newAsset, assetWeight});
+		validUnderAssetWeightsMapPtr->insert({newAsset, adjustedWeightRange});
 	}
 
 	const sic::Model::ModelPortfolio validUnderMPF(
@@ -174,8 +205,10 @@ TEST_F(ModelPortfolioTest, CreateValidAssetsSum100Percent) {
 TEST_F(ModelPortfolioTest, CreateInvalidAssetsSum100Percent) {
 
 	constexpr int expAssetCount = 5;
-	constexpr sic::Weight perAssetWeight =
+	constexpr sic::Weight perAssetTargetWeight =
 		1.0 / static_cast<sic::Weight>(expAssetCount);
+	constexpr sic::Weight perAssetMinWeight = perAssetTargetWeight - 0.01;
+	constexpr sic::Weight perAssetMaxWeight = perAssetTargetWeight + 0.01;
 	constexpr sic::External::ID expExternalID = 435354;
 	const std::string expError =
 		"ModelPortfolio Asset weights must sum to 1.0.";
@@ -191,12 +224,14 @@ TEST_F(ModelPortfolioTest, CreateInvalidAssetsSum100Percent) {
 
 		// Offset one Asset weight by just over the maximum tolerance.
 		const sic::Weight assetWeight =
-			(i == 0) ? perAssetWeight + sic::Tolerance<sic::Weight>() +
+			(i == 0) ? perAssetTargetWeight + sic::Tolerance<sic::Weight>() +
 						   std::numeric_limits<sic::Weight>::epsilon()
-					 : perAssetWeight;
+					 : perAssetTargetWeight;
+		const sic::WeightRange adjustedWeightRange(
+			perAssetMinWeight, assetWeight, perAssetMaxWeight);
 
 		std::shared_ptr<sic::Asset> newAsset(new MockAsset(assetID));
-		invalidOverAssetWeightsMapPtr->insert({newAsset, assetWeight});
+		invalidOverAssetWeightsMapPtr->insert({newAsset, adjustedWeightRange});
 	}
 
 	try {
@@ -219,12 +254,14 @@ TEST_F(ModelPortfolioTest, CreateInvalidAssetsSum100Percent) {
 
 		// Offset one Asset weight by just over the maximum tolerance.
 		const sic::Weight assetWeight =
-			(i == 0) ? perAssetWeight - sic::Tolerance<sic::Weight>() -
+			(i == 0) ? perAssetTargetWeight - sic::Tolerance<sic::Weight>() -
 						   std::numeric_limits<sic::Weight>::epsilon()
-					 : perAssetWeight;
+					 : perAssetTargetWeight;
+		const sic::WeightRange adjustedWeightRange(
+			perAssetMinWeight, assetWeight, perAssetMaxWeight);
 
 		std::shared_ptr<sic::Asset> newAsset(new MockAsset(assetID));
-		invalidUnderAssetWeightsMapPtr->insert({newAsset, assetWeight});
+		invalidUnderAssetWeightsMapPtr->insert({newAsset, adjustedWeightRange});
 	}
 	try {
 		const sic::Model::ModelPortfolio invalidUnderMPF(

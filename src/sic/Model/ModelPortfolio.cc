@@ -27,7 +27,7 @@ sic::Model::ModelPortfolio::ModelPortfolio(
 		}
 
 		inputAssetIDs.insert(assetID);
-		sum += assetEntry.second;
+		sum += assetEntry.second.target;
 	}
 
 	constexpr auto tol = sic::Tolerance<sic::Weight>();
