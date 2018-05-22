@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 
+#include "sic/Base/Iterators.hh"
 #include "sic/Model/AbstractFilterNode.hh"
 
 namespace sic::Model {
@@ -15,9 +16,15 @@ namespace sic::Model {
  * @see sic::Model
  */
 class FilterNode : public sic::Model::AbstractFilterNode {
+
+public:
+	typedef std::vector<std::unique_ptr<sic::Model::AbstractFilterNode>>
+		ChildNodeVector;
+	typedef sic::Model::FilterNode::ChildNodeVector::iterator ChildIterator;
+
 private:
 	const sic::Model::AbstractFilterNode *parentNode;
-	std::vector<std::unique_ptr<sic::Model::AbstractFilterNode>> childNodes;
+	sic::Model::FilterNode::ChildNodeVector childNodes;
 
 	/**
 	 * Create a non-root filter tree FilterNode.
@@ -42,6 +49,13 @@ public:
 	const sic::Model::AbstractFilterNode *getParentNode() const override {
 		return parentNode;
 	}
+
+	/**
+	 * The current and end iterators of the node's children.
+	 *
+	 * @return Current and end iterators.
+	 */
+	sic::Iterators<sic::Model::FilterNode::ChildIterator> getChildIterators();
 };
 
 } // namespace sic::Model

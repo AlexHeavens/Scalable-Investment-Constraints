@@ -5,18 +5,30 @@
 namespace {
 
 class FilterNodeTest : public testing::Test {};
-TEST_F(FilterNodeTest, CreateValidFilterNode) {
+TEST_F(FilterNodeTest, CreateValid) {
 
 	sic::Model::FilterNode parentNode;
-	sic::Model::AbstractFilterNode &childNode1 = parentNode.addChild();
-	sic::Model::AbstractFilterNode &childNode2 = parentNode.addChild();
-	sic::Model::AbstractFilterNode &childNode3 = childNode1.addChild();
+
+	std::vector<sic::Model::AbstractFilterNode *> expChildNodes;
+	expChildNodes.reserve(3);
+	expChildNodes[0] = &parentNode.addChild();
+	expChildNodes[1] = &parentNode.addChild();
+	expChildNodes[2] = &expChildNodes[1]->addChild();
 
 	const sic::Model::AbstractFilterNode *nullNode = nullptr;
 	ASSERT_EQ(nullNode, parentNode.getParentNode());
-	ASSERT_EQ(&parentNode, childNode1.getParentNode());
-	ASSERT_EQ(&parentNode, childNode2.getParentNode());
-	ASSERT_EQ(&childNode1, childNode3.getParentNode());
+	ASSERT_EQ(&parentNode, expChildNodes[0]->getParentNode());
+	ASSERT_EQ(&parentNode, expChildNodes[1]->getParentNode());
+	ASSERT_EQ(expChildNodes[1], expChildNodes[2]->getParentNode());
+
+	auto childIterators = parentNode.getChildIterators();
+	ASSERT_EQ(childIterators.current()->get(), expChildNodes[0]);
+	childIterators.current()++;
+
+	ASSERT_EQ(childIterators.current()->get(), expChildNodes[1]);
+	childIterators.current()++;
+
+	ASSERT_EQ(childIterators.current(), childIterators.end());
 }
 
 } // namespace
