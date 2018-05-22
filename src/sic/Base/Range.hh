@@ -17,7 +17,17 @@ public:
 	 * Create a min, target, max Range.
 	 */
 	Range(Type min, Type target, Type max)
-		: min(min), target(target), max(max) {}
+		: min(min), target(target), max(max) {
+
+		if (min > target) {
+			throw std::invalid_argument(
+				"Range min must be less or equal to target.");
+		}
+		if (max < target) {
+			throw std::invalid_argument(
+				"Range max must be greater or equal to target.");
+		}
+	}
 };
 
 } // namespace sic
