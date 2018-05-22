@@ -4,6 +4,8 @@
 #include <memory>
 #include <vector>
 
+#include "sic/Model/AbstractFilterNode.hh"
+
 namespace sic::Model {
 
 /**
@@ -12,10 +14,10 @@ namespace sic::Model {
  *
  * @see sic::Model
  */
-class FilterNode {
+class FilterNode : public sic::Model::AbstractFilterNode {
 private:
-	const sic::Model::FilterNode *parentNode;
-	std::vector<std::unique_ptr<sic::Model::FilterNode>> childNodes;
+	const sic::Model::AbstractFilterNode *parentNode;
+	std::vector<std::unique_ptr<sic::Model::AbstractFilterNode>> childNodes;
 
 	/**
 	 * Create a non-root filter tree FilterNode.
@@ -24,7 +26,7 @@ private:
 	 *
 	 * @param parentFilterNode the parent FilterNode in the filter tree.
 	 */
-	FilterNode(const sic::Model::FilterNode *parentNode)
+	FilterNode(const sic::Model::AbstractFilterNode *parentNode)
 		: parentNode(parentNode) {}
 
 public:
@@ -33,19 +35,13 @@ public:
 	 */
 	FilterNode() : parentNode(nullptr) {}
 
-	/**
-	 * Add a child FilterNode.
-	 *
-	 * The created FilterNode will be owned (and hence, freed) with its parent.
-	 *
-	 * @return a reference to the created child FilterNode.
-	 */
-	sic::Model::FilterNode &addChild();
+	~FilterNode() override {}
 
-	/**
-	 * The parent FilterNode, if non-root, otherwise nullptr.
-	 */
-	const sic::Model::FilterNode *getParentNode() const { return parentNode; }
+	sic::Model::AbstractFilterNode &addChild() override;
+
+	const sic::Model::AbstractFilterNode *getParentNode() const override {
+		return parentNode;
+	}
 };
 
 } // namespace sic::Model

@@ -38,7 +38,8 @@ else ()
     set(CLANG_TIDY_TEST_IGN
         "-hicpp-special-member-functions,-cppcoreguidelines-special-member-functions,-hicpp-use-equals-default,-cert-err58-cpp,-modernize-use-equals-default,\
         -modernize-use-equals-delete,-hicpp-use-equals-delete,-fuchsia-default-arguments,-cppcoreguidelines-owning-memory,\
-        -cppcoreguidelines-pro-type-vararg,-hicpp-vararg,-clang-analyzer-cplusplus.NewDelete,-clang-analyzer-cplusplus.NewDeleteLeaks"
+        -cppcoreguidelines-pro-type-vararg,-hicpp-vararg,-clang-analyzer-cplusplus.NewDelete,-clang-analyzer-cplusplus.NewDeleteLeaks,\
+        -clang-analyzer-optin.cplusplus.VirtualCall"
     )
     set(CLANG_TIDY_TEST_PROPERTIES "${CLANG_TIDY_EXE}"
             "-checks=*,${CLANG_TIDY_TEST_IGN}"

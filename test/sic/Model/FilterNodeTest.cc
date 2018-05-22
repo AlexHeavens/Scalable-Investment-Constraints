@@ -8,11 +8,11 @@ class FilterNodeTest : public testing::Test {};
 TEST_F(FilterNodeTest, CreateValidFilterNode) {
 
 	sic::Model::FilterNode parentNode;
-	sic::Model::FilterNode &childNode1 = parentNode.addChild();
-	sic::Model::FilterNode &childNode2 = parentNode.addChild();
-	sic::Model::FilterNode &childNode3 = childNode1.addChild();
+	sic::Model::AbstractFilterNode &childNode1 = parentNode.addChild();
+	sic::Model::AbstractFilterNode &childNode2 = parentNode.addChild();
+	sic::Model::AbstractFilterNode &childNode3 = childNode1.addChild();
 
-	const sic::Model::FilterNode *nullNode = nullptr;
+	const sic::Model::AbstractFilterNode *nullNode = nullptr;
 	ASSERT_EQ(nullNode, parentNode.getParentNode());
 	ASSERT_EQ(&parentNode, childNode1.getParentNode());
 	ASSERT_EQ(&parentNode, childNode2.getParentNode());

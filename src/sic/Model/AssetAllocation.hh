@@ -1,6 +1,13 @@
 #ifndef SIC_MODEL_ASSETALLOCATION_H_
 #define SIC_MODEL_ASSETALLOCATION_H_
 
+#include <memory>
+#include <unordered_map>
+
+#include "sic/Model/AbstractAssetAllocationNode.hh"
+#include "sic/Model/AbstractFilterNode.hh"
+#include "sic/Model/AbstractFilterTree.hh"
+
 namespace sic::Model {
 
 /**
@@ -15,12 +22,37 @@ namespace sic::Model {
  */
 class AssetAllocation {
 
+public:
+	/// The mapping of filter nodes to AA nodes an AA contains.
+	typedef std::unordered_map<const sic::Model::AbstractFilterNode *,
+							   const sic::Model::AbstractAssetAllocationNode *>
+		FilterNodeMap;
+
 private:
+	const sic::Model::AbstractFilterTree &filterTree;
+	const std::unique_ptr<sic::Model::AssetAllocation::FilterNodeMap>
+		filterNodeMap;
+
 public:
 	/**
 	 * Construct an AssetAllocation.
+	 *
+	 * @param filterTree the FilterTree representing the underlying tree
+	 * structure of the AssetAllocation.
+	 * @param filterNodeMap a mapping of the FilterTree's nodes to the
+	 * AssetAllocationNodes where specified.
 	 */
-	AssetAllocation() {}
+	AssetAllocation(const sic::Model::AbstractFilterTree &filterTree,
+					std::unique_ptr<sic::Model::AssetAllocation::FilterNodeMap>
+						filterNodeMap)
+		: filterTree(filterTree), filterNodeMap(std::move(filterNodeMap)) {}
+
+	/**
+	 * The FilterTree representing the AA's structure.
+	 */
+	const sic::Model::AbstractFilterTree &getFilterTree() const {
+		return filterTree;
+	}
 };
 
 } // namespace sic::Model
