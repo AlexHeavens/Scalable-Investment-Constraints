@@ -1,6 +1,8 @@
 #ifndef SIC_RANGE_H_
 #define SIC_RANGE_H_
 
+#include <stdexcept>
+
 namespace sic {
 
 /**

@@ -16,6 +16,9 @@ private:
 public:
 	/**
 	 * Construct an AssetAllocationNode.
+	 *
+	 * @param weightRange range of the summed weights that Assets in this node
+	 * must follow.
 	 */
 	AssetAllocationNode(const sic::WeightRange &weightRange)
 		: weightRange(weightRange) {}

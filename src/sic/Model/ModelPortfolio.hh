@@ -7,6 +7,7 @@
 #include "sic/Base/Iterators.hh"
 #include "sic/Base/Types.hh"
 #include "sic/External.hh"
+#include "sic/Model/AbstractModelPortfolio.hh"
 #include "sic/Portfolio/Asset.hh"
 
 namespace sic::Model {
@@ -14,7 +15,8 @@ namespace sic::Model {
 /**
  * A simple weighted Asset list portfolio model.
  */
-class ModelPortfolio : public sic::External {
+class ModelPortfolio : public sic::Model::AbstractModelPortfolio,
+					   public sic::External {
 
 public:
 	/// A map of Assets to weights used by MPFs.
