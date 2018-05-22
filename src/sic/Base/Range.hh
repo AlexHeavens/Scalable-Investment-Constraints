@@ -28,6 +28,11 @@ public:
 				"Range max must be greater or equal to target.");
 		}
 	}
+
+	bool operator==(const Range<Type> &rhs) const {
+		return this->min == rhs.min and this->target == rhs.target and
+			   this->max == rhs.max;
+	}
 };
 
 } // namespace sic

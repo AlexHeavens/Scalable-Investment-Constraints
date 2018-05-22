@@ -52,4 +52,18 @@ TEST_F(RangeTest, CreateInvalidMax) {
 	}
 }
 
+TEST_F(RangeTest, Equality) {
+
+	const sic::Range<float> range1(0.1, 0.2, 0.3);
+	const sic::Range<float> range2(0.1, 0.2, 0.3);
+
+	const sic::Range<float> range3(0.2, 0.2, 0.3);
+	const sic::Range<float> range4(0.1, 0.3, 0.3);
+	const sic::Range<float> range5(0.1, 0.2, 0.2);
+
+	ASSERT_TRUE(range1 == range2);
+	ASSERT_FALSE(range1 == range3);
+	ASSERT_FALSE(range1 == range4);
+}
+
 } // namespace
