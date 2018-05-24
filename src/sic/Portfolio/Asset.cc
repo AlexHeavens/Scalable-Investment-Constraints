@@ -1,9 +1,17 @@
 #include "sic/Portfolio/Asset.hh"
 
+sic::Asset::Asset(const sic::Asset &rhs)
+	: sic::AbstractAsset(rhs.getExternalID()) {
+	referencePrice = rhs.referencePrice;
+
+	// Deep copy classes to avoid damaging input.
+	classes = std::make_unique<sic::Asset::ClassSet>(*rhs.classes);
+}
+
 sic::Asset::Asset(
 	sic::Price referencePrice, sic::External::ID externalID,
 	std::experimental::optional<std::unique_ptr<ClassSet>> classes)
-	: sic::External(externalID), referencePrice(referencePrice) {
+	: sic::AbstractAsset(externalID), referencePrice(referencePrice) {
 
 	if (classes) {
 		this->classes = std::move(*classes);

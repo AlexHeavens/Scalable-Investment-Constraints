@@ -8,7 +8,7 @@
 
 #include "sic/Base/Iterators.hh"
 #include "sic/Base/Types.hh"
-#include "sic/External.hh"
+#include "sic/Portfolio/AbstractAsset.hh"
 
 namespace sic {
 
@@ -18,7 +18,7 @@ namespace sic {
  * Assets define the general properties of the Positions a client holds in their
  * portfolio.
  */
-class Asset : public sic::External {
+class Asset : public sic::AbstractAsset {
 
 public:
 	typedef unsigned Class;
@@ -30,6 +30,14 @@ private:
 	std::unique_ptr<sic::Asset::ClassSet> classes;
 
 public:
+	/**
+	 * Copy constructor for Asset.
+	 *
+	 * Creates a deep copy of the Asset fields, including the list of Asset
+	 * Classes.
+	 */
+	Asset(const sic::Asset &rhs);
+
 	/**
 	 * Create an Asset.
 	 *
