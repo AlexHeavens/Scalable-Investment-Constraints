@@ -10,7 +10,7 @@ TEST_F(EvaluationContextTest, CreateValid) {
 
 	sic::EvaluationContext validContext;
 
-	// Does nothing other than hold the AssetCache right now.
+	// Does nothing other than hold the object caches right now.
 }
 
 } // namespace
