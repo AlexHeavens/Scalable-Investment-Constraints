@@ -1,11 +1,12 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "sic/AssetCache.hh"
+#include "sic/ExternalCache.hh"
+#include "sic/Portfolio/Asset.hh"
 
 namespace {
 
-class AssetCacheTest : public testing::Test {
+class ExternalCacheTest : public testing::Test {
 
 public:
 	class MockAsset : public sic::AbstractAsset {
@@ -16,7 +17,7 @@ public:
 	};
 };
 
-TEST_F(AssetCacheTest, CreateValid) {
+TEST_F(ExternalCacheTest, CreateValid) {
 
 	const sic::External::ID assetAID = 999;
 	const sic::External::ID assetBID = 1;
@@ -25,7 +26,7 @@ TEST_F(AssetCacheTest, CreateValid) {
 	const MockAsset assetB(assetBID);
 	const MockAsset assetC(assetCID);
 
-	sic::AssetCache assetCache;
+	sic::ExternalCache<MockAsset> assetCache;
 	ASSERT_FALSE(assetCache.contains(assetAID));
 	ASSERT_FALSE(assetCache.contains(assetBID));
 	ASSERT_FALSE(assetCache.contains(assetCID));
