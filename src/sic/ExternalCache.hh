@@ -8,7 +8,7 @@
 namespace sic {
 
 /**
- * An optimised container for the Assets available to a given
+ * An optimised container for a type of External objects available to a given
  * EvaluationContext.
  */
 template <typename Item> class ExternalCache {
@@ -18,22 +18,22 @@ private:
 
 public:
 	/**
-	 * Add an Asset to the cache.
+	 * Add an item to the cache.
 	 *
-	 * Note: this Asset will be copied by value to avoid the latency of pointer
-	 * indirection necessary if we were moving the Asset.
+	 * Note: this item will be copied by value to avoid the latency of pointer
+	 * indirection necessary if we were only moving it.
 	 */
 	void add(const Item &item) { itemMap.insert({item.getExternalID(), item}); }
 
 	/**
-	 * Check if a given Assets exists by ID in the cache.
+	 * Check if a given item exists by ID in the cache.
 	 */
 	bool contains(const sic::External::ID itemID) const {
 		return itemMap.find(itemID) != itemMap.end();
 	}
 
 	/**
-	 * Retrieve a reference to a given Asset by its external ID.
+	 * Retrieve a reference to a given item by its external ID.
 	 */
 	const Item &get(const sic::External::ID itemID) const {
 		return itemMap.at(itemID);
