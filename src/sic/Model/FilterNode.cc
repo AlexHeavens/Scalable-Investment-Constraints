@@ -1,9 +1,10 @@
 #include "sic/Model/FilterNode.hh"
 
-sic::Model::AbstractFilterNode &sic::Model::FilterNode::addChild() {
+sic::Model::AbstractFilterNode &sic::Model::FilterNode::addChild(
+	std::unique_ptr<const sic::Model::Filter> childFilter) {
 
 	std::unique_ptr<sic::Model::AbstractFilterNode> newNode(
-		new sic::Model::FilterNode(this));
+		new sic::Model::FilterNode(std::move(childFilter), this));
 	childNodes.push_back(std::move(newNode));
 	return *childNodes.back();
 }

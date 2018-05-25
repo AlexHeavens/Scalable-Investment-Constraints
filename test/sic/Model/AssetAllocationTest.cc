@@ -11,7 +11,13 @@ public:
 	class MockFilterTree : public sic::Model::AbstractFilterTree {};
 	class MockFilterNode : public sic::Model::AbstractFilterNode {
 	public:
-		MOCK_METHOD0(addChild, sic::Model::AbstractFilterNode &());
+		sic::Model::AbstractFilterNode &addChild(
+			std::unique_ptr<const sic::Model::Filter> childFilter) override {
+			return addChild(childFilter.get());
+		}
+
+		MOCK_METHOD1(addChild, sic::Model::AbstractFilterNode &(
+								   const sic::Model::Filter *));
 		MOCK_CONST_METHOD0(getParentNode,
 						   const sic::Model::AbstractFilterNode *());
 	};

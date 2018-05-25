@@ -5,7 +5,7 @@ sic::Asset::Asset(const sic::Asset &rhs)
 	referencePrice = rhs.referencePrice;
 
 	// Deep copy classes to avoid damaging input.
-	classes = std::make_unique<sic::Asset::ClassSet>(*rhs.classes);
+	classes = std::make_unique<sic::AbstractAsset::ClassSet>(*rhs.classes);
 }
 
 sic::Asset::Asset(
@@ -16,17 +16,18 @@ sic::Asset::Asset(
 	if (classes) {
 		this->classes = std::move(*classes);
 	} else {
-		this->classes = std::make_unique<sic::Asset::ClassSet>();
+		this->classes = std::make_unique<sic::AbstractAsset::ClassSet>();
 	}
 }
 
-sic::Iterators<sic::Asset::ClassIterator> sic::Asset::getClassIterators() {
+sic::Iterators<sic::AbstractAsset::ClassIterator>
+sic::Asset::getClassIterators() {
 
-	return sic::Iterators<sic::Asset::ClassIterator>(std::begin(*classes),
-													 std::end(*classes));
+	return sic::Iterators<sic::AbstractAsset::ClassIterator>(
+		std::begin(*classes), std::end(*classes));
 }
 
-bool sic::Asset::hasClass(sic::Asset::Class assetClass) const {
+bool sic::Asset::hasClass(sic::AbstractAsset::Class assetClass) const {
 	const auto search = classes->find(assetClass);
 	return search != classes->end();
 }

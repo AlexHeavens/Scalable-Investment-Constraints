@@ -2,9 +2,6 @@
 #define SIC_PORTFOLIO_ASSET_H_
 
 #include <experimental/optional>
-#include <memory>
-#include <unordered_set>
-#include <utility>
 
 #include "sic/Base/Iterators.hh"
 #include "sic/Base/Types.hh"
@@ -20,14 +17,9 @@ namespace sic {
  */
 class Asset : public sic::AbstractAsset {
 
-public:
-	typedef unsigned Class;
-	typedef std::unordered_set<sic::Asset::Class> ClassSet;
-	typedef sic::Asset::ClassSet::iterator ClassIterator;
-
 private:
 	sic::Price referencePrice;
-	std::unique_ptr<sic::Asset::ClassSet> classes;
+	std::unique_ptr<sic::AbstractAsset::ClassSet> classes;
 
 public:
 	/**
@@ -63,12 +55,12 @@ public:
 	 *
 	 * @returns Current and end Asset classes iterators.
 	 */
-	sic::Iterators<sic::Asset::ClassIterator> getClassIterators();
+	sic::Iterators<sic::AbstractAsset::ClassIterator> getClassIterators();
 
 	/**
 	 * If the Asset has a given Asset Class.
 	 */
-	virtual bool hasClass(sic::Asset::Class assetClass) const;
+	bool hasClass(sic::AbstractAsset::Class assetClass) const override;
 };
 
 } // namespace sic

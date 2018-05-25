@@ -6,6 +6,8 @@
 
 #include "sic/Base/Iterators.hh"
 #include "sic/Model/AbstractFilterNode.hh"
+#include "sic/Model/Filter.hh"
+#include "sic/Model/Filter/AllAssetsFilter.hh"
 
 namespace sic::Model {
 
@@ -26,6 +28,8 @@ private:
 	const sic::Model::AbstractFilterNode *parentNode;
 	sic::Model::FilterNode::ChildNodeVector childNodes;
 
+	const std::unique_ptr<const sic::Model::Filter> filter;
+
 	/**
 	 * Create a non-root filter tree FilterNode.
 	 *
@@ -33,18 +37,24 @@ private:
 	 *
 	 * @param parentFilterNode the parent FilterNode in the filter tree.
 	 */
-	FilterNode(const sic::Model::AbstractFilterNode *parentNode)
-		: parentNode(parentNode) {}
+	FilterNode(std::unique_ptr<const sic::Model::Filter> filter,
+			   const sic::Model::AbstractFilterNode *parentNode)
+		: parentNode(parentNode), filter(std::move(filter)) {}
 
 public:
 	/**
 	 * Create a root filter tree FilterNode.
+	 *
+	 * This node will implicitly be an AllAssetsFilter, passing any Asset.
 	 */
-	FilterNode() : parentNode(nullptr) {}
+	FilterNode()
+		: parentNode(nullptr),
+		  filter(std::make_unique<sic::Model::AllAssetsFilter>()) {}
 
 	~FilterNode() override {}
 
-	sic::Model::AbstractFilterNode &addChild() override;
+	sic::Model::AbstractFilterNode &
+	addChild(std::unique_ptr<const sic::Model::Filter> childFilter) override;
 
 	const sic::Model::AbstractFilterNode *getParentNode() const override {
 		return parentNode;

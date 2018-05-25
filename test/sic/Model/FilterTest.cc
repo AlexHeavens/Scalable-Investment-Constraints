@@ -12,7 +12,7 @@ public:
 	class MockAsset : public sic::Asset {
 
 	public:
-		explicit MockAsset() : sic::Asset(123.00, 3434l) {}
+		explicit MockAsset() : sic::Asset(1.0, 1) {}
 	};
 
 	const static FilterTest::MockAsset assetA, assetB, assetC, assetD;
@@ -20,7 +20,7 @@ public:
 	class MockFilter : public sic::Model::Filter {
 
 	public:
-		bool evaluate(const sic::Asset &asset) const override {
+		bool evaluate(const sic::AbstractAsset &asset) const override {
 			return &asset == &assetA or &asset == &assetC;
 		}
 	};

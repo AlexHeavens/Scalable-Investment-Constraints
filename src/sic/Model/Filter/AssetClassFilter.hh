@@ -24,7 +24,7 @@ public:
 	 */
 	AssetClassFilter(sic::Asset::Class assetClass) : assetClass(assetClass) {}
 
-	bool evaluate(const sic::Asset &asset) const override;
+	bool evaluate(const sic::AbstractAsset &asset) const override;
 };
 
 } // namespace sic::Model

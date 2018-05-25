@@ -11,7 +11,7 @@ namespace sic::Model {
 class AllAssetsFilter : public sic::Model::Filter {
 
 public:
-	bool evaluate(const sic::Asset &asset) const override {
+	bool evaluate(const sic::AbstractAsset &asset) const override {
 #pragma unused(asset)
 		return true;
 	}

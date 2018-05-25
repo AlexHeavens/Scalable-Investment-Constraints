@@ -1,6 +1,9 @@
 #ifndef SIC_ABSTRACTASSET_H_
 #define SIC_ABSTRACTASSET_H_
 
+#include <memory>
+#include <unordered_set>
+
 #include "sic/External.hh"
 
 namespace sic {
@@ -14,6 +17,10 @@ namespace sic {
 class AbstractAsset : public sic::External {
 
 public:
+	typedef unsigned Class;
+	typedef std::unordered_set<sic::AbstractAsset::Class> ClassSet;
+	typedef sic::AbstractAsset::ClassSet::iterator ClassIterator;
+
 	/**
 	 * Construct an AbstractAsset.
 	 *
@@ -26,6 +33,11 @@ public:
 	 * to these results.
 	 */
 	AbstractAsset(sic::External::ID externalID) : sic::External(externalID){};
+
+	/**
+	 * If the Asset has a given Asset Class.
+	 */
+	virtual bool hasClass(sic::AbstractAsset::Class assetClass) const = 0;
 };
 
 } // namespace sic

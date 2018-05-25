@@ -1,7 +1,7 @@
 #ifndef SIC_MODEL_FILTER_H_
 #define SIC_MODEL_FILTER_H_
 
-#include "sic/Portfolio/Asset.hh"
+#include "sic/Portfolio/AbstractAsset.hh"
 
 namespace sic::Model {
 
@@ -14,7 +14,7 @@ public:
 	/**
 	 * If a given Asset passes the filter.
 	 */
-	virtual bool evaluate(const sic::Asset &asset) const = 0;
+	virtual bool evaluate(const sic::AbstractAsset &asset) const = 0;
 
 	virtual ~Filter(){};
 };
