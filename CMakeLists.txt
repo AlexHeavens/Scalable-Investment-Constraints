@@ -14,7 +14,7 @@ set(PROJECT_EXE "project_prog")
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-set(COMMON_FLAGS "-Wall -Wextra")
+set(COMMON_FLAGS "-Werror -Wall -Wextra")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
 
@@ -35,7 +35,12 @@ else ()
             )
 
     # gtest breaks Google's own clang-tidy warnings.
-    set(CLANG_TIDY_TEST_IGN "-hicpp-special-member-functions,-cppcoreguidelines-special-member-functions,-hicpp-use-equals-default,-cert-err58-cpp,-modernize-use-equals-default,-modernize-use-equals-delete,-hicpp-use-equals-delete,-fuchsia-default-arguments,-cppcoreguidelines-owning-memory,-cppcoreguidelines-pro-type-vararg")
+    set(CLANG_TIDY_TEST_IGN
+        "-hicpp-special-member-functions,-cppcoreguidelines-special-member-functions,-hicpp-use-equals-default,-cert-err58-cpp,-modernize-use-equals-default,\
+        -modernize-use-equals-delete,-hicpp-use-equals-delete,-fuchsia-default-arguments,-cppcoreguidelines-owning-memory,\
+        -cppcoreguidelines-pro-type-vararg,-hicpp-vararg,-clang-analyzer-cplusplus.NewDelete,-clang-analyzer-cplusplus.NewDeleteLeaks,\
+        -clang-analyzer-optin.cplusplus.VirtualCall"
+    )
     set(CLANG_TIDY_TEST_PROPERTIES "${CLANG_TIDY_EXE}"
             "-checks=*,${CLANG_TIDY_TEST_IGN}"
             "-warnings-as-errors=*"
@@ -66,6 +71,7 @@ list(REMOVE_ITEM TEST_SOURCES "${TEST_MAIN_SRC}")
 # Required Libraries
 include(FindGTest)
 find_package(GTest REQUIRED)
+set(GTEST_LIBRARIES "${GTEST_LIBRARIES}" "/usr/local/lib/libgmock.a") # FindGTest yet to include GMock
 
 # Build
 add_executable("${PROJECT_EXE}" ${SOURCES} ${MAIN_SRC})
