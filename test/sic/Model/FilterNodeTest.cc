@@ -8,7 +8,7 @@ namespace {
 class FilterNodeTest : public testing::Test {
 
 public:
-	class MockFilter : public sic::Model::Filter {
+	class MockFilter : public sic::Filter {
 
 	public:
 		MOCK_CONST_METHOD1(evaluate, bool(const sic::AbstractAsset &));
@@ -16,16 +16,16 @@ public:
 };
 TEST_F(FilterNodeTest, CreateValid) {
 
-	sic::Model::FilterNode parentNode;
+	sic::FilterNode parentNode;
 
-	std::vector<sic::Model::AbstractFilterNode *> expChildNodes;
+	std::vector<sic::AbstractFilterNode *> expChildNodes;
 	expChildNodes.reserve(3);
 	expChildNodes[0] = &parentNode.addChild(std::make_unique<MockFilter>());
 	expChildNodes[1] = &parentNode.addChild(std::make_unique<MockFilter>());
 	expChildNodes[2] =
 		&expChildNodes[1]->addChild(std::make_unique<MockFilter>());
 
-	const sic::Model::AbstractFilterNode *nullNode = nullptr;
+	const sic::AbstractFilterNode *nullNode = nullptr;
 	ASSERT_EQ(nullNode, parentNode.getParentNode());
 	ASSERT_EQ(&parentNode, expChildNodes[0]->getParentNode());
 	ASSERT_EQ(&parentNode, expChildNodes[1]->getParentNode());

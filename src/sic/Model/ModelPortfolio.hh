@@ -9,12 +9,12 @@
 #include "sic/Model/AbstractModelPortfolio.hh"
 #include "sic/Portfolio/AbstractAsset.hh"
 
-namespace sic::Model {
+namespace sic {
 
 /**
  * A simple weighted Asset list portfolio model.
  */
-class ModelPortfolio : public sic::Model::AbstractModelPortfolio,
+class ModelPortfolio : public sic::AbstractModelPortfolio,
 					   public sic::External {
 
 public:
@@ -23,11 +23,11 @@ public:
 		AssetWeightMap;
 
 	/// Iterator for a ModelPortfolio's Asset/Weight pairs.
-	typedef sic::Model::ModelPortfolio::AssetWeightMap::iterator
+	typedef sic::ModelPortfolio::AssetWeightMap::iterator
 		AssetWeightIterator;
 
 private:
-	std::unique_ptr<sic::Model::ModelPortfolio::AssetWeightMap> assetWeights;
+	std::unique_ptr<sic::ModelPortfolio::AssetWeightMap> assetWeights;
 
 public:
 	/**
@@ -39,7 +39,7 @@ public:
 	 * sic::Tolerance<sic::Weight>().
 	 * @param externalID ID of the MPF in the external system.
 	 */
-	ModelPortfolio(std::unique_ptr<sic::Model::ModelPortfolio::AssetWeightMap>
+	ModelPortfolio(std::unique_ptr<sic::ModelPortfolio::AssetWeightMap>
 					   assetWeights,
 				   sic::External::ID externalID);
 
@@ -49,7 +49,7 @@ public:
 	 *
 	 * @returns Current and end iterators.
 	 */
-	sic::Iterators<sic::Model::ModelPortfolio::AssetWeightIterator>
+	sic::Iterators<sic::ModelPortfolio::AssetWeightIterator>
 	getAssetWeightIterators();
 
 	/**
@@ -58,6 +58,6 @@ public:
 	size_t getAssetCount() const;
 };
 
-} // namespace sic::Model
+} // namespace sic
 
 #endif // SIC_MODELPORTFOLIO_H_

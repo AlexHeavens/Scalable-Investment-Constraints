@@ -3,7 +3,7 @@
 
 #include "sic/Base/Types.hh"
 
-namespace sic::Model {
+namespace sic {
 
 /**
  * A node in an abstracted AssetAlloction, mapping a weight range to a filter
@@ -11,7 +11,7 @@ namespace sic::Model {
  *
  * This exists to allow mocking of AssetAllocations in testing.
  *
- * @see sic::Model::AssetAllocation
+ * @see sic::AssetAllocation
  */
 class AbstractAssetAllocationNode {
 
@@ -24,6 +24,6 @@ public:
 	virtual ~AbstractAssetAllocationNode() {}
 };
 
-} // namespace sic::Model
+} // namespace sic
 
 #endif // SIC_MODEL_ABSTRACTASSETALLOCATION_NODE_H_

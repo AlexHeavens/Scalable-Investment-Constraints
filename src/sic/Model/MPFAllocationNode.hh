@@ -4,16 +4,16 @@
 #include "sic/Model/AbstractModelPortfolio.hh"
 #include "sic/Model/AssetAllocationNode.hh"
 
-namespace sic::Model {
+namespace sic {
 
 /**
  * An AssetAllocation node that additionally requires the resulting Assets to
  * follow an ModelPortfolio.
  */
-class MPFAllocationNode : public sic::Model::AssetAllocationNode {
+class MPFAllocationNode : public sic::AssetAllocationNode {
 
 private:
-	const sic::Model::AbstractModelPortfolio &mpf;
+	const sic::AbstractModelPortfolio &mpf;
 
 public:
 	/**
@@ -23,18 +23,18 @@ public:
 	 * @param weightRange range of the summed weights that Assets in this node
 	 * must follow.
 	 */
-	MPFAllocationNode(const sic::Model::AbstractModelPortfolio &mpf,
+	MPFAllocationNode(const sic::AbstractModelPortfolio &mpf,
 					  const sic::WeightRange &weightRange)
-		: sic::Model::AssetAllocationNode(weightRange), mpf(mpf) {}
+		: sic::AssetAllocationNode(weightRange), mpf(mpf) {}
 
 	/**
 	 * The ModelPortfolio the node follows.
 	 */
-	const sic::Model::AbstractModelPortfolio &getModelPortfolio() const {
+	const sic::AbstractModelPortfolio &getModelPortfolio() const {
 		return mpf;
 	}
 };
 
-} // namespace sic::Model
+} // namespace sic
 
 #endif // SIC_MODEL_MPFALLOCATIONNODE_H_

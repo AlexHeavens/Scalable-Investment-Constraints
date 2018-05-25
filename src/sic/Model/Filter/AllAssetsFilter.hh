@@ -3,12 +3,12 @@
 
 #include "sic/Model/Filter.hh"
 
-namespace sic::Model {
+namespace sic {
 
 /**
  * A filter that passes for all assets.
  */
-class AllAssetsFilter : public sic::Model::Filter {
+class AllAssetsFilter : public sic::Filter {
 
 public:
 	bool evaluate(const sic::AbstractAsset &asset) const override {
@@ -17,6 +17,6 @@ public:
 	}
 };
 
-} // namespace sic::Model
+} // namespace sic
 
 #endif // SIC_MODEL_ALLASSETSFILTER_H_

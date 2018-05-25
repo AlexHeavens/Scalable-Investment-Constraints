@@ -18,9 +18,9 @@ class EvaluationContext {
 private:
 	sic::ExternalCache<sic::Asset> assetCache;
 	sic::ExternalCache<sic::Portfolio> portfolios;
-	sic::ExternalCache<sic::Model::FilterTree> filterTrees;
-	sic::ExternalCache<sic::Model::ModelPortfolio> modelPortfolios;
-	sic::ExternalCache<sic::Model::AssetAllocation> assetAllocations;
+	sic::ExternalCache<sic::FilterTree> filterTrees;
+	sic::ExternalCache<sic::ModelPortfolio> modelPortfolios;
+	sic::ExternalCache<sic::AssetAllocation> assetAllocations;
 
 public:
 	/**
@@ -38,21 +38,21 @@ public:
 	/**
 	 * Get the FilterTrees.
 	 */
-	sic::ExternalCache<sic::Model::FilterTree> &getFilterTreeCache() {
+	sic::ExternalCache<sic::FilterTree> &getFilterTreeCache() {
 		return filterTrees;
 	}
 
 	/**
 	 * Get the ModelPortfolios.
 	 */
-	sic::ExternalCache<sic::Model::ModelPortfolio> &getModelPortfolioCache() {
+	sic::ExternalCache<sic::ModelPortfolio> &getModelPortfolioCache() {
 		return modelPortfolios;
 	}
 
 	/**
 	 * Get the AssetAllocations.
 	 */
-	sic::ExternalCache<sic::Model::AssetAllocation> &getAssetAllocationCache() {
+	sic::ExternalCache<sic::AssetAllocation> &getAssetAllocationCache() {
 		return assetAllocations;
 	}
 };

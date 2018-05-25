@@ -6,8 +6,8 @@
 
 #include "sic/Base/Tolerances.hh"
 
-sic::Model::ModelPortfolio::ModelPortfolio(
-	std::unique_ptr<sic::Model::ModelPortfolio::AssetWeightMap> assetWeights,
+sic::ModelPortfolio::ModelPortfolio(
+	std::unique_ptr<sic::ModelPortfolio::AssetWeightMap> assetWeights,
 	sic::External::ID externalID)
 	: sic::External(externalID) {
 
@@ -39,13 +39,13 @@ sic::Model::ModelPortfolio::ModelPortfolio(
 
 	this->assetWeights = std::move(assetWeights);
 }
-sic::Iterators<sic::Model::ModelPortfolio::AssetWeightIterator>
-sic::Model::ModelPortfolio::getAssetWeightIterators() {
+sic::Iterators<sic::ModelPortfolio::AssetWeightIterator>
+sic::ModelPortfolio::getAssetWeightIterators() {
 
-	return sic::Iterators<sic::Model::ModelPortfolio::AssetWeightIterator>(
+	return sic::Iterators<sic::ModelPortfolio::AssetWeightIterator>(
 		assetWeights->begin(), assetWeights->end());
 }
 
-size_t sic::Model::ModelPortfolio::getAssetCount() const {
+size_t sic::ModelPortfolio::getAssetCount() const {
 	return assetWeights->size();
 }

@@ -3,7 +3,7 @@
 
 #include "sic/Portfolio/AbstractAsset.hh"
 
-namespace sic::Model {
+namespace sic {
 
 /**
  * Asset Filter for placement in a FilterTree.
@@ -19,6 +19,6 @@ public:
 	virtual ~Filter(){};
 };
 
-} // namespace sic::Model
+} // namespace sic
 
 #endif // SIC_MODEL_FILTER_H_

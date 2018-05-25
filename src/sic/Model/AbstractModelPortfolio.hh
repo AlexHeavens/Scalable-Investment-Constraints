@@ -1,7 +1,7 @@
 #ifndef SIC_MODEL_ABSTRACTMODELPORTFOLIO_H_
 #define SIC_MODEL_ABSTRACTMODELPORTFOLIO_H_
 
-namespace sic::Model {
+namespace sic {
 
 /**
  * A simple weighted Asset list portfolio model.
@@ -11,6 +11,6 @@ namespace sic::Model {
  */
 class AbstractModelPortfolio {};
 
-} // namespace sic::Model
+} // namespace sic
 
 #endif // SIC_MODEL_ABSTRACTMODELPORTFOLIO_H_

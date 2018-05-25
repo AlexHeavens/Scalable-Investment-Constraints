@@ -4,12 +4,12 @@
 #include "sic/Base/Types.hh"
 #include "sic/Model/AbstractAssetAllocationNode.hh"
 
-namespace sic::Model {
+namespace sic {
 
 /**
  * A node in an AssetAlloction, mapping a weight range to a filter node.
  */
-class AssetAllocationNode : public sic::Model::AbstractAssetAllocationNode {
+class AssetAllocationNode : public sic::AbstractAssetAllocationNode {
 
 private:
 	const sic::WeightRange weightRange;
@@ -32,6 +32,6 @@ public:
 	}
 };
 
-} // namespace sic::Model
+} // namespace sic
 
 #endif // SIC_MODEL_ASSETALLOCATION_NODE_H_

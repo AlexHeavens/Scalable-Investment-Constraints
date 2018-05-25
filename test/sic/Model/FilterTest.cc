@@ -20,7 +20,7 @@ public:
 
 	const static MockAsset assetA, assetB, assetC, assetD;
 
-	class MockFilter : public sic::Model::Filter {
+	class MockFilter : public sic::Filter {
 
 	public:
 		bool evaluate(const sic::AbstractAsset &asset) const override {

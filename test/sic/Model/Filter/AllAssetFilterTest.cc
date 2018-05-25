@@ -26,7 +26,7 @@ TEST_F(AllAssetsFilterTest, CreateValidFilter) {
 	const MockAsset assetC;
 	const MockAsset assetD;
 
-	sic::Model::AllAssetsFilter validFilter;
+	sic::AllAssetsFilter validFilter;
 
 	ASSERT_TRUE(validFilter.evaluate(assetA));
 	ASSERT_TRUE(validFilter.evaluate(assetB));

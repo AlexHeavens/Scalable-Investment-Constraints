@@ -12,7 +12,7 @@ TEST_F(AssetAllocationNodeTest, CreateValid) {
 
 	const sic::WeightRange expRange(0.1, 0.2, 0.3);
 
-	sic::Model::AssetAllocationNode validNode(expRange);
+	sic::AssetAllocationNode validNode(expRange);
 	ASSERT_EQ(validNode.getWeightRange(), expRange);
 }
 

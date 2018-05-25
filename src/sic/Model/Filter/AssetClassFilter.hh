@@ -4,14 +4,14 @@
 #include "sic/Model/Filter.hh"
 #include "sic/Portfolio/Asset.hh"
 
-namespace sic::Model {
+namespace sic {
 
 /**
  * Filter of Assets of a specific class.
  *
  * @see sic::Asset::Class
  */
-class AssetClassFilter : public sic::Model::Filter {
+class AssetClassFilter : public sic::Filter {
 
 private:
 	const sic::Asset::Class assetClass;
@@ -27,6 +27,6 @@ public:
 	bool evaluate(const sic::AbstractAsset &asset) const override;
 };
 
-} // namespace sic::Model
+} // namespace sic
 
 #endif // SIC_MODEL_ASSETCLASSFILTER_H_

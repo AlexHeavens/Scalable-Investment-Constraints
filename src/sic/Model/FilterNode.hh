@@ -9,26 +9,26 @@
 #include "sic/Model/Filter.hh"
 #include "sic/Model/Filter/AllAssetsFilter.hh"
 
-namespace sic::Model {
+namespace sic {
 
 /**
  * A FilterNode in a tree of filters that defines the model (the Asset
  * Allocation).
  *
- * @see sic::Model
+ * @see sic
  */
-class FilterNode : public sic::Model::AbstractFilterNode {
+class FilterNode : public sic::AbstractFilterNode {
 
 public:
-	typedef std::vector<std::unique_ptr<sic::Model::AbstractFilterNode>>
+	typedef std::vector<std::unique_ptr<sic::AbstractFilterNode>>
 		ChildNodeVector;
-	typedef sic::Model::FilterNode::ChildNodeVector::iterator ChildIterator;
+	typedef sic::FilterNode::ChildNodeVector::iterator ChildIterator;
 
 private:
-	const sic::Model::AbstractFilterNode *parentNode;
-	sic::Model::FilterNode::ChildNodeVector childNodes;
+	const sic::AbstractFilterNode *parentNode;
+	sic::FilterNode::ChildNodeVector childNodes;
 
-	const std::unique_ptr<const sic::Model::Filter> filter;
+	const std::unique_ptr<const sic::Filter> filter;
 
 	/**
 	 * Create a non-root filter tree FilterNode.
@@ -37,8 +37,8 @@ private:
 	 *
 	 * @param parentFilterNode the parent FilterNode in the filter tree.
 	 */
-	FilterNode(std::unique_ptr<const sic::Model::Filter> filter,
-			   const sic::Model::AbstractFilterNode *parentNode)
+	FilterNode(std::unique_ptr<const sic::Filter> filter,
+			   const sic::AbstractFilterNode *parentNode)
 		: parentNode(parentNode), filter(std::move(filter)) {}
 
 public:
@@ -49,14 +49,14 @@ public:
 	 */
 	FilterNode()
 		: parentNode(nullptr),
-		  filter(std::make_unique<sic::Model::AllAssetsFilter>()) {}
+		  filter(std::make_unique<sic::AllAssetsFilter>()) {}
 
 	~FilterNode() override {}
 
-	sic::Model::AbstractFilterNode &
-	addChild(std::unique_ptr<const sic::Model::Filter> childFilter) override;
+	sic::AbstractFilterNode &
+	addChild(std::unique_ptr<const sic::Filter> childFilter) override;
 
-	const sic::Model::AbstractFilterNode *getParentNode() const override {
+	const sic::AbstractFilterNode *getParentNode() const override {
 		return parentNode;
 	}
 
@@ -65,9 +65,9 @@ public:
 	 *
 	 * @return Current and end iterators.
 	 */
-	sic::Iterators<sic::Model::FilterNode::ChildIterator> getChildIterators();
+	sic::Iterators<sic::FilterNode::ChildIterator> getChildIterators();
 };
 
-} // namespace sic::Model
+} // namespace sic
 
 #endif // SIC_MODEL_FILTERNODE_H_

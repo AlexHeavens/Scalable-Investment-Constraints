@@ -40,7 +40,7 @@ TEST_F(AssetsClassFilterTest, CreateValidFilter) {
 		.Times(1)
 		.WillOnce(testing::Return(false));
 
-	sic::Model::AssetClassFilter validFilter(assetClass);
+	sic::AssetClassFilter validFilter(assetClass);
 
 	ASSERT_TRUE(validFilter.evaluate(assetA));
 	ASSERT_TRUE(validFilter.evaluate(assetB));

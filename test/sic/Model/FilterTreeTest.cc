@@ -7,12 +7,12 @@ namespace {
 class FilterTreeTest : public testing::Test {
 
 public:
-	class MockFilterNode : public sic::Model::FilterNode {};
+	class MockFilterNode : public sic::FilterNode {};
 };
 
 TEST_F(FilterTreeTest, CreateValid) {
 
-	sic::Model::FilterTree validTree;
+	sic::FilterTree validTree;
 
 	// Doesn't do anything yet, besides hold the root node.
 }

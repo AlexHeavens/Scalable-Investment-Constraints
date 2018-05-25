@@ -3,13 +3,13 @@
 
 #include "sic/Model/Filter.hh"
 
-namespace sic::Model {
+namespace sic {
 
 /**
  * A FilterNode in a tree of filters that defines the model (the Asset
  * Allocation).
  *
- * @see sic::Model
+ * @see sic
  */
 class AbstractFilterNode {
 
@@ -23,17 +23,17 @@ public:
 	 * child node.  The child node will take ownership of this filter.
 	 * @return a reference to the created child FilterNode.
 	 */
-	virtual sic::Model::AbstractFilterNode &
-	addChild(std::unique_ptr<const sic::Model::Filter> childFilter) = 0;
+	virtual sic::AbstractFilterNode &
+	addChild(std::unique_ptr<const sic::Filter> childFilter) = 0;
 
 	/**
 	 * The parent FilterNode, if non-root, otherwise nullptr.
 	 */
-	virtual const sic::Model::AbstractFilterNode *getParentNode() const = 0;
+	virtual const sic::AbstractFilterNode *getParentNode() const = 0;
 
 	virtual ~AbstractFilterNode(){};
 };
 
-} // namespace sic::Model
+} // namespace sic
 
 #endif // SIC_MODEL_ABSTRACTFILTERNODE_H_

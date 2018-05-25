@@ -8,25 +8,25 @@ namespace {
 class AssetAllocationTest : public testing::Test {
 
 public:
-	class MockFilterTree : public sic::Model::AbstractFilterTree {};
-	class MockFilterNode : public sic::Model::AbstractFilterNode {
+	class MockFilterTree : public sic::AbstractFilterTree {};
+	class MockFilterNode : public sic::AbstractFilterNode {
 	public:
-		sic::Model::AbstractFilterNode &addChild(
-			std::unique_ptr<const sic::Model::Filter> childFilter) override {
+		sic::AbstractFilterNode &addChild(
+			std::unique_ptr<const sic::Filter> childFilter) override {
 			return addChild(childFilter.get());
 		}
 
-		MOCK_METHOD1(addChild, sic::Model::AbstractFilterNode &(
-								   const sic::Model::Filter *));
+		MOCK_METHOD1(addChild, sic::AbstractFilterNode &(
+								   const sic::Filter *));
 		MOCK_CONST_METHOD0(getParentNode,
-						   const sic::Model::AbstractFilterNode *());
+						   const sic::AbstractFilterNode *());
 	};
 
-	class MockAAParentNode : public sic::Model::AbstractAssetAllocationNode {
+	class MockAAParentNode : public sic::AbstractAssetAllocationNode {
 	public:
 		MOCK_CONST_METHOD0(getWeightRange, const sic::WeightRange &());
 	};
-	class MockAALeafNode : public sic::Model::AbstractAssetAllocationNode {
+	class MockAALeafNode : public sic::AbstractAssetAllocationNode {
 	public:
 		MOCK_CONST_METHOD0(getWeightRange, const sic::WeightRange &());
 	};
@@ -57,7 +57,7 @@ TEST_F(AssetAllocationTest, CreateValid) {
 	const MockAALeafNode aaNodeH;
 
 	auto filterNodes =
-		std::make_unique<sic::Model::AssetAllocation::FilterNodeMap>();
+		std::make_unique<sic::AssetAllocation::FilterNodeMap>();
 
 	filterNodes->insert({&filterNodeA, &aaNodeA});
 	filterNodes->insert({&filterNodeB, &aaNodeB});
@@ -68,7 +68,7 @@ TEST_F(AssetAllocationTest, CreateValid) {
 	filterNodes->insert({&filterNodeG, &aaNodeG});
 	filterNodes->insert({&filterNodeH, &aaNodeH});
 
-	sic::Model::AssetAllocation validAA(filterTree, std::move(filterNodes));
+	sic::AssetAllocation validAA(filterTree, std::move(filterNodes));
 
 	ASSERT_EQ(&validAA.getFilterTree(), &filterTree);
 }
