@@ -2,56 +2,55 @@
 #include <gtest/gtest.h>
 
 #include "sic/ExternalCache.hh"
-#include "sic/Portfolio/Asset.hh"
 
 namespace {
 
 class ExternalCacheTest : public testing::Test {
 
 public:
-	class MockAsset : public sic::AbstractAsset {
+	class MockExternal : public sic::External {
 
 	public:
-		explicit MockAsset(sic::External::ID externalID)
-			: sic::AbstractAsset(externalID) {}
+		explicit MockExternal(sic::External::ID externalID)
+			: sic::External(externalID) {}
 	};
 };
 
 TEST_F(ExternalCacheTest, CreateValid) {
 
-	const sic::External::ID assetAID = 999;
-	const sic::External::ID assetBID = 1;
-	const sic::External::ID assetCID = 435436;
-	const MockAsset assetA(assetAID);
-	const MockAsset assetB(assetBID);
-	const MockAsset assetC(assetCID);
+	const sic::External::ID externalAID = 999;
+	const sic::External::ID externalBID = 1;
+	const sic::External::ID externalCID = 435436;
+	const MockExternal externalA(externalAID);
+	const MockExternal externalB(externalBID);
+	const MockExternal externalC(externalCID);
 
-	sic::ExternalCache<MockAsset> assetCache;
-	ASSERT_FALSE(assetCache.contains(assetAID));
-	ASSERT_FALSE(assetCache.contains(assetBID));
-	ASSERT_FALSE(assetCache.contains(assetCID));
+	sic::ExternalCache<MockExternal> externalCache;
+	ASSERT_FALSE(externalCache.contains(externalAID));
+	ASSERT_FALSE(externalCache.contains(externalBID));
+	ASSERT_FALSE(externalCache.contains(externalCID));
 
 	// Add to cache via copy constructor.
-	assetCache.add(assetA);
-	ASSERT_TRUE(assetCache.contains(assetAID));
-	const sic::AbstractAsset &retrievedAssetA1 = assetCache.get(assetAID);
-	ASSERT_EQ(retrievedAssetA1.getExternalID(), assetA.getExternalID());
-	ASSERT_FALSE(&retrievedAssetA1 == &assetA);
+	externalCache.add(externalA);
+	ASSERT_TRUE(externalCache.contains(externalAID));
+	const MockExternal &retrievedExternalA1 = externalCache.get(externalAID);
+	ASSERT_EQ(retrievedExternalA1.getExternalID(), externalA.getExternalID());
+	ASSERT_FALSE(&retrievedExternalA1 == &externalA);
 
 	// Second add does not affect the cache.
-	assetCache.add(assetA);
-	ASSERT_TRUE(assetCache.contains(assetAID));
-	const sic::AbstractAsset &retrievedAssetA2 = assetCache.get(assetAID);
-	ASSERT_EQ(&retrievedAssetA1, &retrievedAssetA2);
-	ASSERT_EQ(retrievedAssetA2.getExternalID(), assetA.getExternalID());
-	ASSERT_FALSE(&retrievedAssetA2 == &assetA);
+	externalCache.add(externalA);
+	ASSERT_TRUE(externalCache.contains(externalAID));
+	const MockExternal &retrievedExternalA2 = externalCache.get(externalAID);
+	ASSERT_EQ(&retrievedExternalA1, &retrievedExternalA2);
+	ASSERT_EQ(retrievedExternalA2.getExternalID(), externalA.getExternalID());
+	ASSERT_FALSE(&retrievedExternalA2 == &externalA);
 
-	assetCache.add(assetB);
-	assetCache.add(assetC);
+	externalCache.add(externalB);
+	externalCache.add(externalC);
 
-	ASSERT_TRUE(assetCache.contains(assetAID));
-	ASSERT_TRUE(assetCache.contains(assetBID));
-	ASSERT_TRUE(assetCache.contains(assetCID));
+	ASSERT_TRUE(externalCache.contains(externalAID));
+	ASSERT_TRUE(externalCache.contains(externalBID));
+	ASSERT_TRUE(externalCache.contains(externalCID));
 }
 
 } // namespace
