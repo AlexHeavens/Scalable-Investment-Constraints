@@ -1,7 +1,6 @@
 #ifndef SIC_MODELPORTFOLIO_H_
 #define SIC_MODELPORTFOLIO_H_
 
-#include <memory>
 #include <unordered_map>
 
 #include "sic/Base/Iterators.hh"
@@ -20,8 +19,7 @@ class ModelPortfolio : public sic::Model::AbstractModelPortfolio,
 
 public:
 	/// A map of Assets to weights used by MPFs.
-	typedef std::unordered_map<std::shared_ptr<sic::AbstractAsset>,
-							   sic::WeightRange>
+	typedef std::unordered_map<const sic::AbstractAsset *, sic::WeightRange>
 		AssetWeightMap;
 
 	/// Iterator for a ModelPortfolio's Asset/Weight pairs.
@@ -36,10 +34,8 @@ public:
 	 * Create an MPF with a given list of weigh-ranged Assets.
 	 *
 	 * @param assetWeights Non empty weight-range list of Assets the MPF will
-	 * take ownership of.  This is a list of shared pointers to ensure
-	 * calculations based on the  MPF remain valid if the AssetCache is
-	 * destroyed.  An Asset cannot appear twice in the list and all target
-	 * weights must sum to 1.0, within a tolerance of
+	 * take ownership of.  An Asset cannot appear twice in the list and all
+	 * target weights must sum to 1.0, within a tolerance of
 	 * sic::Tolerance<sic::Weight>().
 	 * @param externalID ID of the MPF in the external system.
 	 */

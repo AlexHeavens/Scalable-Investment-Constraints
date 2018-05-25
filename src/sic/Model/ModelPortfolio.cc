@@ -20,7 +20,7 @@ sic::Model::ModelPortfolio::ModelPortfolio(
 	std::unordered_set<sic::External::ID> inputAssetIDs;
 	for (const auto &assetEntry : *assetWeights) {
 
-		const auto assetID = assetEntry.first->getExternalID();
+		const auto assetID = (*assetEntry.first).getExternalID();
 		if (inputAssetIDs.find(assetID) != inputAssetIDs.end()) {
 			throw std::invalid_argument(
 				"assetWeightMap must not contain duplicate Assets.");
