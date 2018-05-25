@@ -5,7 +5,7 @@
 
 #include "sic/Base/Types.hh"
 #include "sic/External.hh"
-#include "sic/Portfolio/Asset.hh"
+#include "sic/Portfolio/AbstractAsset.hh"
 
 namespace sic {
 
@@ -23,14 +23,14 @@ public:
 	typedef sic::Position::Vector::iterator VectorIterator;
 
 private:
-	sic::Asset &asset;
+	sic::AbstractAsset &asset;
 	sic::Value referenceValue;
 
 public:
 	/**
 	 * Create a position of a specific asset.
 	 */
-	Position(sic::Asset &asset, sic::Value referenceValue,
+	Position(sic::AbstractAsset &asset, sic::Value referenceValue,
 			 sic::External::ID externalID)
 		: sic::External(externalID), asset(asset),
 		  referenceValue(referenceValue) {}
@@ -38,7 +38,7 @@ public:
 	/**
 	 * The financial asset the position represents a quantity of.
 	 */
-	sic::Asset &getAsset() const { return asset; }
+	sic::AbstractAsset &getAsset() const { return asset; }
 
 	/**
 	 * The value in the (unspecified) reference currency.

@@ -1,21 +1,24 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "sic/Model/Filter.hh"
 
-#include "sic/Portfolio/Asset.hh"
+#include "sic/Portfolio/AbstractAsset.hh"
 
 namespace {
 
 class FilterTest : public testing::Test {
 
 public:
-	class MockAsset : public sic::Asset {
+	class MockAsset : public sic::AbstractAsset {
 
 	public:
-		explicit MockAsset() : sic::Asset(1.0, 1) {}
+		explicit MockAsset() : sic::AbstractAsset(1) {}
+
+		MOCK_CONST_METHOD1(hasClass, bool(sic::AbstractAsset::Class));
 	};
 
-	const static FilterTest::MockAsset assetA, assetB, assetC, assetD;
+	const static MockAsset assetA, assetB, assetC, assetD;
 
 	class MockFilter : public sic::Model::Filter {
 

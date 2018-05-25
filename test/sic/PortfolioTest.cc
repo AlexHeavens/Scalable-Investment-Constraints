@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <stdexcept>
@@ -10,13 +11,15 @@ class PortfolioTest : public testing::Test {
 
 private:
 	// Mock Classes
-	static constexpr sic::Price mockPrice = 100.00;
 	static constexpr sic::External::ID externalAssetID = 43765l;
 
-	class MockAsset : public sic::Asset {
+	class MockAsset : public sic::AbstractAsset {
 
 	public:
-		MockAsset() : sic::Asset(mockPrice, externalAssetID){};
+		MockAsset() : sic::AbstractAsset(externalAssetID){};
+
+		MOCK_CONST_METHOD1(hasClass,
+						   bool(sic::AbstractAsset::Class assetClass));
 	};
 
 	static MockAsset mockAsset;

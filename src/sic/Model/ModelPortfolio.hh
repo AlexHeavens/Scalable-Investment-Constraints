@@ -8,7 +8,7 @@
 #include "sic/Base/Types.hh"
 #include "sic/External.hh"
 #include "sic/Model/AbstractModelPortfolio.hh"
-#include "sic/Portfolio/Asset.hh"
+#include "sic/Portfolio/AbstractAsset.hh"
 
 namespace sic::Model {
 
@@ -20,7 +20,8 @@ class ModelPortfolio : public sic::Model::AbstractModelPortfolio,
 
 public:
 	/// A map of Assets to weights used by MPFs.
-	typedef std::unordered_map<std::shared_ptr<sic::Asset>, sic::WeightRange>
+	typedef std::unordered_map<std::shared_ptr<sic::AbstractAsset>,
+							   sic::WeightRange>
 		AssetWeightMap;
 
 	/// Iterator for a ModelPortfolio's Asset/Weight pairs.

@@ -12,7 +12,6 @@ public:
 
 TEST_F(AssetTest, CreateValidAsset) {
 
-	const sic::Price price = 100.00;
 	const sic::External::ID expExternalID = 43543653l;
 
 	// Random selection of Asset classes.
@@ -33,9 +32,8 @@ TEST_F(AssetTest, CreateValidAsset) {
 		optExpClasses(std::move(expClasses));
 
 	// Create Asset
-	sic::Asset validAsset(price, expExternalID, std::move(optExpClasses));
+	sic::Asset validAsset(expExternalID, std::move(optExpClasses));
 
-	ASSERT_EQ(price, validAsset.getReferencePrice());
 	ASSERT_EQ(expExternalID, validAsset.getExternalID());
 
 	// Test asset class iteration.
@@ -60,11 +58,10 @@ TEST_F(AssetTest, CreateValidAsset) {
 
 TEST_F(AssetTest, EmptyAssetClassList) {
 
-	const sic::Price expPrice = 100.00;
 	const sic::External::ID expExternalID = 43543653l;
 
 	// Create Asset, default empty class list.
-	sic::Asset assetA(expPrice, expExternalID);
+	sic::Asset assetA(expExternalID);
 
 	ASSERT_FALSE(assetA.hasClass(3534));
 
@@ -73,7 +70,7 @@ TEST_F(AssetTest, EmptyAssetClassList) {
 
 	// Create Asset, explicitly empty class list.
 	auto expClassSet = std::make_unique<sic::Asset::ClassSet>();
-	sic::Asset assetB(expPrice, expExternalID, std::move(expClassSet));
+	sic::Asset assetB(expExternalID, std::move(expClassSet));
 
 	ASSERT_FALSE(assetA.hasClass(3534));
 

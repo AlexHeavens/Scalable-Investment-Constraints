@@ -35,6 +35,11 @@ public:
 	AbstractAsset(sic::External::ID externalID) : sic::External(externalID){};
 
 	/**
+	 * Destroy an AbstractAsset.
+	 */
+	virtual ~AbstractAsset() {}
+
+	/**
 	 * If the Asset has a given Asset Class.
 	 */
 	virtual bool hasClass(sic::AbstractAsset::Class assetClass) const = 0;

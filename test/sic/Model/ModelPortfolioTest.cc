@@ -1,3 +1,4 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "sic/Base/Tolerances.hh"
@@ -7,12 +8,12 @@ namespace {
 
 class ModelPortfolioTest : public testing::Test {
 public:
-	class MockAsset : public sic::Asset {
+	class MockAsset : public sic::AbstractAsset {
 	public:
 		explicit MockAsset(sic::External::ID externalID)
-			: sic::Asset(1.00, externalID) {}
+			: sic::AbstractAsset(externalID) {}
 
-		virtual ~MockAsset() = default;
+		MOCK_CONST_METHOD1(hasClass, bool(sic::AbstractAsset::Class));
 	};
 };
 
@@ -66,7 +67,7 @@ TEST_F(ModelPortfolioTest, CreateValid) {
 	for (int i = 0; i < expAssetCount; i++) {
 		const auto assetID = static_cast<sic::External::ID>(i);
 
-		std::shared_ptr<sic::Asset> assetPtr(new MockAsset(assetID));
+		std::shared_ptr<sic::AbstractAsset> assetPtr(new MockAsset(assetID));
 		assetWeightsMapPtr->insert({std::move(assetPtr), assetWeights.at(i)});
 	}
 
@@ -129,7 +130,7 @@ TEST_F(ModelPortfolioTest, CreateInvalidDuplicateAssets) {
 			(i < expDuplicateAssetCount) ? duplicateID
 										 : static_cast<sic::External::ID>(i);
 
-		std::shared_ptr<sic::Asset> newAsset(new MockAsset(assetID));
+		std::shared_ptr<sic::AbstractAsset> newAsset(new MockAsset(assetID));
 		assetWeightsMapPtr->insert({newAsset, perAssetWeightRange});
 	}
 
@@ -172,7 +173,7 @@ TEST_F(ModelPortfolioTest, CreateValidAssetsSum100Percent) {
 		const sic::WeightRange adjustedWeightRange(
 			perAssetMinWeight, assetWeight, perAssetMaxWeight);
 
-		std::shared_ptr<sic::Asset> newAsset(new MockAsset(assetID));
+		std::shared_ptr<sic::AbstractAsset> newAsset(new MockAsset(assetID));
 		validOverAssetWeightsMapPtr->insert({newAsset, adjustedWeightRange});
 	}
 
@@ -194,7 +195,7 @@ TEST_F(ModelPortfolioTest, CreateValidAssetsSum100Percent) {
 		const sic::WeightRange adjustedWeightRange(
 			perAssetMinWeight, assetWeight, perAssetMaxWeight);
 
-		std::shared_ptr<sic::Asset> newAsset(new MockAsset(assetID));
+		std::shared_ptr<sic::AbstractAsset> newAsset(new MockAsset(assetID));
 		validUnderAssetWeightsMapPtr->insert({newAsset, adjustedWeightRange});
 	}
 
@@ -230,7 +231,7 @@ TEST_F(ModelPortfolioTest, CreateInvalidAssetsSum100Percent) {
 		const sic::WeightRange adjustedWeightRange(
 			perAssetMinWeight, assetWeight, perAssetMaxWeight);
 
-		std::shared_ptr<sic::Asset> newAsset(new MockAsset(assetID));
+		std::shared_ptr<sic::AbstractAsset> newAsset(new MockAsset(assetID));
 		invalidOverAssetWeightsMapPtr->insert({newAsset, adjustedWeightRange});
 	}
 
@@ -260,7 +261,7 @@ TEST_F(ModelPortfolioTest, CreateInvalidAssetsSum100Percent) {
 		const sic::WeightRange adjustedWeightRange(
 			perAssetMinWeight, assetWeight, perAssetMaxWeight);
 
-		std::shared_ptr<sic::Asset> newAsset(new MockAsset(assetID));
+		std::shared_ptr<sic::AbstractAsset> newAsset(new MockAsset(assetID));
 		invalidUnderAssetWeightsMapPtr->insert({newAsset, adjustedWeightRange});
 	}
 	try {

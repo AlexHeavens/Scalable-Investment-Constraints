@@ -3,29 +3,30 @@
 
 #include "sic/Model/Filter/AssetClassFilter.hh"
 
-#include "sic/Portfolio/Asset.hh"
+#include "sic/Portfolio/AbstractAsset.hh"
 
 namespace {
 
 class AssetsClassFilterTest : public testing::Test {
 
 public:
-	class MockAsset : public sic::Asset {
+	class MockAsset : public sic::AbstractAsset {
 
 	public:
-		explicit MockAsset() : sic::Asset(1.0, 0l) {}
+		explicit MockAsset() : sic::AbstractAsset(1) {}
 
-		MOCK_CONST_METHOD1(hasClass, bool(sic::Asset::Class assetClass));
+		MOCK_CONST_METHOD1(hasClass,
+						   bool(sic::AbstractAsset::Class assetClass));
 	};
 };
 
 TEST_F(AssetsClassFilterTest, CreateValidFilter) {
-	const AssetsClassFilterTest::MockAsset assetA;
-	const AssetsClassFilterTest::MockAsset assetB;
-	const AssetsClassFilterTest::MockAsset assetC;
-	const AssetsClassFilterTest::MockAsset assetD;
+	const MockAsset assetA;
+	const MockAsset assetB;
+	const MockAsset assetC;
+	const MockAsset assetD;
 
-	const sic::Asset::Class assetClass = 12345;
+	const sic::AbstractAsset::Class assetClass = 12345;
 	EXPECT_CALL(assetA, hasClass(assetClass))
 		.Times(1)
 		.WillOnce(testing::Return(true));
