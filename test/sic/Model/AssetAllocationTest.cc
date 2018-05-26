@@ -11,15 +11,15 @@ public:
 	class MockFilterTree : public sic::AbstractFilterTree {};
 	class MockFilterNode : public sic::AbstractFilterNode {
 	public:
-		sic::AbstractFilterNode &addChild(
-			std::unique_ptr<const sic::Filter> childFilter) override {
+		sic::AbstractFilterNode &
+		addChild(std::unique_ptr<const sic::Filter> childFilter) override {
 			return addChild(childFilter.get());
 		}
 
-		MOCK_METHOD1(addChild, sic::AbstractFilterNode &(
-								   const sic::Filter *));
-		MOCK_CONST_METHOD0(getParentNode,
-						   const sic::AbstractFilterNode *());
+		MOCK_METHOD1(addChild, sic::AbstractFilterNode &(const sic::Filter *));
+		MOCK_CONST_METHOD0(getParentNode, const sic::AbstractFilterNode *());
+		MOCK_METHOD0(getChildIterators,
+					 sic::Iterators<sic::AbstractFilterNode::ChildIterator>());
 	};
 
 	class MockAAParentNode : public sic::AbstractAssetAllocationNode {
@@ -56,8 +56,7 @@ TEST_F(AssetAllocationTest, CreateValid) {
 	const MockAALeafNode aaNodeG;
 	const MockAALeafNode aaNodeH;
 
-	auto filterNodes =
-		std::make_unique<sic::AssetAllocation::FilterNodeMap>();
+	auto filterNodes = std::make_unique<sic::AssetAllocation::FilterNodeMap>();
 
 	filterNodes->insert({&filterNodeA, &aaNodeA});
 	filterNodes->insert({&filterNodeB, &aaNodeB});

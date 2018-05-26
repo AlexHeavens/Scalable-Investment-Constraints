@@ -1,6 +1,9 @@
 #ifndef SIC_MODEL_ABSTRACTFILTERNODE_H_
 #define SIC_MODEL_ABSTRACTFILTERNODE_H_
 
+#include <vector>
+
+#include "sic/Base/Iterators.hh"
 #include "sic/Model/Filter.hh"
 
 namespace sic {
@@ -14,6 +17,10 @@ namespace sic {
 class AbstractFilterNode {
 
 public:
+	typedef std::vector<std::unique_ptr<sic::AbstractFilterNode>>
+		ChildNodeVector;
+	typedef sic::AbstractFilterNode::ChildNodeVector::iterator ChildIterator;
+
 	/**
 	 * Add a child FilterNode.
 	 *
@@ -30,6 +37,14 @@ public:
 	 * The parent FilterNode, if non-root, otherwise nullptr.
 	 */
 	virtual const sic::AbstractFilterNode *getParentNode() const = 0;
+
+	/**
+	 * The current and end iterators of the node's children.
+	 *
+	 * @return Current and end iterators.
+	 */
+	virtual sic::Iterators<sic::AbstractFilterNode::ChildIterator>
+	getChildIterators() = 0;
 
 	virtual ~AbstractFilterNode(){};
 };
