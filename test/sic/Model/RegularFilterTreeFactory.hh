@@ -32,7 +32,8 @@ public:
 		: depth(depth), nodeDegree(nodeDegree), nextClass(0),
 		  nextClassJump(nodeClassJump) {}
 
-	std::unique_ptr<sic::FilterTree> create() override;
+	std::unique_ptr<sic::FilterTree>
+	create(sic::External::ID externalID) override;
 };
 } // namespace sic
 

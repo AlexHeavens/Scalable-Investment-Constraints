@@ -8,7 +8,10 @@ namespace {
 class AssetAllocationTest : public testing::Test {
 
 public:
-	class MockFilterTree : public sic::AbstractFilterTree {};
+	class MockFilterTree : public sic::AbstractFilterTree {
+	public:
+		MockFilterTree() : sic::AbstractFilterTree(1) {}
+	};
 	class MockFilterNode : public sic::AbstractFilterNode {
 	public:
 		sic::AbstractFilterNode &

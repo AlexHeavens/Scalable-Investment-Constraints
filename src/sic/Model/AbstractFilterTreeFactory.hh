@@ -13,7 +13,8 @@ namespace sic {
 class AbstractFilterTreeFactory {
 
 public:
-	virtual std::unique_ptr<sic::FilterTree> create() = 0;
+	virtual std::unique_ptr<sic::FilterTree>
+	create(sic::External::ID externalID) = 0;
 };
 
 } // namespace sic

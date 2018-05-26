@@ -37,9 +37,10 @@ void sic::RegularFilterTreeFactory::generateNode(sic::AbstractFilterNode &node,
 	}
 }
 
-std::unique_ptr<sic::FilterTree> sic::RegularFilterTreeFactory::create() {
+std::unique_ptr<sic::FilterTree>
+sic::RegularFilterTreeFactory::create(sic::External::ID externalID) {
 
-	auto returnTree = std::make_unique<sic::FilterTree>();
+	auto returnTree = std::make_unique<sic::FilterTree>(externalID);
 
 	constexpr unsigned currentDepth = 1;
 
