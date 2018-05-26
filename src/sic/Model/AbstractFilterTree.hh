@@ -1,6 +1,8 @@
 #ifndef SIC_MODEL_ABSTRACTFILTERTREE_H_
 #define SIC_MODEL_ABSTRACTFILTERTREE_H_
 
+#include "sic/External.hh"
+
 namespace sic {
 
 /**
@@ -10,7 +12,15 @@ namespace sic {
  *
  * @see sic::FilterTree
  */
-class AbstractFilterTree {};
+class AbstractFilterTree : public sic::External {
+
+public:
+	/**
+	 * Construct a FilterTree.
+	 */
+	AbstractFilterTree(sic::External::ID externalID)
+		: sic::External(externalID) {}
+};
 
 } // namespace sic
 

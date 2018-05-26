@@ -12,7 +12,8 @@ public:
 
 TEST_F(FilterTreeTest, CreateValid) {
 
-	sic::FilterTree validTree;
+	const sic::External::ID expExternalID = 1;
+	sic::FilterTree validTree(expExternalID);
 
 	// Doesn't do anything yet, besides hold the root node.
 }

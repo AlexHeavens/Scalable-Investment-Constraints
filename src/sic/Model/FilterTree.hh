@@ -17,6 +17,12 @@ private:
 
 public:
 	/**
+	 * Construct a FilterTree.
+	 */
+	FilterTree(sic::External::ID externalID)
+		: sic::AbstractFilterTree(externalID) {}
+
+	/**
 	 * Get the root filter node of the tree.
 	 */
 	sic::AbstractFilterNode &getRootNode() { return rootNode; }
