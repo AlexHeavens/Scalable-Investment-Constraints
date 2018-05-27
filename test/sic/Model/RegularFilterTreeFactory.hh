@@ -17,7 +17,7 @@ private:
 	const unsigned nodeDegree;
 
 	static constexpr sic::AbstractAsset::Class nodeClassJump = 100;
-	sic::AbstractAsset::Class nextClass, nextClassJump;
+	sic::AbstractAsset::Class nextClassJump;
 
 	/**
 	 * Generate the child nodes and filters of a given parent node.
@@ -32,8 +32,7 @@ public:
 	 * Create a new Factory.
 	 */
 	RegularFilterTreeFactory(unsigned depth, unsigned nodeDegree)
-		: depth(depth), nodeDegree(nodeDegree), nextClass(0),
-		  nextClassJump(nodeClassJump) {}
+		: depth(depth), nodeDegree(nodeDegree), nextClassJump(nodeClassJump) {}
 
 	std::unique_ptr<sic::FilterTree>
 	create(sic::External::ID externalID) override;

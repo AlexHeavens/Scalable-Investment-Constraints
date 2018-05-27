@@ -14,6 +14,7 @@ void sic::RegularFilterTreeFactory::generateNode(sic::AbstractFilterNode &node,
 	}
 
 	// Create node's children.
+	auto nextClass = nextClassJump;
 	for (unsigned childIndex = 0; childIndex < nodeDegree - 1; childIndex++) {
 
 		const auto filterClass = nextClass++;
