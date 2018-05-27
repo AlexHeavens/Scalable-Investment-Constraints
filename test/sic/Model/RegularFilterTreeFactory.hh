@@ -21,6 +21,9 @@ private:
 
 	/**
 	 * Generate the child nodes and filters of a given parent node.
+	 *
+	 * This will add nodeDegree - 1 arbitrary AssetClassFilter nodes and one
+	 * final AllAssetsFilter node as a catch all.
 	 */
 	void generateNode(sic::AbstractFilterNode &node, unsigned currentDepth);
 

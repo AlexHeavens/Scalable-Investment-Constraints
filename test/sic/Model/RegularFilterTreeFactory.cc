@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 
+#include "sic/Model/Filter/AllAssetsFilter.hh"
 #include "sic/Model/Filter/AssetClassFilter.hh"
 
 void sic::RegularFilterTreeFactory::generateNode(sic::AbstractFilterNode &node,
@@ -13,12 +14,16 @@ void sic::RegularFilterTreeFactory::generateNode(sic::AbstractFilterNode &node,
 	}
 
 	// Create node's children.
-	for (unsigned childIndex = 0; childIndex < nodeDegree; childIndex++) {
+	for (unsigned childIndex = 0; childIndex < nodeDegree - 1; childIndex++) {
 
 		const auto filterClass = nextClass++;
 		auto filter = std::make_unique<sic::AssetClassFilter>(filterClass);
 		node.addChild(std::move(filter));
 	}
+
+	// Always add an "All Assets" node at each level.
+	auto filter = std::make_unique<sic::AllAssetsFilter>();
+	node.addChild(std::move(filter));
 
 	nextClassJump += nodeClassJump;
 	currentDepth++;
