@@ -15,6 +15,8 @@ class AbstractFilterTreeFactory {
 public:
 	virtual std::unique_ptr<sic::FilterTree>
 	create(sic::External::ID externalID) = 0;
+
+	virtual void create(sic::FilterTree &filterTree) = 0;
 };
 
 } // namespace sic

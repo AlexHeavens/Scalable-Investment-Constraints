@@ -34,6 +34,8 @@ public:
 
 	std::unique_ptr<sic::FilterTree>
 	create(sic::External::ID externalID) override;
+
+	void create(sic::FilterTree &filterTree) override;
 };
 } // namespace sic
 

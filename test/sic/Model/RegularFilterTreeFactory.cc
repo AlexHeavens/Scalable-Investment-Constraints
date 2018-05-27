@@ -42,11 +42,16 @@ sic::RegularFilterTreeFactory::create(sic::External::ID externalID) {
 
 	auto returnTree = std::make_unique<sic::FilterTree>(externalID);
 
+	create(*returnTree);
+
+	return returnTree;
+}
+
+void sic::RegularFilterTreeFactory::create(sic::FilterTree &filterTree) {
+
 	constexpr unsigned currentDepth = 1;
 
 	if (depth > currentDepth) {
-		generateNode(returnTree->getRootNode(), currentDepth);
+		generateNode(filterTree.getRootNode(), currentDepth);
 	}
-
-	return returnTree;
 }
