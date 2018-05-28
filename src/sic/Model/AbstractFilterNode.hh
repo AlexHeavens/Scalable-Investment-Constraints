@@ -31,6 +31,11 @@ public:
 	 */
 	virtual const sic::AbstractFilterNode *getParentNode() const = 0;
 
+	/**
+	 * Get the filter stored.
+	 */
+	virtual const sic::Filter &getFilter() const = 0;
+
 	virtual ~AbstractFilterNode(){};
 };
 

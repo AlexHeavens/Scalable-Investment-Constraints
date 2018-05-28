@@ -21,6 +21,7 @@ public:
 
 		MOCK_METHOD1(addChild, sic::AbstractFilterNode &(const sic::Filter *));
 		MOCK_CONST_METHOD0(getParentNode, const sic::AbstractFilterNode *());
+		MOCK_CONST_METHOD0(getFilter, const sic::Filter &());
 	};
 
 	class MockAAParentNode : public sic::AbstractAssetAllocationNode {

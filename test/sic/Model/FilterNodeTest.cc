@@ -8,6 +8,15 @@ namespace {
 class FilterNodeTest : public testing::Test {
 
 public:
+	class MockAsset : public sic::AbstractAsset {
+
+	public:
+		MockAsset() : sic::AbstractAsset(1) {}
+
+		MOCK_CONST_METHOD1(hasClass,
+						   bool(sic::AbstractAsset::Class assetClass));
+	};
+
 	class MockFilter : public sic::Filter {
 
 	public:
@@ -39,6 +48,32 @@ TEST_F(FilterNodeTest, CreateValid) {
 	childIterators.current()++;
 
 	ASSERT_EQ(childIterators.current(), childIterators.end());
+}
+
+TEST_F(FilterNodeTest, FilterToChild) {
+
+	sic::FilterNode parentNode;
+
+	std::vector<sic::AbstractFilterNode *> expChildNodes;
+	expChildNodes.reserve(3);
+	expChildNodes[0] = &parentNode.addChild(std::make_unique<MockFilter>());
+	expChildNodes[1] = &parentNode.addChild(std::make_unique<MockFilter>());
+	expChildNodes[2] = &parentNode.addChild(std::make_unique<MockFilter>());
+
+	MockAsset testAsset;
+
+	EXPECT_CALL(dynamic_cast<const MockFilter &>(expChildNodes[0]->getFilter()),
+				evaluate(testing::Ref(testAsset)))
+		.Times(1)
+		.WillOnce(testing::Return(false));
+	EXPECT_CALL(dynamic_cast<const MockFilter &>(expChildNodes[1]->getFilter()),
+				evaluate(testing::Ref(testAsset)))
+		.Times(1)
+		.WillOnce(testing::Return(true));
+
+	const sic::AbstractFilterNode *returnedNode =
+		parentNode.filterToChild(testAsset);
+	ASSERT_EQ(returnedNode, expChildNodes[1]);
 }
 
 } // namespace

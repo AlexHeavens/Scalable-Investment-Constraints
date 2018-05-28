@@ -14,3 +14,22 @@ sic::FilterNode::getChildIterators() {
 	return sic::Iterators<sic::FilterNode::ChildIterator>(childNodes.begin(),
 														  childNodes.end());
 }
+
+const sic::AbstractFilterNode *
+sic::FilterNode::filterToChild(sic::AbstractAsset &asset) {
+
+	sic::AbstractFilterNode *matchNode = nullptr;
+	auto childIt = getChildIterators();
+	while (childIt.current() != childIt.end()) {
+
+		const auto &currentChild = *childIt.current();
+		if (currentChild->getFilter().evaluate(asset)) {
+			matchNode = currentChild.get();
+			break;
+		}
+
+		childIt.current()++;
+	}
+
+	return matchNode;
+}
