@@ -1,23 +1,13 @@
 #include <gtest/gtest.h>
 
 #include "sic/Model/AssetAllocation.hh"
+#include "sic/Model/MockAssetAllocationNode.hh"
 #include "sic/Model/MockFilterNode.hh"
 #include "sic/Model/MockFilterTree.hh"
 
 namespace {
 
-class AssetAllocationTest : public testing::Test {
-
-public:
-	class MockAAParentNode : public sic::AbstractAssetAllocationNode {
-	public:
-		MOCK_CONST_METHOD0(getWeightRange, const sic::WeightRange &());
-	};
-	class MockAALeafNode : public sic::AbstractAssetAllocationNode {
-	public:
-		MOCK_CONST_METHOD0(getWeightRange, const sic::WeightRange &());
-	};
-};
+class AssetAllocationTest : public testing::Test {};
 
 TEST_F(AssetAllocationTest, CreateValid) {
 
@@ -33,15 +23,15 @@ TEST_F(AssetAllocationTest, CreateValid) {
 	const sic::MockFilterNode filterNodeG;
 	const sic::MockFilterNode filterNodeH;
 
-	const MockAAParentNode aaNodeA;
-	const MockAAParentNode aaNodeB;
-	const MockAAParentNode aaNodeC;
-	const MockAAParentNode aaNodeD;
+	const sic::MockAssetAllocationNode aaNodeA;
+	const sic::MockAssetAllocationNode aaNodeB;
+	const sic::MockAssetAllocationNode aaNodeC;
+	const sic::MockAssetAllocationNode aaNodeD;
 
-	const MockAALeafNode aaNodeE;
-	const MockAALeafNode aaNodeF;
-	const MockAALeafNode aaNodeG;
-	const MockAALeafNode aaNodeH;
+	const sic::MockAssetAllocationNode aaNodeE;
+	const sic::MockAssetAllocationNode aaNodeF;
+	const sic::MockAssetAllocationNode aaNodeG;
+	const sic::MockAssetAllocationNode aaNodeH;
 
 	auto filterNodes = std::make_unique<sic::AssetAllocation::FilterNodeMap>();
 
