@@ -1,24 +1,14 @@
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "sic/Model/Filter.hh"
-
-#include "sic/Portfolio/AbstractAsset.hh"
+#include "sic/Portfolio/MockAsset.hh"
 
 namespace {
 
 class FilterTest : public testing::Test {
 
 public:
-	class MockAsset : public sic::AbstractAsset {
-
-	public:
-		explicit MockAsset() : sic::AbstractAsset(1) {}
-
-		MOCK_CONST_METHOD1(hasClass, bool(sic::AbstractAsset::Class));
-	};
-
-	const static MockAsset assetA, assetB, assetC, assetD;
+	const static sic::MockAsset assetA, assetB, assetC, assetD;
 
 	class MockFilter : public sic::Filter {
 
@@ -29,10 +19,10 @@ public:
 	};
 };
 
-const FilterTest::MockAsset FilterTest::assetA;
-const FilterTest::MockAsset FilterTest::assetB;
-const FilterTest::MockAsset FilterTest::assetC;
-const FilterTest::MockAsset FilterTest::assetD;
+const sic::MockAsset FilterTest::assetA;
+const sic::MockAsset FilterTest::assetB;
+const sic::MockAsset FilterTest::assetC;
+const sic::MockAsset FilterTest::assetD;
 
 TEST_F(FilterTest, CreateValidFilter) {
 	MockFilter validFilter;

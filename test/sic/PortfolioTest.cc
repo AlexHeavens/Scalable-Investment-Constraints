@@ -1,9 +1,9 @@
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <stdexcept>
 
 #include "sic/Portfolio.hh"
+#include "sic/Portfolio/MockAsset.hh"
 
 namespace {
 
@@ -11,18 +11,7 @@ class PortfolioTest : public testing::Test {
 
 private:
 	// Mock Classes
-	static constexpr sic::External::ID externalAssetID = 43765l;
-
-	class MockAsset : public sic::AbstractAsset {
-
-	public:
-		MockAsset() : sic::AbstractAsset(externalAssetID){};
-
-		MOCK_CONST_METHOD1(hasClass,
-						   bool(sic::AbstractAsset::Class assetClass));
-	};
-
-	static MockAsset mockAsset;
+	static sic::MockAsset mockAsset;
 	static sic::External::ID externalPositionIDCounter;
 
 public:
@@ -41,7 +30,7 @@ public:
 	void SetUp() override { externalPositionIDCounter = 43324l; }
 };
 
-PortfolioTest::MockAsset PortfolioTest::mockAsset;
+sic::MockAsset PortfolioTest::mockAsset;
 sic::External::ID PortfolioTest::externalPositionIDCounter;
 
 TEST_F(PortfolioTest, CreateValidPortfolio) {

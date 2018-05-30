@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "sic/Portfolio/AbstractAsset.hh"
+#include "sic/Portfolio/MockAsset.hh"
 #include "sic/Portfolio/Position.hh"
 
 namespace {
@@ -13,16 +13,7 @@ public:
 
 TEST_F(PositionTest, CreateValidPosition) {
 
-	class MockAsset : public sic::AbstractAsset {
-
-	public:
-		MockAsset() : sic::AbstractAsset(1) {}
-
-		MOCK_CONST_METHOD1(hasClass,
-						   bool(sic::AbstractAsset::Class assetClass));
-	};
-
-	MockAsset asset;
+	sic::MockAsset asset;
 
 	const sic::Value value = 333.33;
 	const sic::External::ID expExternalID = 943875l;

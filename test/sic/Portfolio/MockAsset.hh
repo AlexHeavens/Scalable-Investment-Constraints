@@ -1,0 +1,24 @@
+#ifndef SIC_MOCKASSET_H_
+#define SIC_MOCKASSET_H_
+
+#include <gmock/gmock.h>
+
+#include "sic/Portfolio/AbstractAsset.hh"
+
+namespace sic {
+
+/**
+ * Mocked Asset API for testing.
+ */
+class MockAsset : public sic::AbstractAsset {
+
+public:
+	explicit MockAsset(sic::External::ID externalID = 1)
+		: sic::AbstractAsset(externalID) {}
+
+	MOCK_CONST_METHOD1(hasClass, bool(sic::AbstractAsset::Class));
+};
+
+} // namespace sic
+
+#endif // SIC_MOCKASSET_H_
