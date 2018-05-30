@@ -1,19 +1,14 @@
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "sic/Model/AssetAllocation.hh"
 #include "sic/Model/MockFilterNode.hh"
+#include "sic/Model/MockFilterTree.hh"
 
 namespace {
 
 class AssetAllocationTest : public testing::Test {
 
 public:
-	class MockFilterTree : public sic::AbstractFilterTree {
-	public:
-		MockFilterTree() : sic::AbstractFilterTree(1) {}
-	};
-
 	class MockAAParentNode : public sic::AbstractAssetAllocationNode {
 	public:
 		MOCK_CONST_METHOD0(getWeightRange, const sic::WeightRange &());
@@ -26,7 +21,7 @@ public:
 
 TEST_F(AssetAllocationTest, CreateValid) {
 
-	MockFilterTree filterTree;
+	sic::MockFilterTree filterTree;
 
 	const sic::MockFilterNode filterNodeA;
 	const sic::MockFilterNode filterNodeB;

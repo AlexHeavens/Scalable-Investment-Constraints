@@ -1,6 +1,8 @@
 #ifndef SIC_MOCKFILTERNODE_H_
 #define SIC_MOCKFILTERNODE_H_
 
+#include <gmock/gmock.h>
+
 #include "sic/Model/AbstractFilterNode.hh"
 
 namespace sic {
@@ -9,6 +11,7 @@ namespace sic {
  * Mocked FilterNode for testing.
  */
 class MockFilterNode : public sic::AbstractFilterNode {
+
 public:
 	/**
 	 * Gmock-compatible version of addChild.
