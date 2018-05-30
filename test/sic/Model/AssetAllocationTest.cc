@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "sic/Model/AssetAllocation.hh"
+#include "sic/Model/MockFilterNode.hh"
 
 namespace {
 
@@ -11,16 +12,6 @@ public:
 	class MockFilterTree : public sic::AbstractFilterTree {
 	public:
 		MockFilterTree() : sic::AbstractFilterTree(1) {}
-	};
-	class MockFilterNode : public sic::AbstractFilterNode {
-	public:
-		sic::AbstractFilterNode &
-		addChild(std::unique_ptr<const sic::Filter> childFilter) override {
-			return addChild(childFilter.get());
-		}
-
-		MOCK_METHOD1(addChild, sic::AbstractFilterNode &(const sic::Filter *));
-		MOCK_CONST_METHOD0(getParentNode, const sic::AbstractFilterNode *());
 	};
 
 	class MockAAParentNode : public sic::AbstractAssetAllocationNode {
@@ -37,15 +28,15 @@ TEST_F(AssetAllocationTest, CreateValid) {
 
 	MockFilterTree filterTree;
 
-	const MockFilterNode filterNodeA;
-	const MockFilterNode filterNodeB;
-	const MockFilterNode filterNodeC;
-	const MockFilterNode filterNodeD;
+	const sic::MockFilterNode filterNodeA;
+	const sic::MockFilterNode filterNodeB;
+	const sic::MockFilterNode filterNodeC;
+	const sic::MockFilterNode filterNodeD;
 
-	const MockFilterNode filterNodeE;
-	const MockFilterNode filterNodeF;
-	const MockFilterNode filterNodeG;
-	const MockFilterNode filterNodeH;
+	const sic::MockFilterNode filterNodeE;
+	const sic::MockFilterNode filterNodeF;
+	const sic::MockFilterNode filterNodeG;
+	const sic::MockFilterNode filterNodeH;
 
 	const MockAAParentNode aaNodeA;
 	const MockAAParentNode aaNodeB;

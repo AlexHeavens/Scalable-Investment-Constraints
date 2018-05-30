@@ -4,11 +4,7 @@
 
 namespace {
 
-class FilterTreeTest : public testing::Test {
-
-public:
-	class MockFilterNode : public sic::FilterNode {};
-};
+class FilterTreeTest : public testing::Test {};
 
 TEST_F(FilterTreeTest, CreateValid) {
 
