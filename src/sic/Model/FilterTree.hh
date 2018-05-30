@@ -12,6 +12,9 @@ namespace sic {
  */
 class FilterTree : public sic::AbstractFilterTree {
 
+public:
+	typedef std::vector<const sic::AbstractFilterNode *> Path;
+
 private:
 	sic::FilterNode rootNode;
 
@@ -26,6 +29,15 @@ public:
 	 * Get the root filter node of the tree.
 	 */
 	sic::AbstractFilterNode &getRootNode() { return rootNode; }
+
+	/**
+	 * Get a path of an Asset through the FilterTree.
+	 *
+	 * @param asset Asset to find path of.
+	 * @param path Path container to append the list of nodes in the path.
+	 */
+	void getAssetPath(const sic::AbstractAsset &asset,
+					  sic::FilterTree::Path &path);
 };
 
 } // namespace sic

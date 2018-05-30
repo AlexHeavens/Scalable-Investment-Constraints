@@ -67,12 +67,8 @@ public:
 	 */
 	sic::Iterators<sic::FilterNode::ChildIterator> getChildIterators();
 
-	/**
-	 * Return the child that matches a given Asset.
-	 *
-	 * If no child matches, nullptr is returned.
-	 */
-	const sic::AbstractFilterNode *filterToChild(sic::AbstractAsset &asset);
+	sic::AbstractFilterNode *
+	filterToChild(const sic::AbstractAsset &asset) override;
 
 	const sic::Filter &getFilter() const override { return *filter; }
 };

@@ -2,6 +2,7 @@
 #define SIC_MODEL_ABSTRACTFILTERNODE_H_
 
 #include "sic/Model/Filter.hh"
+#include "sic/Portfolio/AbstractAsset.hh"
 
 namespace sic {
 
@@ -35,6 +36,14 @@ public:
 	 * Get the filter stored.
 	 */
 	virtual const sic::Filter &getFilter() const = 0;
+
+	/**
+	 * Return the child that matches a given Asset.
+	 *
+	 * If no child matches, nullptr is returned.
+	 */
+	virtual sic::AbstractFilterNode *
+	filterToChild(const sic::AbstractAsset &asset) = 0;
 
 	virtual ~AbstractFilterNode(){};
 };

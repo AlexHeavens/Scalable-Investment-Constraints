@@ -15,8 +15,8 @@ sic::FilterNode::getChildIterators() {
 														  childNodes.end());
 }
 
-const sic::AbstractFilterNode *
-sic::FilterNode::filterToChild(sic::AbstractAsset &asset) {
+sic::AbstractFilterNode *
+sic::FilterNode::filterToChild(const sic::AbstractAsset &asset) {
 
 	sic::AbstractFilterNode *matchNode = nullptr;
 	auto childIt = getChildIterators();
