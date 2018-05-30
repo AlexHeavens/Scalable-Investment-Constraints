@@ -11,3 +11,18 @@ void sic::FilterTree::getAssetPath(const sic::AbstractAsset &asset,
 		currentNode = currentNode->filterToChild(asset);
 	}
 }
+
+sic::AbstractFilterNode &
+sic::FilterTree::getLeafNode(const sic::AbstractAsset &asset) {
+
+	sic::AbstractFilterNode *currentNode = &(this->getRootNode());
+	sic::AbstractFilterNode *returnNode = nullptr;
+
+	while (currentNode != nullptr) {
+
+		returnNode = currentNode;
+		currentNode = currentNode->filterToChild(asset);
+	}
+
+	return *returnNode;
+}

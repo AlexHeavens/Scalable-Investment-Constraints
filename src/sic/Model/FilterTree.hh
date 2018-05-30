@@ -38,6 +38,9 @@ public:
 	 */
 	void getAssetPath(const sic::AbstractAsset &asset,
 					  sic::FilterTree::Path &path);
+
+	sic::AbstractFilterNode &
+	getLeafNode(const sic::AbstractAsset &asset) override;
 };
 
 } // namespace sic
