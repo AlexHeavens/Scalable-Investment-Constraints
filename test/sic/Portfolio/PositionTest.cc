@@ -6,10 +6,7 @@
 
 namespace {
 
-class PositionTest : public testing::Test {
-public:
-	void SetUp() override {}
-};
+class PositionTest : public testing::Test {};
 
 TEST_F(PositionTest, CreateValidPosition) {
 

@@ -10,7 +10,6 @@ namespace {
 class PortfolioTest : public testing::Test {
 
 private:
-	// Mock Classes
 	static sic::MockAsset mockAsset;
 	static sic::External::ID externalPositionIDCounter;
 
