@@ -5,10 +5,7 @@
 
 namespace {
 
-class AssetTest : public testing::Test {
-public:
-	void SetUp() override {}
-};
+class AssetTest : public testing::Test {};
 
 TEST_F(AssetTest, CreateValidAsset) {
 

@@ -4,10 +4,8 @@
 
 namespace {
 
-class AssetAllocationNodeTest : public testing::Test {
+class AssetAllocationNodeTest : public testing::Test {};
 
-public:
-};
 TEST_F(AssetAllocationNodeTest, CreateValid) {
 
 	const sic::WeightRange expRange(0.1, 0.2, 0.3);

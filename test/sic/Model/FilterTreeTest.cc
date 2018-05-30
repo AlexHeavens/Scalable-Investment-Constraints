@@ -1,28 +1,14 @@
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <memory>
 
 #include "sic/Model/FilterTree.hh"
+#include "sic/Model/MockFilter.hh"
+#include "sic/Portfolio/MockAsset.hh"
 
 namespace {
 
-class FilterTreeTest : public testing::Test {
-
-public:
-	class MockAsset : public sic::AbstractAsset {
-	public:
-		explicit MockAsset() : sic::AbstractAsset(1) {}
-
-		MOCK_CONST_METHOD1(hasClass, bool(sic::AbstractAsset::Class));
-	};
-
-	class MockFilter : public sic::Filter {
-
-	public:
-		MOCK_CONST_METHOD1(evaluate, bool(const sic::AbstractAsset &));
-	};
-};
+class FilterTreeTest : public testing::Test {};
 
 TEST_F(FilterTreeTest, CreateValid) {
 
@@ -32,18 +18,18 @@ TEST_F(FilterTreeTest, CreateValid) {
 
 TEST_F(FilterTreeTest, FilterAssetPath) {
 
-	MockAsset testAsset;
+	sic::MockAsset testAsset;
 
 	const sic::External::ID expExternalID = 1;
 	sic::FilterTree filterTree(expExternalID);
 
 	std::vector<const sic::Filter *> filters;
 	filters.reserve(5);
-	filters[0] = new MockFilter();
-	filters[1] = new MockFilter();
-	filters[2] = new MockFilter();
-	filters[3] = new MockFilter();
-	filters[4] = new MockFilter();
+	filters[0] = new sic::MockFilter();
+	filters[1] = new sic::MockFilter();
+	filters[2] = new sic::MockFilter();
+	filters[3] = new sic::MockFilter();
+	filters[4] = new sic::MockFilter();
 
 	std::vector<sic::AbstractFilterNode *> childNodes;
 	sic::AbstractFilterNode &rootNode = filterTree.getRootNode();
@@ -60,16 +46,19 @@ TEST_F(FilterTreeTest, FilterAssetPath) {
 	childNodes[4] = &childNodes[0]->addChild(
 		std::unique_ptr<const sic::Filter>(filters[4]));
 
-	EXPECT_CALL(dynamic_cast<const MockFilter &>(childNodes[0]->getFilter()),
-				evaluate(testing::Ref(testAsset)))
+	EXPECT_CALL(
+		dynamic_cast<const sic::MockFilter &>(childNodes[0]->getFilter()),
+		evaluate(testing::Ref(testAsset)))
 		.Times(1)
 		.WillOnce(testing::Return(true));
-	EXPECT_CALL(dynamic_cast<const MockFilter &>(childNodes[3]->getFilter()),
-				evaluate(testing::Ref(testAsset)))
+	EXPECT_CALL(
+		dynamic_cast<const sic::MockFilter &>(childNodes[3]->getFilter()),
+		evaluate(testing::Ref(testAsset)))
 		.Times(1)
 		.WillOnce(testing::Return(false));
-	EXPECT_CALL(dynamic_cast<const MockFilter &>(childNodes[4]->getFilter()),
-				evaluate(testing::Ref(testAsset)))
+	EXPECT_CALL(
+		dynamic_cast<const sic::MockFilter &>(childNodes[4]->getFilter()),
+		evaluate(testing::Ref(testAsset)))
 		.Times(1)
 		.WillOnce(testing::Return(true));
 

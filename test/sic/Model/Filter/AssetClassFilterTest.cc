@@ -1,30 +1,17 @@
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "sic/Model/Filter/AssetClassFilter.hh"
-
-#include "sic/Portfolio/AbstractAsset.hh"
+#include "sic/Portfolio/MockAsset.hh"
 
 namespace {
 
-class AssetsClassFilterTest : public testing::Test {
-
-public:
-	class MockAsset : public sic::AbstractAsset {
-
-	public:
-		explicit MockAsset() : sic::AbstractAsset(1) {}
-
-		MOCK_CONST_METHOD1(hasClass,
-						   bool(sic::AbstractAsset::Class assetClass));
-	};
-};
+class AssetsClassFilterTest : public testing::Test {};
 
 TEST_F(AssetsClassFilterTest, CreateValidFilter) {
-	const MockAsset assetA;
-	const MockAsset assetB;
-	const MockAsset assetC;
-	const MockAsset assetD;
+	const sic::MockAsset assetA;
+	const sic::MockAsset assetB;
+	const sic::MockAsset assetC;
+	const sic::MockAsset assetD;
 
 	const sic::AbstractAsset::Class assetClass = 12345;
 	EXPECT_CALL(assetA, hasClass(assetClass))
