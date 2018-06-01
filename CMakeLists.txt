@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.6)
 project(ScalableInvestmentConstraints)
 
+# Custom Modules
+## Necessary for finding Google Benchmark
+set(PROJECT_CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/.cmake/Modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_CMAKE_MODULE_PATH})
+
 # Project
 set(SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 set(BIN_DIR "${PROJECT_SOURCE_DIR}/bin")
@@ -72,6 +77,9 @@ list(REMOVE_ITEM TEST_SOURCES "${TEST_MAIN_SRC}")
 include(FindGTest)
 find_package(GTest REQUIRED)
 set(GTEST_LIBRARIES "${GTEST_LIBRARIES}" "/usr/local/lib/libgmock.a") # FindGTest yet to include GMock
+
+include(FindBenchmark)
+find_package(Benchmark REQUIRED)
 
 # Build
 add_executable("${PROJECT_EXE}" ${SOURCES} ${MAIN_SRC})
