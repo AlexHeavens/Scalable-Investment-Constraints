@@ -20,7 +20,7 @@ printf -- "------------\n"
 cmake "$PROJECT_ROOT_DIR" $CMAKE_ARGS
 make tests benchmarks
 MAKE_ALL_TESTS_RESULT="$?"
-ALL_TESTS_RESULTS=0
+ALL_TESTS_RESULT=0
 
 if [ "$MAKE_ALL_TESTS_RESULT" -ne 0 ]; then
 	ALL_TESTS_RESULT="$MAKE_ALL_TESTS_RESULT"
@@ -30,7 +30,7 @@ printf "\n\n"
 printf "Unit / Use-case Tests:\n"
 printf -- "----------------------\n"
 # Unit and use case tests.
-if [ "$ALL_TESTS_RESULTS" -eq 0 ]; then
+if [ "$ALL_TESTS_RESULT" -eq 0 ]; then
 	"${PROJECT_BIN_DIR}/tests"
 	ALL_TESTS_RESULT="$?"
 fi
