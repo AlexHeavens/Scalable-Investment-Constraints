@@ -29,6 +29,8 @@ public:
 	MOCK_CONST_METHOD0(getFilter, const sic::Filter &());
 	MOCK_METHOD1(filterToChild,
 				 sic::AbstractFilterNode *(const sic::AbstractAsset &asset));
+	MOCK_METHOD0(getChildIterators,
+				 sic::Iterators<sic::AbstractFilterNode::ChildIterator>());
 };
 
 } // namespace sic

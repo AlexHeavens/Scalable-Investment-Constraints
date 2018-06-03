@@ -9,15 +9,13 @@ namespace sic {
 
 class TraditionalAAUseCase : public testing::Test {
 
-private:
-	constexpr int randomSeed = 34534;
-	std::mt19937 randomGen(randomSeed);
-
+public:
+	static constexpr int randomSeed = 34534;
+	std::mt19937 randomGen;
 	sic::EvaluationContext context;
 
-public:
-	static void generateData(sic::EvaluationContext &context,
-							 std::mt19937 &randomGen) {
+	static void generateData(sic::EvaluationContext *const context,
+							 std::mt19937 *const randomGen) {
 
 		// Generate FilterTrees.
 		sic::External::ID nextFilterTreeID = 1000;
@@ -43,10 +41,10 @@ public:
 
 			for (unsigned i = 0; i < filterTreeParam.treeCount; i++) {
 
-				context.getFilterTreeCache().add(
+				context->getFilterTreeCache().add(
 					std::make_unique<sic::FilterTree>(nextFilterTreeID));
 				auto &filterTree =
-					context.getFilterTreeCache().get(nextFilterTreeID);
+					context->getFilterTreeCache().get(nextFilterTreeID);
 
 				filterTreeFactory.create(filterTree);
 				nextFilterTreeID++;
@@ -74,17 +72,21 @@ public:
 			for (unsigned classGroup = 0; classGroup < classGroupCount;
 				 classGroup++) {
 				const sic::Asset::Class groupClass =
-					classGroup * groupJump + classDistribution(randomGen);
+					classGroup * groupJump + classDistribution(*randomGen);
 				assetClasses->insert(groupClass);
 			}
 
 			auto asset =
 				std::make_unique<sic::Asset>(assetID, std::move(assetClasses));
-			context.getAssetCache().add(std::move(asset));
+			context->getAssetCache().add(std::move(asset));
 		}
 	}
 
-	void SetUp() override { generateData(context, randomGen) }
+	void SetUp() override {
+
+		randomGen = std::mt19937(randomSeed);
+		generateData(&context, &randomGen);
+	}
 };
 
 TEST_F(TraditionalAAUseCase, Execute) {}

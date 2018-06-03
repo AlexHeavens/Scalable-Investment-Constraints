@@ -26,6 +26,8 @@ public:
 	 */
 	virtual sic::AbstractFilterNode &
 	getLeafNode(const sic::AbstractAsset &asset) = 0;
+
+	virtual ~AbstractFilterTree() {}
 };
 
 } // namespace sic

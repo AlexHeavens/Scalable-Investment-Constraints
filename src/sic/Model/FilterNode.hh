@@ -53,12 +53,7 @@ public:
 		return parentNode;
 	}
 
-	/**
-	 * The current and end iterators of the node's children.
-	 *
-	 * @return Current and end iterators.
-	 */
-	sic::Iterators<sic::FilterNode::ChildIterator> getChildIterators();
+	sic::Iterators<sic::FilterNode::ChildIterator> getChildIterators() override;
 
 	sic::AbstractFilterNode *
 	filterToChild(const sic::AbstractAsset &asset) override;
