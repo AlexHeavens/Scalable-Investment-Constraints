@@ -9,18 +9,15 @@
 #  BENCHMARK_INCLUDE_DIRS - The benchmark include directories
 #  BENCHMARK_LIBRARIES - The libraries needed to use benchmark
 
-set(BENCHMARK_ROOT_DIR "" CACHE PATH "Folder containing benchmark")
 
 find_path(BENCHMARK_INCLUDE_DIR "benchmark/benchmark.h"
-  PATHS ${BENCHMARK_ROOT_DIR}
   PATH_SUFFIXES include
-  NO_DEFAULT_PATH)
+)
 find_path(BENCHMARK_INCLUDE_DIR "benchmark/benchmark.h")
 
 find_library(BENCHMARK_LIBRARY NAMES "benchmark"
-  PATHS ${BENCHMARK_ROOT_DIR}
   PATH_SUFFIXES lib lib64
-  NO_DEFAULT_PATH)
+)
 find_library(BENCHMARK_LIBRARY NAMES "benchmark")
 
 include(FindPackageHandleStandardArgs)
