@@ -72,9 +72,11 @@ set(MAIN_SRC "${SRC_DIR}/Main.cc")
 file(GLOB_RECURSE SOURCES "${SRC_DIR}/*.cc" "${SRC_DIR}/*.c")
 list(REMOVE_ITEM SOURCES "${MAIN_SRC}")
 
+set(TEST_MAIN_SRC "${TEST_DIR}/AllTests.cc")
 file(GLOB_RECURSE TEST_SOURCES "${TEST_DIR}/*.cc" "${TEST_DIR}/*.c")
 list(REMOVE_ITEM TEST_SOURCES "${TEST_MAIN_SRC}")
 
+set(BENCHMARK_MAIN_SRC "${BENCHMARK_DIR}/sic/all_benchmarks.cc")
 file(GLOB_RECURSE BENCHMARK_SOURCES "${BENCHMARK_DIR}/*.cc" "${BENCHMARK_DIR}/*.c")
 list(REMOVE_ITEM BENCHMARK_SOURCES "${BENCHMARK_MAIN_SRC}")
 
@@ -90,13 +92,13 @@ find_package(Benchmark REQUIRED)
 add_executable("${PROJECT_EXE}" ${SOURCES} ${MAIN_SRC})
 target_include_directories("${PROJECT_EXE}" PUBLIC "${SRC_DIR}")
 
-add_executable("${TEST_EXE}" ${SOURCES} ${TEST_SOURCES} ${TEST_MAIN})
+add_executable("${TEST_EXE}" ${SOURCES} ${TEST_SOURCES} ${TEST_MAIN_SRC})
 target_include_directories("${TEST_EXE}" PUBLIC "${SRC_DIR}" "${TEST_DIR}")
 target_link_libraries("${TEST_EXE}" ${GTEST_LIBRARIES} pthread)
 
-add_executable("${BENCHMARK_EXE}" ${SOURCES} ${BENCHMARK_SOURCES})
-target_include_directories("${BENCHMARK_EXE}" PUBLIC "${SRC_DIR}" "${BENCHMARK_INCLUDE_DIRS}")
-target_link_libraries("${BENCHMARK_EXE}" ${BENCHMARK_LIBRARIES} pthread)
+add_executable("${BENCHMARK_EXE}" ${SOURCES} ${TEST_SOURCES} ${BENCHMARK_SOURCES} ${BENCHMARK_MAIN_SRC})
+target_include_directories("${BENCHMARK_EXE}" PUBLIC "${SRC_DIR}" "${TEST_DIR}" "${BENCHMARK_INCLUDE_DIRS}")
+target_link_libraries("${BENCHMARK_EXE}" ${GTEST_LIBRARIES} ${BENCHMARK_LIBRARIES} pthread)
 
 if (CLANG_TIDY_EXE)
     set_target_properties(
