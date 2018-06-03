@@ -24,7 +24,7 @@ set(COMMON_FLAGS "-Werror -Wall -Wextra")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
 
-set(TEST_EXE "all_tests")
+set(TEST_EXE "tests")
 set(BENCHMARK_EXE "benchmarks")
 
 # Required Build Programs
