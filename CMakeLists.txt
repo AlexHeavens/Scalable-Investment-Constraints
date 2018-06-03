@@ -1,11 +1,17 @@
 cmake_minimum_required(VERSION 3.6)
 project(ScalableInvestmentConstraints)
 
+# Custom Modules
+## Necessary for finding Google Benchmark
+set(PROJECT_CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/.cmake/Modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_CMAKE_MODULE_PATH})
+
 # Project
 set(SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 set(BIN_DIR "${PROJECT_SOURCE_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BIN_DIR}")
 set(TEST_DIR "${PROJECT_SOURCE_DIR}/test")
+set(BENCHMARK_DIR "${PROJECT_SOURCE_DIR}/benchmark")
 set(DOC_DIR "${PROJECT_SOURCE_DIR}/doc")
 set(DOXYGEN_CONFIG "${DOC_DIR}/doxygen-config")
 
@@ -18,7 +24,8 @@ set(COMMON_FLAGS "-Werror -Wall -Wextra")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
 
-set(TEST_EXE "all_tests")
+set(TEST_EXE "tests")
+set(BENCHMARK_EXE "benchmarks")
 
 # Required Build Programs
 find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
@@ -68,10 +75,16 @@ list(REMOVE_ITEM SOURCES "${MAIN_SRC}")
 file(GLOB_RECURSE TEST_SOURCES "${TEST_DIR}/*.cc" "${TEST_DIR}/*.c")
 list(REMOVE_ITEM TEST_SOURCES "${TEST_MAIN_SRC}")
 
+file(GLOB_RECURSE BENCHMARK_SOURCES "${BENCHMARK_DIR}/*.cc" "${BENCHMARK_DIR}/*.c")
+list(REMOVE_ITEM BENCHMARK_SOURCES "${BENCHMARK_MAIN_SRC}")
+
 # Required Libraries
 include(FindGTest)
 find_package(GTest REQUIRED)
 set(GTEST_LIBRARIES "${GTEST_LIBRARIES}" "/usr/local/lib/libgmock.a") # FindGTest yet to include GMock
+
+include(FindBenchmark)
+find_package(Benchmark REQUIRED)
 
 # Build
 add_executable("${PROJECT_EXE}" ${SOURCES} ${MAIN_SRC})
@@ -80,6 +93,10 @@ target_include_directories("${PROJECT_EXE}" PUBLIC "${SRC_DIR}")
 add_executable("${TEST_EXE}" ${SOURCES} ${TEST_SOURCES} ${TEST_MAIN})
 target_include_directories("${TEST_EXE}" PUBLIC "${SRC_DIR}" "${TEST_DIR}")
 target_link_libraries("${TEST_EXE}" ${GTEST_LIBRARIES} pthread)
+
+add_executable("${BENCHMARK_EXE}" ${SOURCES} ${BENCHMARK_SOURCES})
+target_include_directories("${BENCHMARK_EXE}" PUBLIC "${SRC_DIR}" "${BENCHMARK_INCLUDE_DIRS}")
+target_link_libraries("${BENCHMARK_EXE}" ${BENCHMARK_LIBRARIES} pthread)
 
 if (CLANG_TIDY_EXE)
     set_target_properties(
