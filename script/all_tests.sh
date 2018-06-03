@@ -14,13 +14,19 @@ if [ "$1" == "debug" ]; then
 fi
 
 cmake "$PROJECT_ROOT_DIR" $CMAKE_ARGS
-make tests
+make tests benchmarks
 MAKE_ALL_TESTS_RESULT="$?"
 
 if [ "$MAKE_ALL_TESTS_RESULT" -ne 0 ]; then
 	ALL_TESTS_RESULT="$MAKE_ALL_TESTS_RESULT"
 else
 	"${PROJECT_BIN_DIR}/tests"
+	ALL_TESTS_RESULT="$?"
+fi
+
+# Execute benchmarks as a sanity check.
+if [ "${ALL_TESTS_RESULT}" -eq 0 ]; then
+	"${PROJECT_BIN_DIR}/benchmarks"
 	ALL_TESTS_RESULT="$?"
 fi
 
