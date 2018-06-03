@@ -18,35 +18,41 @@ public:
 
 TEST_F(ExternalCacheTest, CreateValid) {
 
-	const sic::External::ID externalAID = 999;
-	const sic::External::ID externalBID = 1;
-	const sic::External::ID externalCID = 435436;
-	const MockExternal externalA(externalAID);
-	const MockExternal externalB(externalBID);
-	const MockExternal externalC(externalCID);
+	constexpr sic::External::ID externalAID = 999;
+	constexpr sic::External::ID externalBID = 1;
+	constexpr sic::External::ID externalCID = 435436;
+	auto *externalA = new MockExternal(externalAID);
+	auto *externalA2 = new MockExternal(externalAID);
+	auto *externalB = new MockExternal(externalBID);
+	auto *externalC = new MockExternal(externalCID);
+
+	std::unique_ptr<MockExternal> externalAPtr(externalA);
+	std::unique_ptr<MockExternal> externalA2Ptr(externalA2);
+	std::unique_ptr<MockExternal> externalBPtr(externalB);
+	std::unique_ptr<MockExternal> externalCPtr(externalC);
 
 	sic::ExternalCache<MockExternal> externalCache;
 	ASSERT_FALSE(externalCache.contains(externalAID));
 	ASSERT_FALSE(externalCache.contains(externalBID));
 	ASSERT_FALSE(externalCache.contains(externalCID));
 
-	// Add to cache via copy constructor.
-	externalCache.add(externalA);
+	// Add to cache via movw.
+	externalCache.add(std::move(externalAPtr));
 	ASSERT_TRUE(externalCache.contains(externalAID));
 	const MockExternal &retrievedExternalA1 = externalCache.get(externalAID);
-	ASSERT_EQ(retrievedExternalA1.getExternalID(), externalA.getExternalID());
-	ASSERT_FALSE(&retrievedExternalA1 == &externalA);
+	ASSERT_EQ(retrievedExternalA1.getExternalID(), externalA->getExternalID());
+	ASSERT_EQ(&retrievedExternalA1, externalA);
 
 	// Second add does not affect the cache.
-	externalCache.add(externalA);
+	externalCache.add(std::move(externalA2Ptr));
 	ASSERT_TRUE(externalCache.contains(externalAID));
 	const MockExternal &retrievedExternalA2 = externalCache.get(externalAID);
 	ASSERT_EQ(&retrievedExternalA1, &retrievedExternalA2);
-	ASSERT_EQ(retrievedExternalA2.getExternalID(), externalA.getExternalID());
-	ASSERT_FALSE(&retrievedExternalA2 == &externalA);
+	ASSERT_EQ(retrievedExternalA2.getExternalID(), externalA->getExternalID());
+	ASSERT_EQ(&retrievedExternalA2, externalA);
 
-	externalCache.add(externalB);
-	externalCache.add(externalC);
+	externalCache.add(std::move(externalBPtr));
+	externalCache.add(std::move(externalCPtr));
 
 	ASSERT_TRUE(externalCache.contains(externalAID));
 	ASSERT_TRUE(externalCache.contains(externalBID));

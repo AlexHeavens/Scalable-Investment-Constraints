@@ -9,10 +9,10 @@ sic::FilterNode::addChild(std::unique_ptr<const sic::Filter> childFilter) {
 	return *childNodes.back();
 }
 
-sic::Iterators<sic::FilterNode::ChildIterator>
+sic::Iterators<sic::AbstractFilterNode::ChildIterator>
 sic::FilterNode::getChildIterators() {
-	return sic::Iterators<sic::FilterNode::ChildIterator>(childNodes.begin(),
-														  childNodes.end());
+	return sic::Iterators<sic::AbstractFilterNode::ChildIterator>(
+		childNodes.begin(), childNodes.end());
 }
 
 sic::AbstractFilterNode *
