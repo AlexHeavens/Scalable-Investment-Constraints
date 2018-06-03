@@ -5,7 +5,7 @@
 #include "sic/EvaluationContext.hh"
 #include "sic/Model/RegularFilterTreeFactory.hh"
 
-namespace {
+namespace sic {
 
 class TraditionalAAUseCase : public testing::Test {
 
@@ -89,4 +89,4 @@ public:
 
 TEST_F(TraditionalAAUseCase, Execute) {}
 
-} // namespace
+} // namespace sic
