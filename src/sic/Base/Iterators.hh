@@ -38,6 +38,11 @@ public:
 	 * The (fixed) end iterator.
 	 */
 	const IteratorType &end() { return *endIt; }
+
+	/**
+	 * If there are remaining items to iterator through.
+	 */
+	bool remaining() const { return *currentIt != *endIt; }
 };
 
 } // namespace sic
