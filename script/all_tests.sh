@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 PROJECT_ROOT_DIR="$(git rev-parse --show-toplevel)"
 PROJECT_BUILD_DIR="$PROJECT_ROOT_DIR/build"
 PROJECT_BIN_DIR="${PROJECT_ROOT_DIR}/bin"
@@ -9,16 +9,14 @@ cd $PROJECT_BUILD_DIR
 if [ "$1" == "debug" ]; then
 	echo "Generating test in debug mode"
 	CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Debug"
-	cmake $PROJECT_ROOT_DIR clean
-	make clean
 fi
 
 # Build.
 printf "\n\n"
 printf "CMake Build:\n"
 printf -- "------------\n"
-cmake "$PROJECT_ROOT_DIR" $CMAKE_ARGS
-make tests benchmarks
+cmake "$PROJECT_ROOT_DIR" $CMAKE_ARGS -DCMAKE_MAKE_PROGRAM=ninja -G Ninja
+ninja tests benchmarks
 MAKE_ALL_TESTS_RESULT="$?"
 ALL_TESTS_RESULT=0
 

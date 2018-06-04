@@ -5,5 +5,5 @@ PROJECT_ROOT_DIR="${SCRIPT_DIR}/.."
 BUILD_DIR="${PROJECT_ROOT_DIR}/build"
 
 cd "${BUILD_DIR}"
-cmake .. -DCMAKE_BUILD_TYPE=Debug
-make
+cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=ninja –G Ninja
+ninja
