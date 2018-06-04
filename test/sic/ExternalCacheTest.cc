@@ -36,7 +36,7 @@ TEST_F(ExternalCacheTest, CreateValid) {
 	ASSERT_FALSE(externalCache.contains(externalBID));
 	ASSERT_FALSE(externalCache.contains(externalCID));
 
-	// Add to cache via movw.
+	// Add to cache via move.
 	externalCache.add(std::move(externalAPtr));
 	ASSERT_TRUE(externalCache.contains(externalAID));
 	const MockExternal &retrievedExternalA1 = externalCache.get(externalAID);
