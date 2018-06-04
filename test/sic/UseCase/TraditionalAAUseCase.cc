@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <chrono>
+#include <iostream>
 #include <random>
 
 #include "sic/EvaluationContext.hh"
@@ -91,6 +93,8 @@ public:
 
 TEST_F(TraditionalAAUseCase, Execute) {
 
+	auto startTime = std::chrono::high_resolution_clock::now();
+
 	auto filterTrees = context.getFilterTreeCache().getItems();
 
 	while (filterTrees.remaining()) {
@@ -111,6 +115,12 @@ TEST_F(TraditionalAAUseCase, Execute) {
 
 		filterTrees.current()++;
 	}
+
+	auto finishTime = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double, std::milli> durationMilliseconds =
+		finishTime - startTime;
+	std::cout << "TraditionalAAUseCase Wall Time (ms): "
+			  << durationMilliseconds.count() << std::endl;
 }
 
 } // namespace sic
