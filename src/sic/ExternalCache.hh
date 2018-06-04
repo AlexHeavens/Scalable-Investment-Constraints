@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 
+#include "sic/Base/Iterators.hh"
 #include "sic/External.hh"
 
 namespace sic {
@@ -12,6 +13,12 @@ namespace sic {
  * EvaluationContext.
  */
 template <typename Item> class ExternalCache {
+
+public:
+	typedef std::unordered_map<sic::External::ID, std::unique_ptr<Item>>
+		ItemMap;
+
+	typedef typename sic::ExternalCache<Item>::ItemMap::iterator ItemIterator;
 
 private:
 	std::unordered_map<sic::External::ID, std::unique_ptr<Item>> itemMap;
@@ -36,6 +43,14 @@ public:
 	 */
 	Item &get(const sic::External::ID itemID) const {
 		return *itemMap.at(itemID);
+	}
+
+	/**
+	 * Retrieve iterators for items held in cache.
+	 */
+	sic::Iterators<sic::ExternalCache<Item>::ItemIterator> getItems() {
+		return sic::Iterators<sic::ExternalCache<Item>::ItemIterator>(
+			std::begin(itemMap), std::end(itemMap));
 	}
 };
 

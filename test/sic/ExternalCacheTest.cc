@@ -57,6 +57,11 @@ TEST_F(ExternalCacheTest, CreateValid) {
 	ASSERT_TRUE(externalCache.contains(externalAID));
 	ASSERT_TRUE(externalCache.contains(externalBID));
 	ASSERT_TRUE(externalCache.contains(externalCID));
+
+	// Sanity-check iterators.
+	auto items = externalCache.getItems();
+	ASSERT_TRUE(items.current() != items.end())
+		<< "Cache iterators matches the end of the item set.";
 }
 
 } // namespace
