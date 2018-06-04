@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.6)
 project(ScalableInvestmentConstraints)
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
 # Custom Modules
 ## Necessary for finding Google Benchmark
 set(PROJECT_CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/.cmake/Modules/")
@@ -23,6 +27,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(COMMON_FLAGS "-Werror -Wall -Wextra")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
 set(TEST_EXE "tests")
 set(BENCHMARK_EXE "benchmarks")
