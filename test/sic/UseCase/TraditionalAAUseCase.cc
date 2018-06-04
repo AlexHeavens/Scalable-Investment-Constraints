@@ -89,6 +89,28 @@ public:
 	}
 };
 
-TEST_F(TraditionalAAUseCase, Execute) {}
+TEST_F(TraditionalAAUseCase, Execute) {
+
+	auto filterTrees = context.getFilterTreeCache().getItems();
+
+	while (filterTrees.remaining()) {
+
+		auto &filterTree = *(filterTrees.current()->second);
+
+		auto assets = context.getAssetCache().getItems();
+
+		while (assets.remaining()) {
+
+			auto &asset = *(assets.current()->second);
+
+			auto &leaf = filterTree.getLeafNode(asset);
+#pragma unused(leaf)
+
+			assets.current()++;
+		}
+
+		filterTrees.current()++;
+	}
+}
 
 } // namespace sic
