@@ -6,21 +6,18 @@ namespace {
 
 class ControllerTest : public testing::Test {
 public:
+	project::Controller c;
 
-  project::Controller c;
+	ControllerTest() = default;
 
-  ControllerTest() = default;
-
-  void SetUp() override {}
-
+	void SetUp() override {}
 };
 
 TEST_F(ControllerTest, ValidRun) {
 
-  ASSERT_FALSE(c.getHasExecuted());
-  c.run();
-  ASSERT_TRUE(c.getHasExecuted());
-
+	ASSERT_FALSE(c.getHasExecuted());
+	c.run();
+	ASSERT_TRUE(c.getHasExecuted());
 }
 
 } // namespace

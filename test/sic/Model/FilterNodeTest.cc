@@ -2,28 +2,24 @@
 #include <gtest/gtest.h>
 
 #include "sic/Model/FilterNode.hh"
+#include "sic/Model/MockFilter.hh"
 
 namespace {
 
-class FilterNodeTest : public testing::Test {
+class FilterNodeTest : public testing::Test {};
 
-public:
-	class MockFilter : public sic::Filter {
-
-	public:
-		MOCK_CONST_METHOD1(evaluate, bool(const sic::AbstractAsset &));
-	};
-};
 TEST_F(FilterNodeTest, CreateValid) {
 
 	sic::FilterNode parentNode;
 
 	std::vector<sic::AbstractFilterNode *> expChildNodes;
 	expChildNodes.reserve(3);
-	expChildNodes[0] = &parentNode.addChild(std::make_unique<MockFilter>());
-	expChildNodes[1] = &parentNode.addChild(std::make_unique<MockFilter>());
+	expChildNodes[0] =
+		&parentNode.addChild(std::make_unique<sic::MockFilter>());
+	expChildNodes[1] =
+		&parentNode.addChild(std::make_unique<sic::MockFilter>());
 	expChildNodes[2] =
-		&expChildNodes[1]->addChild(std::make_unique<MockFilter>());
+		&expChildNodes[1]->addChild(std::make_unique<sic::MockFilter>());
 
 	const sic::AbstractFilterNode *nullNode = nullptr;
 	ASSERT_EQ(nullNode, parentNode.getParentNode());

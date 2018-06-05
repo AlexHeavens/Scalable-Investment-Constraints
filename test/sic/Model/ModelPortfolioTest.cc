@@ -1,30 +1,21 @@
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <memory>
 
 #include "sic/Base/Tolerances.hh"
 #include "sic/Model/ModelPortfolio.hh"
+#include "sic/Portfolio/MockAsset.hh"
 
 namespace {
 
-class ModelPortfolioTest : public testing::Test {
-public:
-	class MockAsset : public sic::AbstractAsset {
-	public:
-		explicit MockAsset(sic::External::ID externalID)
-			: sic::AbstractAsset(externalID) {}
-
-		MOCK_CONST_METHOD1(hasClass, bool(sic::AbstractAsset::Class));
-	};
-};
+class ModelPortfolioTest : public testing::Test {};
 
 TEST_F(ModelPortfolioTest, CreateValid) {
 
 	auto assetList = new sic::ModelPortfolio::AssetWeightMap();
 	const auto &assetListRef = *assetList;
-	std::unique_ptr<sic::ModelPortfolio::AssetWeightMap>
-		assetWeightsMapPtr(assetList);
+	std::unique_ptr<sic::ModelPortfolio::AssetWeightMap> assetWeightsMapPtr(
+		assetList);
 
 	constexpr int expAssetCount = 19;
 	assetWeightsMapPtr->reserve(expAssetCount);
@@ -66,19 +57,18 @@ TEST_F(ModelPortfolioTest, CreateValid) {
 		assetWeights.push_back(remainingWeightRange);
 	}
 
-	std::vector<std::unique_ptr<const MockAsset>> assets;
+	std::vector<std::unique_ptr<const sic::MockAsset>> assets;
 	assets.reserve(expAssetCount);
 	for (int i = 0; i < expAssetCount; i++) {
 		const auto assetID = static_cast<sic::External::ID>(i);
 
-		assets.emplace_back(std::make_unique<const MockAsset>(assetID));
+		assets.emplace_back(std::make_unique<const sic::MockAsset>(assetID));
 		assetWeightsMapPtr->insert({assets.at(i).get(), assetWeights.at(i)});
 	}
 
 	constexpr sic::External::ID expExternalID = 43534l;
 
-	sic::ModelPortfolio validMPF(std::move(assetWeightsMapPtr),
-										expExternalID);
+	sic::ModelPortfolio validMPF(std::move(assetWeightsMapPtr), expExternalID);
 
 	ASSERT_EQ(expExternalID, validMPF.getExternalID());
 	ASSERT_EQ(expAssetCount, validMPF.getAssetCount());
@@ -92,16 +82,16 @@ TEST_F(ModelPortfolioTest, CreateValid) {
 TEST_F(ModelPortfolioTest, CreateInvalidEmptyAssetsList) {
 
 	auto assetList = new sic::ModelPortfolio::AssetWeightMap();
-	std::unique_ptr<sic::ModelPortfolio::AssetWeightMap>
-		assetWeightsMapPtr(assetList);
+	std::unique_ptr<sic::ModelPortfolio::AssetWeightMap> assetWeightsMapPtr(
+		assetList);
 
 	constexpr sic::External::ID expExternalID = 43534l;
 	const std::string expError =
 		"assetWeightMap must contain at least one entry.";
 
 	try {
-		const sic::ModelPortfolio invalidMPF(
-			std::move(assetWeightsMapPtr), expExternalID);
+		const sic::ModelPortfolio invalidMPF(std::move(assetWeightsMapPtr),
+											 expExternalID);
 		FAIL() << "Able to create MPF with empty assets map.";
 	} catch (std::invalid_argument &e) {
 		ASSERT_EQ(expError, e.what());
@@ -113,8 +103,8 @@ TEST_F(ModelPortfolioTest, CreateInvalidEmptyAssetsList) {
 TEST_F(ModelPortfolioTest, CreateInvalidDuplicateAssets) {
 
 	auto assetList = new sic::ModelPortfolio::AssetWeightMap();
-	std::unique_ptr<sic::ModelPortfolio::AssetWeightMap>
-		assetWeightsMapPtr(assetList);
+	std::unique_ptr<sic::ModelPortfolio::AssetWeightMap> assetWeightsMapPtr(
+		assetList);
 
 	constexpr int expAssetCount = 20;
 	constexpr int expDuplicateAssetCount = 2;
@@ -129,14 +119,14 @@ TEST_F(ModelPortfolioTest, CreateInvalidDuplicateAssets) {
 
 	constexpr sic::External::ID duplicateID = 432344;
 
-	std::vector<std::unique_ptr<const MockAsset>> assets;
+	std::vector<std::unique_ptr<const sic::MockAsset>> assets;
 	assets.reserve(expAssetCount);
 	for (int i = 0; i < expAssetCount; i++) {
 		const sic::External::ID assetID =
 			(i < expDuplicateAssetCount) ? duplicateID
 										 : static_cast<sic::External::ID>(i);
 
-		assets.emplace_back(std::make_unique<const MockAsset>(assetID));
+		assets.emplace_back(std::make_unique<const sic::MockAsset>(assetID));
 		assetWeightsMapPtr->insert({assets.at(i).get(), perAssetWeightRange});
 	}
 
@@ -144,8 +134,8 @@ TEST_F(ModelPortfolioTest, CreateInvalidDuplicateAssets) {
 		"assetWeightMap must not contain duplicate Assets.";
 
 	try {
-		const sic::ModelPortfolio invalidMPF(
-			std::move(assetWeightsMapPtr), expExternalID);
+		const sic::ModelPortfolio invalidMPF(std::move(assetWeightsMapPtr),
+											 expExternalID);
 		FAIL() << "Able to create MPF with duplicate Assets.";
 	} catch (std::invalid_argument &e) {
 		ASSERT_EQ(expError, e.what());
@@ -169,7 +159,7 @@ TEST_F(ModelPortfolioTest, CreateValidAssetsSum100Percent) {
 	std::unique_ptr<sic::ModelPortfolio::AssetWeightMap>
 		validOverAssetWeightsMapPtr(validOverAssetList);
 
-	std::vector<std::unique_ptr<const MockAsset>> overAssets;
+	std::vector<std::unique_ptr<const sic::MockAsset>> overAssets;
 	overAssets.reserve(expAssetCount);
 	for (int i = 0; i < expAssetCount; i++) {
 		const auto assetID = static_cast<sic::External::ID>(i);
@@ -181,7 +171,8 @@ TEST_F(ModelPortfolioTest, CreateValidAssetsSum100Percent) {
 		const sic::WeightRange adjustedWeightRange(
 			perAssetMinWeight, assetWeight, perAssetMaxWeight);
 
-		overAssets.emplace_back(std::make_unique<const MockAsset>(assetID));
+		overAssets.emplace_back(
+			std::make_unique<const sic::MockAsset>(assetID));
 		validOverAssetWeightsMapPtr->insert(
 			{overAssets.at(i).get(), adjustedWeightRange});
 	}
@@ -194,7 +185,7 @@ TEST_F(ModelPortfolioTest, CreateValidAssetsSum100Percent) {
 	std::unique_ptr<sic::ModelPortfolio::AssetWeightMap>
 		validUnderAssetWeightsMapPtr(validUnderAssetList);
 
-	std::vector<std::unique_ptr<const MockAsset>> underAssets;
+	std::vector<std::unique_ptr<const sic::MockAsset>> underAssets;
 	underAssets.reserve(expAssetCount);
 	for (int i = 0; i < expAssetCount; i++) {
 		const auto assetID = static_cast<sic::External::ID>(i);
@@ -206,7 +197,8 @@ TEST_F(ModelPortfolioTest, CreateValidAssetsSum100Percent) {
 		const sic::WeightRange adjustedWeightRange(
 			perAssetMinWeight, assetWeight, perAssetMaxWeight);
 
-		underAssets.emplace_back(std::make_unique<const MockAsset>(assetID));
+		underAssets.emplace_back(
+			std::make_unique<const sic::MockAsset>(assetID));
 		validUnderAssetWeightsMapPtr->insert(
 			{underAssets.at(i).get(), adjustedWeightRange});
 	}
@@ -227,12 +219,11 @@ TEST_F(ModelPortfolioTest, CreateInvalidAssetsSum100Percent) {
 		"ModelPortfolio Asset weights must sum to 1.0.";
 
 	// Overweight, invalid.
-	auto invalidOverAssetList =
-		new sic::ModelPortfolio::AssetWeightMap();
+	auto invalidOverAssetList = new sic::ModelPortfolio::AssetWeightMap();
 	std::unique_ptr<sic::ModelPortfolio::AssetWeightMap>
 		invalidOverAssetWeightsMapPtr(invalidOverAssetList);
 
-	std::vector<std::unique_ptr<const MockAsset>> overAssets;
+	std::vector<std::unique_ptr<const sic::MockAsset>> overAssets;
 	overAssets.reserve(expAssetCount);
 	for (int i = 0; i < expAssetCount; i++) {
 		const auto assetID = static_cast<sic::External::ID>(i);
@@ -245,7 +236,8 @@ TEST_F(ModelPortfolioTest, CreateInvalidAssetsSum100Percent) {
 		const sic::WeightRange adjustedWeightRange(
 			perAssetMinWeight, assetWeight, perAssetMaxWeight);
 
-		overAssets.emplace_back(std::make_unique<const MockAsset>(assetID));
+		overAssets.emplace_back(
+			std::make_unique<const sic::MockAsset>(assetID));
 		invalidOverAssetWeightsMapPtr->insert(
 			{overAssets.at(i).get(), adjustedWeightRange});
 	}
@@ -260,12 +252,11 @@ TEST_F(ModelPortfolioTest, CreateInvalidAssetsSum100Percent) {
 	}
 
 	// Overweight, still valid.
-	auto invalidUnderAssetList =
-		new sic::ModelPortfolio::AssetWeightMap();
+	auto invalidUnderAssetList = new sic::ModelPortfolio::AssetWeightMap();
 	std::unique_ptr<sic::ModelPortfolio::AssetWeightMap>
 		invalidUnderAssetWeightsMapPtr(invalidUnderAssetList);
 
-	std::vector<std::unique_ptr<const MockAsset>> underAssets;
+	std::vector<std::unique_ptr<const sic::MockAsset>> underAssets;
 	underAssets.reserve(expAssetCount);
 	for (int i = 0; i < expAssetCount; i++) {
 		const auto assetID = static_cast<sic::External::ID>(i);
@@ -278,7 +269,8 @@ TEST_F(ModelPortfolioTest, CreateInvalidAssetsSum100Percent) {
 		const sic::WeightRange adjustedWeightRange(
 			perAssetMinWeight, assetWeight, perAssetMaxWeight);
 
-		underAssets.emplace_back(std::make_unique<const MockAsset>(assetID));
+		underAssets.emplace_back(
+			std::make_unique<const sic::MockAsset>(assetID));
 		invalidUnderAssetWeightsMapPtr->insert(
 			{underAssets.at(i).get(), adjustedWeightRange});
 	}
