@@ -7,7 +7,7 @@
 #include "sic/EvaluationContext.hh"
 #include "sic/Model/RegularFilterTreeFactory.hh"
 
-namespace sic {
+namespace {
 
 class TraditionalAAUseCase : public testing::Test {
 
@@ -123,4 +123,4 @@ TEST_F(TraditionalAAUseCase, Execute) {
 			  << durationMilliseconds.count() << std::endl;
 }
 
-} // namespace sic
+} // namespace

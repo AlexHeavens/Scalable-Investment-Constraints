@@ -101,9 +101,9 @@ add_executable("${TEST_EXE}" ${SOURCES} ${TEST_SOURCES} ${TEST_MAIN_SRC})
 target_include_directories("${TEST_EXE}" PUBLIC "${SRC_DIR}" "${TEST_DIR}")
 target_link_libraries("${TEST_EXE}" ${GTEST_LIBRARIES} ${GMOCK_LIBRARIES} pthread)
 
-add_executable("${BENCHMARK_EXE}" ${SOURCES} ${TEST_SOURCES} ${BENCHMARK_SOURCES})
-target_include_directories("${BENCHMARK_EXE}" PUBLIC "${SRC_DIR}" "${TEST_DIR}" "${BENCHMARK_INCLUDE_DIRS}")
-target_link_libraries("${BENCHMARK_EXE}" ${GTEST_LIBRARIES} ${GMOCK_LIBRARIES} ${BENCHMARK_MAIN_LIBRARIES} pthread)
+add_executable("${BENCHMARK_EXE}" ${SOURCES} ${BENCHMARK_SOURCES})
+target_include_directories("${BENCHMARK_EXE}" PUBLIC "${SRC_DIR}" "${BENCHMARK_INCLUDE_DIRS}")
+target_link_libraries("${BENCHMARK_EXE}" ${BENCHMARK_MAIN_LIBRARIES} pthread)
 
 if (CLANG_TIDY_EXE)
     set_target_properties(
