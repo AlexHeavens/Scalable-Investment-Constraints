@@ -38,6 +38,16 @@ public:
 	create(sic::External::ID externalID) override;
 
 	void create(sic::FilterTree &filterTree) override;
+
+	/**
+	 * Return the classes necessary to follow a path through the generated tree.
+	 *
+	 * @param path the child choice at each step through the tree.
+	 * @return Classes necessary for an asset to follow this path through the
+	 * tree.
+	 */
+	std::unique_ptr<sic::AbstractAsset::ClassSet>
+	getPathClasses(std::vector<unsigned> path) const;
 };
 } // namespace sic
 
