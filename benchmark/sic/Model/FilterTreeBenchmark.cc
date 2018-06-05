@@ -5,15 +5,20 @@
 
 static void FilterTree_getLeafNode(benchmark::State &state) {
 
-	constexpr unsigned depth = 4;
-	constexpr unsigned nodeDegree = 5;
+	const unsigned depth = state.range(0);
+	const unsigned nodeDegree = state.range(1);
 	sic::RegularFilterTreeFactory factory(depth, nodeDegree);
 
 	constexpr sic::External::ID treeID = 555;
 	sic::FilterTree tree(treeID);
 	factory.create(tree);
 
-	const std::vector<unsigned> path{1, 3, 5};
+	std::vector<unsigned> path;
+	path.reserve(depth - 1);
+	for (unsigned pathDepth = 0; pathDepth < depth - 1; pathDepth++) {
+		path.push_back(pathDepth % nodeDegree);
+	}
+
 	auto classes = factory.getPathClasses(path);
 	constexpr sic::External::ID assetID = 123;
 
@@ -26,4 +31,4 @@ static void FilterTree_getLeafNode(benchmark::State &state) {
 	}
 }
 
-BENCHMARK(FilterTree_getLeafNode);
+BENCHMARK(FilterTree_getLeafNode)->RangeMultiplier(2)->Ranges({{1, 8}, {1, 8}});
