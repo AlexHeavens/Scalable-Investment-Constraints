@@ -55,6 +55,11 @@ public:
 
 	sic::Iterators<sic::AbstractFilterNode::ChildIterator>
 	getChildIterators() override;
+
+	sic::Iterators<sic::AbstractFilterNode::ConstChildIterator>
+	getChildIterators() const override;
+
+	std::size_t getChildCount() const override { return childNodes.size(); };
 };
 
 } // namespace sic

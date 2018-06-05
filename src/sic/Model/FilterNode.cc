@@ -14,3 +14,9 @@ sic::FilterNode::getChildIterators() {
 	return sic::Iterators<sic::AbstractFilterNode::ChildIterator>(
 		childNodes.begin(), childNodes.end());
 }
+
+sic::Iterators<sic::AbstractFilterNode::ConstChildIterator>
+sic::FilterNode::getChildIterators() const {
+	return sic::Iterators<sic::AbstractFilterNode::ConstChildIterator>(
+		childNodes.cbegin(), childNodes.cend());
+}

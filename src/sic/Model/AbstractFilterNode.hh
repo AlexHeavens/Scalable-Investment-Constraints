@@ -20,6 +20,8 @@ public:
 	typedef std::vector<std::unique_ptr<sic::AbstractFilterNode>>
 		ChildNodeVector;
 	typedef sic::AbstractFilterNode::ChildNodeVector::iterator ChildIterator;
+	typedef sic::AbstractFilterNode::ChildNodeVector::const_iterator
+		ConstChildIterator;
 
 	/**
 	 * Add a child FilterNode.
@@ -45,6 +47,19 @@ public:
 	 */
 	virtual sic::Iterators<sic::AbstractFilterNode::ChildIterator>
 	getChildIterators() = 0;
+
+	/**
+	 * The current and end iterators of the node's children.
+	 *
+	 * @return Current and end iterators.
+	 */
+	virtual sic::Iterators<sic::AbstractFilterNode::ConstChildIterator>
+	getChildIterators() const = 0;
+
+	/**
+	 * The number of children below the node.
+	 */
+	virtual std::size_t getChildCount() const = 0;
 
 	virtual ~AbstractFilterNode(){};
 };

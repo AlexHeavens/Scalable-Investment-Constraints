@@ -11,15 +11,20 @@ class FilterNodeTest : public testing::Test {};
 TEST_F(FilterNodeTest, CreateValid) {
 
 	sic::FilterNode parentNode;
+	ASSERT_EQ(parentNode.getChildCount(), 0);
 
 	std::vector<sic::AbstractFilterNode *> expChildNodes;
 	expChildNodes.reserve(3);
 	expChildNodes[0] =
 		&parentNode.addChild(std::make_unique<sic::MockFilter>());
+	ASSERT_EQ(parentNode.getChildCount(), 1);
 	expChildNodes[1] =
 		&parentNode.addChild(std::make_unique<sic::MockFilter>());
+	ASSERT_EQ(parentNode.getChildCount(), 2);
+	ASSERT_EQ(expChildNodes[1]->getChildCount(), 0);
 	expChildNodes[2] =
 		&expChildNodes[1]->addChild(std::make_unique<sic::MockFilter>());
+	ASSERT_EQ(expChildNodes[1]->getChildCount(), 1);
 
 	const sic::AbstractFilterNode *nullNode = nullptr;
 	ASSERT_EQ(nullNode, parentNode.getParentNode());
