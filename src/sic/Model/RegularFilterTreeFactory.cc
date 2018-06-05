@@ -64,12 +64,12 @@ void sic::RegularFilterTreeFactory::create(sic::FilterTree &filterTree) {
 
 std::unique_ptr<sic::AbstractAsset::ClassSet>
 sic::RegularFilterTreeFactory::getPathClasses(
-	std::vector<unsigned> path) const {
+	const std::vector<unsigned> &path) const {
 
 	unsigned classGroup = 0;
 	auto classes = std::make_unique<sic::AbstractAsset::ClassSet>();
 
-	for (unsigned level = 1; level <= depth; level++) {
+	for (unsigned level = 1; level < depth; level++) {
 
 		const auto classGroupID = classGroup * nodeClassJump;
 		const auto classID = classGroupID + path.at(level - 1);

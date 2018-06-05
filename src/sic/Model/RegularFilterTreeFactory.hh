@@ -47,7 +47,7 @@ public:
 	 * tree.
 	 */
 	std::unique_ptr<sic::AbstractAsset::ClassSet>
-	getPathClasses(std::vector<unsigned> path) const;
+	getPathClasses(const std::vector<unsigned> &path) const;
 };
 } // namespace sic
 
