@@ -6,14 +6,14 @@
 static void FilterTree_getLeafNode(benchmark::State &state) {
 
 	constexpr unsigned depth = 4;
-	constexpr unsigned nodeDegree = 4;
+	constexpr unsigned nodeDegree = 5;
 	sic::RegularFilterTreeFactory factory(depth, nodeDegree);
 
 	constexpr sic::External::ID treeID = 555;
 	sic::FilterTree tree(treeID);
 	factory.create(tree);
 
-	const std::vector<unsigned> path{1, 2, 3};
+	const std::vector<unsigned> path{1, 3, 5};
 	auto classes = factory.getPathClasses(path);
 	constexpr sic::External::ID assetID = 123;
 
