@@ -14,16 +14,15 @@ namespace sic {
 template <typename Item> class ExternalCache {
 
 private:
-	std::unordered_map<sic::External::ID, Item> itemMap;
+	std::unordered_map<sic::External::ID, std::unique_ptr<Item>> itemMap;
 
 public:
 	/**
 	 * Add an item to the cache.
-	 *
-	 * Note: this item will be copied by value to avoid the latency of pointer
-	 * indirection necessary if we were only moving it.
 	 */
-	void add(const Item &item) { itemMap.insert({item.getExternalID(), item}); }
+	void add(std::unique_ptr<Item> item) {
+		itemMap.insert(std::make_pair(item->getExternalID(), std::move(item)));
+	}
 
 	/**
 	 * Check if a given item exists by ID in the cache.
@@ -35,8 +34,8 @@ public:
 	/**
 	 * Retrieve a reference to a given item by its external ID.
 	 */
-	const Item &get(const sic::External::ID itemID) const {
-		return itemMap.at(itemID);
+	Item &get(const sic::External::ID itemID) const {
+		return *itemMap.at(itemID);
 	}
 };
 

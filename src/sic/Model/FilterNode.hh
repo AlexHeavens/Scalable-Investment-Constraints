@@ -2,9 +2,7 @@
 #define SIC_MODEL_FILTERNODE_H_
 
 #include <memory>
-#include <vector>
 
-#include "sic/Base/Iterators.hh"
 #include "sic/Model/AbstractFilterNode.hh"
 #include "sic/Model/Filter.hh"
 #include "sic/Model/Filter/AllAssetsFilter.hh"
@@ -19,14 +17,9 @@ namespace sic {
  */
 class FilterNode : public sic::AbstractFilterNode {
 
-public:
-	typedef std::vector<std::unique_ptr<sic::AbstractFilterNode>>
-		ChildNodeVector;
-	typedef sic::FilterNode::ChildNodeVector::iterator ChildIterator;
-
 private:
 	const sic::AbstractFilterNode *parentNode;
-	sic::FilterNode::ChildNodeVector childNodes;
+	sic::AbstractFilterNode::ChildNodeVector childNodes;
 
 	const std::unique_ptr<const sic::Filter> filter;
 
@@ -60,12 +53,13 @@ public:
 		return parentNode;
 	}
 
-	/**
-	 * The current and end iterators of the node's children.
-	 *
-	 * @return Current and end iterators.
-	 */
-	sic::Iterators<sic::FilterNode::ChildIterator> getChildIterators();
+	sic::Iterators<sic::AbstractFilterNode::ChildIterator>
+	getChildIterators() override;
+
+	sic::Iterators<sic::AbstractFilterNode::ConstChildIterator>
+	getChildIterators() const override;
+
+	std::size_t getChildCount() const override { return childNodes.size(); };
 };
 
 } // namespace sic

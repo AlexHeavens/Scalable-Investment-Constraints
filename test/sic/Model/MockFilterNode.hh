@@ -26,6 +26,12 @@ public:
 
 	MOCK_METHOD1(addChild, sic::AbstractFilterNode &(const sic::Filter *));
 	MOCK_CONST_METHOD0(getParentNode, const sic::AbstractFilterNode *());
+	MOCK_METHOD0(getChildIterators,
+				 sic::Iterators<sic::AbstractFilterNode::ChildIterator>());
+	MOCK_CONST_METHOD0(getChildCount, std::size_t());
+	MOCK_CONST_METHOD0(
+		getChildIterators,
+		sic::Iterators<sic::AbstractFilterNode::ConstChildIterator>());
 };
 
 } // namespace sic
