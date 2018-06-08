@@ -4,9 +4,9 @@
 #include <memory>
 #include <unordered_map>
 
+#include "sic/Model/AbstractAssetAllocation.hh"
 #include "sic/Model/AbstractAssetAllocationNode.hh"
 #include "sic/Model/AbstractFilterNode.hh"
-#include "sic/Model/AbstractFilterTree.hh"
 
 namespace sic {
 
@@ -20,7 +20,7 @@ namespace sic {
  *
  * At leaf nodes in the tree, ModelPortfolios are defined to
  */
-class AssetAllocation {
+class AssetAllocation : public sic::AbstractAssetAllocation {
 
 public:
 	/// The mapping of filter nodes to AA nodes an AA contains.
@@ -30,8 +30,7 @@ public:
 
 private:
 	const sic::AbstractFilterTree &filterTree;
-	const std::unique_ptr<sic::AssetAllocation::FilterNodeMap>
-		filterNodeMap;
+	const std::unique_ptr<sic::AssetAllocation::FilterNodeMap> filterNodeMap;
 
 public:
 	/**
@@ -42,15 +41,12 @@ public:
 	 * @param filterNodeMap a mapping of the FilterTree's nodes to the
 	 * AssetAllocationNodes where specified.
 	 */
-	AssetAllocation(const sic::AbstractFilterTree &filterTree,
-					std::unique_ptr<sic::AssetAllocation::FilterNodeMap>
-						filterNodeMap)
+	AssetAllocation(
+		const sic::AbstractFilterTree &filterTree,
+		std::unique_ptr<sic::AssetAllocation::FilterNodeMap> filterNodeMap)
 		: filterTree(filterTree), filterNodeMap(std::move(filterNodeMap)) {}
 
-	/**
-	 * The FilterTree representing the AA's structure.
-	 */
-	const sic::AbstractFilterTree &getFilterTree() const {
+	const sic::AbstractFilterTree &getFilterTree() const override {
 		return filterTree;
 	}
 };

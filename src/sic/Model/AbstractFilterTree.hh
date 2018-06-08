@@ -2,6 +2,8 @@
 #define SIC_MODEL_ABSTRACTFILTERTREE_H_
 
 #include "sic/External.hh"
+#include "sic/Model/AbstractFilterNode.hh"
+#include "sic/Portfolio/AbstractAsset.hh"
 
 namespace sic {
 

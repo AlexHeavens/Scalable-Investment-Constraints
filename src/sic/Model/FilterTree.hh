@@ -1,7 +1,6 @@
 #ifndef SIC_MODEL_FILTERTREE_H_
 #define SIC_MODEL_FILTERTREE_H_
 
-#include "sic/Model/AbstractFilterNode.hh"
 #include "sic/Model/AbstractFilterTree.hh"
 #include "sic/Model/FilterNode.hh"
 
