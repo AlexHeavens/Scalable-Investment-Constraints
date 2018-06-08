@@ -20,6 +20,14 @@ public:
 	 */
 	AbstractFilterTree(sic::External::ID externalID)
 		: sic::External(externalID) {}
+
+	/**
+	 * Filter an Asset to its leaf position in the tree.
+	 */
+	virtual sic::AbstractFilterNode &
+	getLeafNode(const sic::AbstractAsset &asset) = 0;
+
+	virtual ~AbstractFilterTree() {}
 };
 
 } // namespace sic

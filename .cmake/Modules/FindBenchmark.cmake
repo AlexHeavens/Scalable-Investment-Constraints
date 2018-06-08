@@ -19,6 +19,7 @@ find_library(BENCHMARK_LIBRARY NAMES "benchmark"
   PATH_SUFFIXES lib lib64
 )
 find_library(BENCHMARK_LIBRARY NAMES "benchmark")
+find_library(BENCHMARK_MAIN_LIBRARY NAMES "benchmark_main")
 
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set BENCHMARK_FOUND to TRUE
@@ -29,6 +30,7 @@ find_package_handle_standard_args(benchmark FOUND_VAR BENCHMARK_FOUND
 
 if(BENCHMARK_FOUND)
   set(BENCHMARK_LIBRARIES ${BENCHMARK_LIBRARY})
+  set(BENCHMARK_MAIN_LIBRARIES ${BENCHMARK_LIBRARY} ${BENCHMARK_MAIN_LIBRARY})
   set(BENCHMARK_INCLUDE_DIRS ${BENCHMARK_INCLUDE_DIR})
 endif()
 

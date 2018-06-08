@@ -22,7 +22,7 @@ TEST_F(IteratorsTest, CreateValidFull) {
 	int intCount = 0;
 	auto vectorIt = intVector.begin();
 
-	while (validIterators.current() != validIterators.end()) {
+	while (validIterators.remaining()) {
 
 		ASSERT_EQ(validIterators.current(), vectorIt)
 			<< "Iterator does not match.";
@@ -48,6 +48,7 @@ TEST_F(IteratorsTest, CreateValidEmpty) {
 	ASSERT_EQ(validIterators.current(), intVector.begin());
 	ASSERT_EQ(validIterators.end(), intVector.end());
 	ASSERT_EQ(validIterators.current(), validIterators.end());
+	ASSERT_FALSE(validIterators.remaining());
 }
 
 } // namespace

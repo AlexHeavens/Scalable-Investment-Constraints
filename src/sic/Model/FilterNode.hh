@@ -46,12 +46,17 @@ public:
 
 	~FilterNode() override {}
 
+	const sic::Filter &getFilter() const override { return *filter; }
+
 	sic::AbstractFilterNode &
 	addChild(std::unique_ptr<const sic::Filter> childFilter) override;
 
 	const sic::AbstractFilterNode *getParentNode() const override {
 		return parentNode;
 	}
+
+	sic::AbstractFilterNode *
+	filterToChild(const sic::AbstractAsset &asset) override;
 
 	sic::Iterators<sic::AbstractFilterNode::ChildIterator>
 	getChildIterators() override;

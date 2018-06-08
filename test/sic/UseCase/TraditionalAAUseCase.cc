@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <chrono>
+#include <iostream>
 #include <random>
 
 #include "sic/EvaluationContext.hh"
@@ -7,77 +9,118 @@
 
 namespace {
 
-class TraditionalAAUseCase : public testing::Test {};
+class TraditionalAAUseCase : public testing::Test {
+
+public:
+	static constexpr int randomSeed = 34534;
+	std::mt19937 randomGen;
+	sic::EvaluationContext context;
+
+	static void generateData(sic::EvaluationContext *const context,
+							 std::mt19937 *const randomGen) {
+
+		// Generate FilterTrees.
+		sic::External::ID nextFilterTreeID = 1000;
+		struct FilterTreeParameters {
+			unsigned treeCount, treeDepth, nodeDegree;
+			FilterTreeParameters(unsigned treeCount, unsigned treeDepth,
+								 unsigned nodeDegree)
+				: treeCount(treeCount), treeDepth(treeDepth),
+				  nodeDegree(nodeDegree) {}
+		};
+
+		// Typical cross-bank number of FilterTrees.
+		std::vector<FilterTreeParameters> filterTreeParams;
+		filterTreeParams.emplace_back(5, 3, 4);
+		filterTreeParams.emplace_back(5, 3, 3);
+		filterTreeParams.emplace_back(5, 2, 5);
+		filterTreeParams.emplace_back(5, 2, 3);
+
+		for (auto &filterTreeParam : filterTreeParams) {
+
+			sic::RegularFilterTreeFactory filterTreeFactory(
+				filterTreeParam.treeDepth, filterTreeParam.nodeDegree);
+
+			for (unsigned i = 0; i < filterTreeParam.treeCount; i++) {
+
+				context->getFilterTreeCache().add(
+					std::make_unique<sic::FilterTree>(nextFilterTreeID));
+				auto &filterTree =
+					context->getFilterTreeCache().get(nextFilterTreeID);
+
+				filterTreeFactory.create(filterTree);
+				nextFilterTreeID++;
+			}
+		}
+
+		// Generate Assets.
+
+		// 100 class groups, up to 4 classes per group.
+		constexpr unsigned classGroupCount = 100;
+		constexpr unsigned groupJump = 100;
+		constexpr unsigned classesPerGroup = 4;
+
+		// Give each Asset a random class from each group.
+		std::uniform_int_distribution<> classDistribution(0,
+														  classesPerGroup - 1);
+
+		constexpr sic::External::ID assetIDsFrom = 1000;
+		constexpr unsigned assetCount = 100000;
+		for (sic::Asset::ID assetID = assetIDsFrom;
+			 assetID < assetIDsFrom + assetCount; assetID++) {
+
+			std::unique_ptr<sic::AbstractAsset::ClassSet> assetClasses(
+				new sic::AbstractAsset::ClassSet);
+			for (unsigned classGroup = 0; classGroup < classGroupCount;
+				 classGroup++) {
+				const sic::Asset::Class groupClass =
+					classGroup * groupJump + classDistribution(*randomGen);
+				assetClasses->insert(groupClass);
+			}
+
+			auto asset =
+				std::make_unique<sic::Asset>(assetID, std::move(assetClasses));
+			context->getAssetCache().add(std::move(asset));
+		}
+	}
+
+	void SetUp() override {
+
+		randomGen = std::mt19937(randomSeed);
+		generateData(&context, &randomGen);
+	}
+};
 
 TEST_F(TraditionalAAUseCase, Execute) {
 
-	constexpr int randomSeed = 34534;
-	std::mt19937 randomGen(randomSeed);
+	auto startTime = std::chrono::high_resolution_clock::now();
 
-	sic::EvaluationContext context;
+	auto filterTrees = context.getFilterTreeCache().getItems();
 
-	// Generate FilterTrees.
-	sic::External::ID nextFilterTreeID = 1000;
-	struct FilterTreeParameters {
-		unsigned treeCount, treeDepth, nodeDegree;
-		FilterTreeParameters(unsigned treeCount, unsigned treeDepth,
-							 unsigned nodeDegree)
-			: treeCount(treeCount), treeDepth(treeDepth),
-			  nodeDegree(nodeDegree) {}
-	};
+	while (filterTrees.remaining()) {
 
-	// Typical cross-bank number of FilterTrees.
-	std::vector<FilterTreeParameters> filterTreeParams;
-	filterTreeParams.emplace_back(5, 3, 4);
-	filterTreeParams.emplace_back(5, 3, 3);
-	filterTreeParams.emplace_back(5, 2, 5);
-	filterTreeParams.emplace_back(5, 2, 3);
+		auto &filterTree = *(filterTrees.current()->second);
 
-	for (auto &filterTreeParam : filterTreeParams) {
+		auto assets = context.getAssetCache().getItems();
 
-		sic::RegularFilterTreeFactory filterTreeFactory(
-			filterTreeParam.treeDepth, filterTreeParam.nodeDegree);
+		while (assets.remaining()) {
 
-		for (unsigned i = 0; i < filterTreeParam.treeCount; i++) {
+			auto &asset = *(assets.current()->second);
 
-			context.getFilterTreeCache().add(
-				std::make_unique<sic::FilterTree>(nextFilterTreeID));
-			auto &filterTree =
-				context.getFilterTreeCache().get(nextFilterTreeID);
+			auto &leaf = filterTree.getLeafNode(asset);
+#pragma unused(leaf)
 
-			filterTreeFactory.create(filterTree);
-			nextFilterTreeID++;
-		}
-	}
-
-	// Generate Assets.
-
-	// 100 class groups, up to 4 classes per group.
-	constexpr unsigned classGroupCount = 100;
-	constexpr unsigned groupJump = 100;
-	constexpr unsigned classesPerGroup = 4;
-
-	// Give each Asset a random class from each group.
-	std::uniform_int_distribution<> classDistribution(0, classesPerGroup - 1);
-
-	constexpr sic::External::ID assetIDsFrom = 1000;
-	constexpr unsigned assetCount = 100000;
-	for (sic::Asset::ID assetID = assetIDsFrom;
-		 assetID < assetIDsFrom + assetCount; assetID++) {
-
-		std::unique_ptr<sic::AbstractAsset::ClassSet> assetClasses(
-			new sic::AbstractAsset::ClassSet);
-		for (unsigned classGroup = 0; classGroup < classGroupCount;
-			 classGroup++) {
-			const sic::Asset::Class groupClass =
-				classGroup * groupJump + classDistribution(randomGen);
-			assetClasses->insert(groupClass);
+			assets.current()++;
 		}
 
-		auto asset =
-			std::make_unique<sic::Asset>(assetID, std::move(assetClasses));
-		context.getAssetCache().add(std::move(asset));
+		filterTrees.current()++;
 	}
+
+	auto finishTime = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double, std::milli> durationMilliseconds =
+		finishTime - startTime;
+	std::cout << "TraditionalAAUseCase Wall Time (ms): "
+			  << durationMilliseconds.count() << std::endl;
 }
 
 } // namespace

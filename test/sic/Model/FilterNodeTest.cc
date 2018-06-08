@@ -3,6 +3,7 @@
 
 #include "sic/Model/FilterNode.hh"
 #include "sic/Model/MockFilter.hh"
+#include "sic/Portfolio/MockAsset.hh"
 
 namespace {
 
@@ -40,6 +41,37 @@ TEST_F(FilterNodeTest, CreateValid) {
 	childIterators.current()++;
 
 	ASSERT_EQ(childIterators.current(), childIterators.end());
+}
+
+TEST_F(FilterNodeTest, FilterToChild) {
+
+	sic::FilterNode parentNode;
+
+	std::vector<sic::AbstractFilterNode *> expChildNodes;
+	expChildNodes.reserve(3);
+	expChildNodes[0] =
+		&parentNode.addChild(std::make_unique<sic::MockFilter>());
+	expChildNodes[1] =
+		&parentNode.addChild(std::make_unique<sic::MockFilter>());
+	expChildNodes[2] =
+		&parentNode.addChild(std::make_unique<sic::MockFilter>());
+
+	sic::MockAsset testAsset;
+
+	EXPECT_CALL(
+		dynamic_cast<const sic::MockFilter &>(expChildNodes[0]->getFilter()),
+		evaluate(testing::Ref(testAsset)))
+		.Times(1)
+		.WillOnce(testing::Return(false));
+	EXPECT_CALL(
+		dynamic_cast<const sic::MockFilter &>(expChildNodes[1]->getFilter()),
+		evaluate(testing::Ref(testAsset)))
+		.Times(1)
+		.WillOnce(testing::Return(true));
+
+	const sic::AbstractFilterNode *returnedNode =
+		parentNode.filterToChild(testAsset);
+	ASSERT_EQ(returnedNode, expChildNodes[1]);
 }
 
 } // namespace

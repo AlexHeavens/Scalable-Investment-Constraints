@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.6)
 project(ScalableInvestmentConstraints)
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
 # Custom Modules
 ## Necessary for finding Google Benchmark
 set(PROJECT_CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/.cmake/Modules/")
@@ -23,6 +27,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(COMMON_FLAGS "-Werror -Wall -Wextra")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
 set(TEST_EXE "tests")
 set(BENCHMARK_EXE "benchmarks")
@@ -76,9 +81,7 @@ set(TEST_MAIN_SRC "${TEST_DIR}/AllTests.cc")
 file(GLOB_RECURSE TEST_SOURCES "${TEST_DIR}/*.cc" "${TEST_DIR}/*.c")
 list(REMOVE_ITEM TEST_SOURCES "${TEST_MAIN_SRC}")
 
-set(BENCHMARK_MAIN_SRC "${BENCHMARK_DIR}/sic/all_benchmarks.cc")
 file(GLOB_RECURSE BENCHMARK_SOURCES "${BENCHMARK_DIR}/*.cc" "${BENCHMARK_DIR}/*.c")
-list(REMOVE_ITEM BENCHMARK_SOURCES "${BENCHMARK_MAIN_SRC}")
 
 # Required Libraries
 include(FindGTest)
@@ -98,9 +101,9 @@ add_executable("${TEST_EXE}" ${SOURCES} ${TEST_SOURCES} ${TEST_MAIN_SRC})
 target_include_directories("${TEST_EXE}" PUBLIC "${SRC_DIR}" "${TEST_DIR}")
 target_link_libraries("${TEST_EXE}" ${GTEST_LIBRARIES} ${GMOCK_LIBRARIES} pthread)
 
-add_executable("${BENCHMARK_EXE}" ${SOURCES} ${TEST_SOURCES} ${BENCHMARK_SOURCES} ${BENCHMARK_MAIN_SRC})
-target_include_directories("${BENCHMARK_EXE}" PUBLIC "${SRC_DIR}" "${TEST_DIR}" "${BENCHMARK_INCLUDE_DIRS}")
-target_link_libraries("${BENCHMARK_EXE}" ${GTEST_LIBRARIES} ${GMOCK_LIBRARIES} ${BENCHMARK_LIBRARIES} pthread)
+add_executable("${BENCHMARK_EXE}" ${SOURCES} ${BENCHMARK_SOURCES})
+target_include_directories("${BENCHMARK_EXE}" PUBLIC "${SRC_DIR}" "${BENCHMARK_INCLUDE_DIRS}")
+target_link_libraries("${BENCHMARK_EXE}" ${BENCHMARK_MAIN_LIBRARIES} pthread)
 
 if (CLANG_TIDY_EXE)
     set_target_properties(
