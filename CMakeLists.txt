@@ -38,8 +38,9 @@ if (NOT CLANG_TIDY_EXE)
     message(STATUS "clang-tidy not found.")
 else ()
     message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
+    set(CLANG_TIDY_IGN "-fuchsia-default-arguments")
     set(CLANG_TIDY_PROPERTIES "${CLANG_TIDY_EXE}"
-            "-checks=*"
+            "-checks=*,${CLANG_TIDY_IGN}"
             "-warnings-as-errors=*"
             "-format-style=google"
             "-header-filter=\"${SRC_DIR}\""
@@ -48,9 +49,14 @@ else ()
 
     # gtest breaks Google's own clang-tidy warnings.
     set(CLANG_TIDY_TEST_IGN
-        "-hicpp-special-member-functions,-cppcoreguidelines-special-member-functions,-hicpp-use-equals-default,-cert-err58-cpp,-modernize-use-equals-default,\
-        -modernize-use-equals-delete,-hicpp-use-equals-delete,-fuchsia-default-arguments,-cppcoreguidelines-owning-memory,\
-        -cppcoreguidelines-pro-type-vararg,-hicpp-vararg,-clang-analyzer-cplusplus.NewDelete,-clang-analyzer-cplusplus.NewDeleteLeaks,\
+        "${CLANG_TIDY_IGN},-hicpp-special-member-functions,\
+        -cppcoreguidelines-special-member-functions,\
+        -hicpp-use-equals-default,-cert-err58-cpp,\
+        -modernize-use-equals-default,-modernize-use-equals-delete,\
+        -hicpp-use-equals-delete,-cppcoreguidelines-owning-memory,\
+        -cppcoreguidelines-pro-type-vararg,-hicpp-vararg,\
+        -clang-analyzer-cplusplus.NewDelete,\
+        -clang-analyzer-cplusplus.NewDeleteLeaks,\
         -clang-analyzer-optin.cplusplus.VirtualCall"
     )
     set(CLANG_TIDY_TEST_PROPERTIES "${CLANG_TIDY_EXE}"
