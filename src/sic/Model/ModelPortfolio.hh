@@ -23,8 +23,7 @@ public:
 		AssetWeightMap;
 
 	/// Iterator for a ModelPortfolio's Asset/Weight pairs.
-	typedef sic::ModelPortfolio::AssetWeightMap::iterator
-		AssetWeightIterator;
+	typedef sic::ModelPortfolio::AssetWeightMap::iterator AssetWeightIterator;
 
 private:
 	std::unique_ptr<sic::ModelPortfolio::AssetWeightMap> assetWeights;
@@ -39,9 +38,9 @@ public:
 	 * sic::Tolerance<sic::Weight>().
 	 * @param externalID ID of the MPF in the external system.
 	 */
-	ModelPortfolio(std::unique_ptr<sic::ModelPortfolio::AssetWeightMap>
-					   assetWeights,
-				   sic::External::ID externalID);
+	ModelPortfolio(
+		std::unique_ptr<sic::ModelPortfolio::AssetWeightMap> assetWeights,
+		sic::External::ID externalID);
 
 	/**
 	 * The begin and end iterators of the ModelPortfolio's Asset/Weight-Range
@@ -49,7 +48,7 @@ public:
 	 *
 	 * @returns Current and end iterators.
 	 */
-	sic::Iterators<sic::ModelPortfolio::AssetWeightIterator>
+	sic::Iterators<std::pair<const sic::AbstractAsset *const, sic::WeightRange>>
 	getAssetWeightIterators();
 
 	/**

@@ -17,7 +17,7 @@ public:
 	 * Construct an AssetAllocation and return to the caller with ownership as a
 	 * unique_ptr.
 	 */
-	std::unique_ptr<sic::AbstractAssetAllocation> create();
+	virtual std::unique_ptr<sic::AbstractAssetAllocation> create() = 0;
 };
 
 } // namespace sic

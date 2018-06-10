@@ -37,7 +37,7 @@ public:
 	 *
 	 * @returns Current and end iterators.
 	 */
-	sic::Iterators<sic::Position::VectorIterator> getPositionIterators();
+	sic::Iterators<sic::Position> getPositionIterators();
 };
 
 } // namespace sic

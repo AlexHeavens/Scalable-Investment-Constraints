@@ -17,15 +17,16 @@ TEST_F(IteratorsTest, CreateValidFull) {
 		intVector.push_back(i);
 	}
 
-	sic::Iterators validIterators(intVector.begin(), intVector.end());
+	sic::Iterators<int>::It begin(intVector.begin());
+	const sic::Iterators<int>::It end(intVector.end());
+
+	sic::Iterators<int> validIterators(begin, end);
 
 	int intCount = 0;
 	auto vectorIt = intVector.begin();
 
 	while (validIterators.remaining()) {
 
-		ASSERT_EQ(validIterators.current(), vectorIt)
-			<< "Iterator does not match.";
 		ASSERT_EQ(*validIterators.current(), *vectorIt)
 			<< "Value at iterator does not match.";
 
@@ -43,10 +44,11 @@ TEST_F(IteratorsTest, CreateValidEmpty) {
 
 	std::vector<int> intVector;
 
-	sic::Iterators validIterators(intVector.begin(), intVector.end());
+	sic::Iterators<int>::It begin(intVector.begin());
+	const sic::Iterators<int>::It end(intVector.end());
 
-	ASSERT_EQ(validIterators.current(), intVector.begin());
-	ASSERT_EQ(validIterators.end(), intVector.end());
+	sic::Iterators<int> validIterators(begin, end);
+
 	ASSERT_EQ(validIterators.current(), validIterators.end());
 	ASSERT_FALSE(validIterators.remaining());
 }

@@ -28,14 +28,21 @@ sic::FilterNode::filterToChild(const sic::AbstractAsset &asset) {
 	return matchNode;
 }
 
-sic::Iterators<sic::AbstractFilterNode::ChildIterator>
+sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>
 sic::FilterNode::getChildIterators() {
-	return sic::Iterators<sic::AbstractFilterNode::ChildIterator>(
-		childNodes.begin(), childNodes.end());
+	sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>::It begin(
+		childNodes.begin());
+	const sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>::It end(
+		childNodes.end());
+	return sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>(begin, end);
 }
 
-sic::Iterators<sic::AbstractFilterNode::ConstChildIterator>
+sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>
 sic::FilterNode::getChildIterators() const {
-	return sic::Iterators<sic::AbstractFilterNode::ConstChildIterator>(
-		childNodes.cbegin(), childNodes.cend());
+	sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>::It begin(
+		childNodes.cbegin());
+	const sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>::It end(
+		childNodes.cend());
+
+	return sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>(begin, end);
 }

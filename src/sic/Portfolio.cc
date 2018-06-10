@@ -23,9 +23,10 @@ sic::Portfolio::Portfolio(std::unique_ptr<std::vector<sic::Position>> positions,
 	this->positions = std::move(positions);
 }
 
-sic::Iterators<sic::Position::VectorIterator>
-sic::Portfolio::getPositionIterators() {
+sic::Iterators<sic::Position> sic::Portfolio::getPositionIterators() {
 
-	return sic::Iterators<sic::Position::VectorIterator>(std::begin(*positions),
-														 std::end(*positions));
+	sic::Iterators<sic::Position>::It begin(positions->begin());
+	sic::Iterators<sic::Position>::It end(positions->end());
+
+	return sic::Iterators<sic::Position>(begin, end);
 }

@@ -47,7 +47,7 @@ public:
 	 *
 	 * @returns Current and end Asset classes iterators.
 	 */
-	sic::Iterators<sic::AbstractAsset::ClassIterator> getClassIterators();
+	sic::Iterators<sic::AbstractAsset::Class> getClassIterators();
 
 	/**
 	 * If the Asset has a given Asset Class.

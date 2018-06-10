@@ -58,10 +58,10 @@ public:
 	sic::AbstractFilterNode *
 	filterToChild(const sic::AbstractAsset &asset) override;
 
-	sic::Iterators<sic::AbstractFilterNode::ChildIterator>
+	sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>
 	getChildIterators() override;
 
-	sic::Iterators<sic::AbstractFilterNode::ConstChildIterator>
+	sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>
 	getChildIterators() const override;
 
 	std::size_t getChildCount() const override { return childNodes.size(); };

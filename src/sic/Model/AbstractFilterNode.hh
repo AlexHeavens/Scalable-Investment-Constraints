@@ -59,7 +59,7 @@ public:
 	 *
 	 * @return Current and end iterators.
 	 */
-	virtual sic::Iterators<sic::AbstractFilterNode::ChildIterator>
+	virtual sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>
 	getChildIterators() = 0;
 
 	/**
@@ -67,7 +67,7 @@ public:
 	 *
 	 * @return Current and end iterators.
 	 */
-	virtual sic::Iterators<sic::AbstractFilterNode::ConstChildIterator>
+	virtual sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>
 	getChildIterators() const = 0;
 
 	/**

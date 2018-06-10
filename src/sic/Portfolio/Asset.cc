@@ -19,11 +19,12 @@ sic::Asset::Asset(
 	}
 }
 
-sic::Iterators<sic::AbstractAsset::ClassIterator>
-sic::Asset::getClassIterators() {
+sic::Iterators<sic::AbstractAsset::Class> sic::Asset::getClassIterators() {
 
-	return sic::Iterators<sic::AbstractAsset::ClassIterator>(
-		std::begin(*classes), std::end(*classes));
+	sic::Iterators<sic::AbstractAsset::Class>::It begin(classes->begin());
+	const sic::Iterators<sic::AbstractAsset::Class>::It end(classes->end());
+
+	return sic::Iterators<sic::AbstractAsset::Class>(begin, end);
 }
 
 bool sic::Asset::hasClass(sic::AbstractAsset::Class assetClass) const {

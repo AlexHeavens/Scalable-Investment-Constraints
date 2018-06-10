@@ -30,10 +30,10 @@ public:
 	MOCK_METHOD1(filterToChild,
 				 sic::AbstractFilterNode *(const sic::AbstractAsset &asset));
 	MOCK_METHOD0(getChildIterators,
-				 sic::Iterators<sic::AbstractFilterNode::ChildIterator>());
+				 sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>());
 	MOCK_CONST_METHOD0(
 		getChildIterators,
-		sic::Iterators<sic::AbstractFilterNode::ConstChildIterator>());
+		sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>());
 	MOCK_CONST_METHOD0(getChildCount, std::size_t());
 };
 

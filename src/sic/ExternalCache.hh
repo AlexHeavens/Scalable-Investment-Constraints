@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 
-#include "sic/Base/Iterators.hh"
+#include "sic/Base/Source.hh"
 #include "sic/External.hh"
 
 namespace sic {
@@ -12,7 +12,10 @@ namespace sic {
  * An optimised container for a type of External objects available to a given
  * EvaluationContext.
  */
-template <typename Item> class ExternalCache {
+template <typename Item>
+class ExternalCache
+	: public sic::Source<
+		  std::pair<const sic::External::ID, std::unique_ptr<Item>>> {
 
 public:
 	typedef std::unordered_map<sic::External::ID, std::unique_ptr<Item>>
@@ -48,9 +51,20 @@ public:
 	/**
 	 * Retrieve iterators for items held in cache.
 	 */
-	sic::Iterators<sic::ExternalCache<Item>::ItemIterator> getItems() {
-		return sic::Iterators<sic::ExternalCache<Item>::ItemIterator>(
-			std::begin(itemMap), std::end(itemMap));
+	typename sic::Iterators<
+		std::pair<const sic::External::ID, std::unique_ptr<Item>>>
+	getItems() {
+
+		typename sic::Iterators<
+			std::pair<const sic::External::ID, std::unique_ptr<Item>>>::It
+			begin(itemMap.begin());
+		typename sic::Iterators<
+			std::pair<const sic::External::ID, std::unique_ptr<Item>>>::It
+			end(itemMap.end());
+
+		return sic::Iterators<
+			std::pair<const sic::External::ID, std::unique_ptr<Item>>>(begin,
+																	   end);
 	}
 };
 

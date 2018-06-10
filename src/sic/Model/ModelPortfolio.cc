@@ -39,11 +39,19 @@ sic::ModelPortfolio::ModelPortfolio(
 
 	this->assetWeights = std::move(assetWeights);
 }
-sic::Iterators<sic::ModelPortfolio::AssetWeightIterator>
+sic::Iterators<std::pair<const sic::AbstractAsset *const, sic::WeightRange>>
 sic::ModelPortfolio::getAssetWeightIterators() {
 
-	return sic::Iterators<sic::ModelPortfolio::AssetWeightIterator>(
-		assetWeights->begin(), assetWeights->end());
+	sic::Iterators<
+		std::pair<const sic::AbstractAsset *const, sic::WeightRange>>::It
+		begin(assetWeights->begin());
+	const sic::Iterators<
+		std::pair<const sic::AbstractAsset *const, sic::WeightRange>>::It
+		end(assetWeights->end());
+
+	return sic::Iterators<
+		std::pair<const sic::AbstractAsset *const, sic::WeightRange>>(begin,
+																	  end);
 }
 
 size_t sic::ModelPortfolio::getAssetCount() const {
