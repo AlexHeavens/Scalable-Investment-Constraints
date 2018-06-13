@@ -22,7 +22,7 @@ sic::Asset::Asset(
 sic::Iterators<sic::AbstractAsset::Class> sic::Asset::getClassIterators() {
 
 	sic::Iterators<sic::AbstractAsset::Class>::It begin(classes->begin());
-	const sic::Iterators<sic::AbstractAsset::Class>::It end(classes->end());
+	sic::Iterators<sic::AbstractAsset::Class>::It end(classes->end());
 
 	return sic::Iterators<sic::AbstractAsset::Class>(begin, end);
 }

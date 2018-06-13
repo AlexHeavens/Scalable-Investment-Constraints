@@ -32,7 +32,7 @@ sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>
 sic::FilterNode::getChildIterators() {
 	sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>::It begin(
 		childNodes.begin());
-	const sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>::It end(
+	sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>::It end(
 		childNodes.end());
 	return sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>(begin, end);
 }
@@ -41,7 +41,7 @@ sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>
 sic::FilterNode::getChildIterators() const {
 	sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>::It begin(
 		childNodes.cbegin());
-	const sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>::It end(
+	sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>::It end(
 		childNodes.cend());
 
 	return sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>(begin, end);

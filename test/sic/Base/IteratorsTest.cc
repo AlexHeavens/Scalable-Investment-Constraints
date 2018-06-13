@@ -18,7 +18,7 @@ TEST_F(IteratorsTest, CreateValidFull) {
 	}
 
 	sic::Iterators<int>::It begin(intVector.begin());
-	const sic::Iterators<int>::It end(intVector.end());
+	sic::Iterators<int>::It end(intVector.end());
 
 	sic::Iterators<int> validIterators(begin, end);
 
@@ -45,7 +45,7 @@ TEST_F(IteratorsTest, CreateValidEmpty) {
 	std::vector<int> intVector;
 
 	sic::Iterators<int>::It begin(intVector.begin());
-	const sic::Iterators<int>::It end(intVector.end());
+	sic::Iterators<int>::It end(intVector.end());
 
 	sic::Iterators<int> validIterators(begin, end);
 

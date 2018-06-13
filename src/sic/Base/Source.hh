@@ -14,7 +14,7 @@ public:
 	/**
 	 * Retrieve iterators for the items of type ItemType.
 	 */
-	virtual sic::Iterators<ItemType> getItems() = 0;
+	virtual typename sic::Iterators<ItemType> getItems() = 0;
 };
 
 } // namespace sic

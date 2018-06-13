@@ -18,15 +18,23 @@ public:
 
 private:
 	sic::Iterators<Item>::It currentIt;
-	const sic::Iterators<Item>::It endIt;
+	sic::Iterators<Item>::It endIt;
 
 public:
 	/**
 	 * Create an Iterator pair.
 	 */
-	Iterators(sic::Iterators<Item>::It &begin,
-			  const sic::Iterators<Item>::It &end)
+	Iterators(sic::Iterators<Item>::It &begin, sic::Iterators<Item>::It &end)
 		: currentIt(begin), endIt(end) {}
+
+	/**
+	 * Assigment to an Iterators.
+	 */
+	Iterators<Item> &operator=(const Iterators<Item> &lhs) {
+		this->currentIt = lhs.currentIt;
+		this->endIt = lhs.endIt;
+		return *this;
+	}
 
 	/**
 	 * The (modifiable) current iterator.
