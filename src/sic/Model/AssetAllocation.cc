@@ -6,8 +6,10 @@ namespace sic {
 
 AssetAllocation::AssetAllocation(
 	const sic::AbstractFilterTree &filterTree,
-	std::unique_ptr<sic::AssetAllocation::FilterNodeMap> filterNodeMap)
-	: filterTree(filterTree), filterNodeMap(std::move(filterNodeMap)) {
+	std::unique_ptr<sic::AssetAllocation::FilterNodeMap> filterNodeMap,
+	sic::External::ID externalID)
+	: sic::AbstractAssetAllocation(externalID), filterTree(filterTree),
+	  filterNodeMap(std::move(filterNodeMap)) {
 
 	if (!this->filterNodeMap or this->filterNodeMap->empty()) {
 		throw std::invalid_argument("empty filterNodeMap.");

@@ -41,10 +41,12 @@ public:
 	 * structure of the AssetAllocation.
 	 * @param filterNodeMap a mapping of the FilterTree's nodes to the
 	 * AssetAllocationNodes where specified.  Must be non-empty.
+	 * @param externalID ID of the AA in the external system.
 	 */
 	AssetAllocation(
 		const sic::AbstractFilterTree &filterTree,
-		std::unique_ptr<sic::AssetAllocation::FilterNodeMap> filterNodeMap);
+		std::unique_ptr<sic::AssetAllocation::FilterNodeMap> filterNodeMap,
+		sic::External::ID externalID);
 
 	const sic::AbstractFilterTree &getFilterTree() const override {
 		return filterTree;

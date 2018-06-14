@@ -39,7 +39,9 @@ TEST_F(AssetAllocationTest, CreateValid) {
 			std::make_pair(filterNodes.at(i).get(), std::move(aaNodes.at(i))));
 	}
 
-	sic::AssetAllocation validAA(filterTree, std::move(filterNodeMap));
+	constexpr sic::External::ID aaID = 1;
+
+	sic::AssetAllocation validAA(filterTree, std::move(filterNodeMap), aaID);
 
 	ASSERT_EQ(&validAA.getFilterTree(), &filterTree);
 }
@@ -49,9 +51,12 @@ TEST_F(AssetAllocationTest, EmptyNodeMap) {
 	const sic::MockFilterTree filterTree;
 	std::unique_ptr<sic::AssetAllocation::FilterNodeMap> nullPtrFilterNodeMap;
 
+	constexpr sic::External::ID aaID = 1;
+
 	const std::string expExceptionString = "empty filterNodeMap.";
 	try {
-		sic::AssetAllocation aa(filterTree, std::move(nullPtrFilterNodeMap));
+		sic::AssetAllocation aa(filterTree, std::move(nullPtrFilterNodeMap),
+								aaID);
 #pragma unused(aa)
 
 		FAIL()
@@ -66,7 +71,8 @@ TEST_F(AssetAllocationTest, EmptyNodeMap) {
 		std::make_unique<sic::AssetAllocation::FilterNodeMap>();
 
 	try {
-		sic::AssetAllocation aa(filterTree, std::move(emptyFilterNodeMap));
+		sic::AssetAllocation aa(filterTree, std::move(emptyFilterNodeMap),
+								aaID);
 #pragma unused(aa)
 
 		FAIL() << "Able to pass filter tree node with empty filterNodeMap.";
@@ -103,10 +109,12 @@ TEST_F(AssetAllocationTest, MapUnknownFilterTreeNode) {
 	EXPECT_CALL(unknownNode, getFilterTree())
 		.WillOnce(testing::ReturnRef(unknownFilterTree));
 
+	constexpr sic::External::ID aaID = 1;
+
 	const std::string expExceptionString =
 		"filterNodeMap contains FilterNode from an unknown tree.";
 	try {
-		sic::AssetAllocation aa(filterTree, std::move(filterNodeMap));
+		sic::AssetAllocation aa(filterTree, std::move(filterNodeMap), aaID);
 #pragma unused(aa)
 
 		FAIL() << "Able to pass filter tree node from unknown tree.";

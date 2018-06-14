@@ -94,12 +94,16 @@ TEST_F(RegularAAFactoryTest, CreateValid) {
 		.WillOnce(testing::Return(filterTreesIt))
 		.WillOnce(testing::Return(filterTreesIt));
 
-	sic::RegularAAFactory factory(filterTreeSource);
+	constexpr sic::External::ID expInitialAAID = 123;
+	sic::RegularAAFactory factory(filterTreeSource, expInitialAAID);
 
 	constexpr int expAACount = 6;
 	for (int i = 0; i < expAACount; i++) {
 
 		auto newAA = factory.create();
+
+		ASSERT_EQ(newAA->getExternalID(), expInitialAAID + i)
+			<< "AA does not have expected ID.";
 
 		// FilterTrees are expected to be used in a round-robin fashion.
 		const int expAAIndex = i % filterTreeCount;

@@ -74,8 +74,10 @@ std::unique_ptr<sic::AbstractAssetAllocation> sic::RegularAAFactory::create() {
 	// Recursively add child AA nodes.
 	addAANodes(rootNode, 1.0, filterNodeMap.get());
 
-	sic::AssetAllocation *newAA =
-		new sic::AssetAllocation(filterTree, std::move(filterNodeMap));
+	sic::AssetAllocation *newAA = new sic::AssetAllocation(
+		filterTree, std::move(filterNodeMap), nextAAID);
+
+	nextAAID++;
 
 	std::unique_ptr<sic::AbstractAssetAllocation> newAAPtr(newAA);
 
