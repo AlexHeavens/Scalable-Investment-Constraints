@@ -13,38 +13,31 @@ TEST_F(AssetAllocationTest, CreateValid) {
 
 	sic::MockFilterTree filterTree;
 
-	const sic::MockFilterNode filterNodeA;
-	const sic::MockFilterNode filterNodeB;
-	const sic::MockFilterNode filterNodeC;
-	const sic::MockFilterNode filterNodeD;
+	constexpr int filterNodeCount = 8;
 
-	const sic::MockFilterNode filterNodeE;
-	const sic::MockFilterNode filterNodeF;
-	const sic::MockFilterNode filterNodeG;
-	const sic::MockFilterNode filterNodeH;
+	std::vector<std::unique_ptr<sic::MockFilterNode>> filterNodes;
+	filterNodes.reserve(filterNodeCount);
 
-	auto aaNodeA = std::make_unique<sic::MockAssetAllocationNode>();
-	auto aaNodeB = std::make_unique<sic::MockAssetAllocationNode>();
-	auto aaNodeC = std::make_unique<sic::MockAssetAllocationNode>();
-	auto aaNodeD = std::make_unique<sic::MockAssetAllocationNode>();
+	for (int i = 0; i < filterNodeCount; i++) {
+		filterNodes.emplace_back(new sic::MockFilterNode);
+	}
 
-	auto aaNodeE = std::make_unique<sic::MockAssetAllocationNode>();
-	auto aaNodeF = std::make_unique<sic::MockAssetAllocationNode>();
-	auto aaNodeG = std::make_unique<sic::MockAssetAllocationNode>();
-	auto aaNodeH = std::make_unique<sic::MockAssetAllocationNode>();
+	std::vector<std::unique_ptr<sic::MockAssetAllocationNode>> aaNodes;
+	aaNodes.reserve(filterNodeCount);
 
-	auto filterNodes = std::make_unique<sic::AssetAllocation::FilterNodeMap>();
+	for (int i = 0; i < filterNodeCount; i++) {
+		aaNodes.emplace_back(new sic::MockAssetAllocationNode);
+	}
 
-	filterNodes->insert(std::make_pair(&filterNodeA, std::move(aaNodeA)));
-	filterNodes->insert(std::make_pair(&filterNodeB, std::move(aaNodeB)));
-	filterNodes->insert(std::make_pair(&filterNodeC, std::move(aaNodeC)));
-	filterNodes->insert(std::make_pair(&filterNodeD, std::move(aaNodeD)));
-	filterNodes->insert(std::make_pair(&filterNodeE, std::move(aaNodeE)));
-	filterNodes->insert(std::make_pair(&filterNodeF, std::move(aaNodeF)));
-	filterNodes->insert(std::make_pair(&filterNodeG, std::move(aaNodeG)));
-	filterNodes->insert(std::make_pair(&filterNodeH, std::move(aaNodeH)));
+	auto filterNodeMap =
+		std::make_unique<sic::AssetAllocation::FilterNodeMap>();
 
-	sic::AssetAllocation validAA(filterTree, std::move(filterNodes));
+	for (int i = 0; i < filterNodeCount; i++) {
+		filterNodeMap->insert(
+			std::make_pair(filterNodes.at(i).get(), std::move(aaNodes.at(i))));
+	}
+
+	sic::AssetAllocation validAA(filterTree, std::move(filterNodeMap));
 
 	ASSERT_EQ(&validAA.getFilterTree(), &filterTree);
 }
