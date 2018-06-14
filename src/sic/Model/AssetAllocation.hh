@@ -40,7 +40,7 @@ public:
 	 * @param filterTree the FilterTree representing the underlying tree
 	 * structure of the AssetAllocation.
 	 * @param filterNodeMap a mapping of the FilterTree's nodes to the
-	 * AssetAllocationNodes where specified.
+	 * AssetAllocationNodes where specified.  Must be non-empty.
 	 */
 	AssetAllocation(
 		const sic::AbstractFilterTree &filterTree,
