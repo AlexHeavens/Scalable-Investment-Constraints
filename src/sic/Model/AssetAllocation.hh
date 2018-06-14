@@ -44,8 +44,7 @@ public:
 	 */
 	AssetAllocation(
 		const sic::AbstractFilterTree &filterTree,
-		std::unique_ptr<sic::AssetAllocation::FilterNodeMap> filterNodeMap)
-		: filterTree(filterTree), filterNodeMap(std::move(filterNodeMap)) {}
+		std::unique_ptr<sic::AssetAllocation::FilterNodeMap> filterNodeMap);
 
 	const sic::AbstractFilterTree &getFilterTree() const override {
 		return filterTree;
