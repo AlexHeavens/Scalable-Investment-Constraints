@@ -1,6 +1,8 @@
 #ifndef SIC_ABSTRACTASSETALLOCATION_H_
 #define SIC_ABSTRACTASSETALLOCATION_H_
 
+#include "sic/Model/AbstractAssetAllocationNode.hh"
+#include "sic/Model/AbstractFilterNode.hh"
 #include "sic/Model/AbstractFilterTree.hh"
 
 namespace sic {
@@ -20,6 +22,12 @@ public:
 	 * Destroy the AssetAlloction.
 	 */
 	virtual ~AbstractAssetAllocation() {}
+
+	/**
+	 * Retrieve the AA Node corresponding to a FilterTree node.
+	 */
+	virtual const sic::AbstractAssetAllocationNode &
+	getAANode(const sic::AbstractFilterNode &filterNode) const = 0;
 };
 
 } // namespace sic

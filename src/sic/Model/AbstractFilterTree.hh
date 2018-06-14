@@ -24,6 +24,16 @@ public:
 		: sic::External(externalID) {}
 
 	/**
+	 * Get the root filter node of the tree.
+	 */
+	virtual sic::AbstractFilterNode &getRootNode() = 0;
+
+	/**
+	 * Get the root filter node of the tree.
+	 */
+	virtual const sic::AbstractFilterNode &getRootNode() const = 0;
+
+	/**
 	 * Filter an Asset to its leaf position in the tree.
 	 */
 	virtual sic::AbstractFilterNode &

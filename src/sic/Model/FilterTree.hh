@@ -24,10 +24,11 @@ public:
 	FilterTree(sic::External::ID externalID)
 		: sic::AbstractFilterTree(externalID) {}
 
-	/**
-	 * Get the root filter node of the tree.
-	 */
-	sic::AbstractFilterNode &getRootNode() { return rootNode; }
+	sic::AbstractFilterNode &getRootNode() override { return rootNode; }
+
+	const sic::AbstractFilterNode &getRootNode() const override {
+		return rootNode;
+	}
 
 	/**
 	 * Get a path of an Asset through the FilterTree.

@@ -24,8 +24,9 @@ class AssetAllocation : public sic::AbstractAssetAllocation {
 
 public:
 	/// The mapping of filter nodes to AA nodes an AA contains.
-	typedef std::unordered_map<const sic::AbstractFilterNode *,
-							   const sic::AbstractAssetAllocationNode *>
+	typedef std::unordered_map<
+		const sic::AbstractFilterNode *,
+		const std::unique_ptr<sic::AbstractAssetAllocationNode>>
 		FilterNodeMap;
 
 private:
@@ -49,6 +50,11 @@ public:
 	const sic::AbstractFilterTree &getFilterTree() const override {
 		return filterTree;
 	}
+
+	const sic::AbstractAssetAllocationNode &
+	getAANode(const sic::AbstractFilterNode &filterNode) const override {
+		return *(filterNodeMap->at(&filterNode));
+	};
 };
 
 } // namespace sic

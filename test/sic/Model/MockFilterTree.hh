@@ -17,6 +17,9 @@ public:
 
 	MOCK_METHOD1(getLeafNode,
 				 sic::AbstractFilterNode &(const sic::AbstractAsset &asset));
+
+	MOCK_METHOD0(getRootNode, sic::AbstractFilterNode &());
+	MOCK_CONST_METHOD0(getRootNode, sic::AbstractFilterNode &());
 };
 
 } // namespace sic

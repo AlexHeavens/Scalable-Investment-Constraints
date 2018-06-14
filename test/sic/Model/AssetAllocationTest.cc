@@ -23,26 +23,26 @@ TEST_F(AssetAllocationTest, CreateValid) {
 	const sic::MockFilterNode filterNodeG;
 	const sic::MockFilterNode filterNodeH;
 
-	const sic::MockAssetAllocationNode aaNodeA;
-	const sic::MockAssetAllocationNode aaNodeB;
-	const sic::MockAssetAllocationNode aaNodeC;
-	const sic::MockAssetAllocationNode aaNodeD;
+	auto aaNodeA = std::make_unique<sic::MockAssetAllocationNode>();
+	auto aaNodeB = std::make_unique<sic::MockAssetAllocationNode>();
+	auto aaNodeC = std::make_unique<sic::MockAssetAllocationNode>();
+	auto aaNodeD = std::make_unique<sic::MockAssetAllocationNode>();
 
-	const sic::MockAssetAllocationNode aaNodeE;
-	const sic::MockAssetAllocationNode aaNodeF;
-	const sic::MockAssetAllocationNode aaNodeG;
-	const sic::MockAssetAllocationNode aaNodeH;
+	auto aaNodeE = std::make_unique<sic::MockAssetAllocationNode>();
+	auto aaNodeF = std::make_unique<sic::MockAssetAllocationNode>();
+	auto aaNodeG = std::make_unique<sic::MockAssetAllocationNode>();
+	auto aaNodeH = std::make_unique<sic::MockAssetAllocationNode>();
 
 	auto filterNodes = std::make_unique<sic::AssetAllocation::FilterNodeMap>();
 
-	filterNodes->insert({&filterNodeA, &aaNodeA});
-	filterNodes->insert({&filterNodeB, &aaNodeB});
-	filterNodes->insert({&filterNodeC, &aaNodeC});
-	filterNodes->insert({&filterNodeD, &aaNodeD});
-	filterNodes->insert({&filterNodeE, &aaNodeE});
-	filterNodes->insert({&filterNodeF, &aaNodeF});
-	filterNodes->insert({&filterNodeG, &aaNodeG});
-	filterNodes->insert({&filterNodeH, &aaNodeH});
+	filterNodes->insert(std::make_pair(&filterNodeA, std::move(aaNodeA)));
+	filterNodes->insert(std::make_pair(&filterNodeB, std::move(aaNodeB)));
+	filterNodes->insert(std::make_pair(&filterNodeC, std::move(aaNodeC)));
+	filterNodes->insert(std::make_pair(&filterNodeD, std::move(aaNodeD)));
+	filterNodes->insert(std::make_pair(&filterNodeE, std::move(aaNodeE)));
+	filterNodes->insert(std::make_pair(&filterNodeF, std::move(aaNodeF)));
+	filterNodes->insert(std::make_pair(&filterNodeG, std::move(aaNodeG)));
+	filterNodes->insert(std::make_pair(&filterNodeH, std::move(aaNodeH)));
 
 	sic::AssetAllocation validAA(filterTree, std::move(filterNodes));
 
