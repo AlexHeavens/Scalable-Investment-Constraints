@@ -3,6 +3,7 @@
 
 #include "sic/Model/FilterNode.hh"
 #include "sic/Model/MockFilter.hh"
+#include "sic/Model/MockFilterTree.hh"
 #include "sic/Portfolio/MockAsset.hh"
 
 namespace {
@@ -11,7 +12,10 @@ class FilterNodeTest : public testing::Test {};
 
 TEST_F(FilterNodeTest, CreateValid) {
 
-	sic::FilterNode parentNode;
+	sic::MockFilterTree filterTree;
+
+	sic::FilterNode parentNode(filterTree);
+	ASSERT_EQ(&parentNode.getFilterTree(), &filterTree);
 	ASSERT_EQ(parentNode.getChildCount(), 0);
 
 	std::vector<sic::AbstractFilterNode *> expChildNodes;
@@ -41,11 +45,17 @@ TEST_F(FilterNodeTest, CreateValid) {
 	childIterators.current()++;
 
 	ASSERT_EQ(childIterators.current(), childIterators.end());
+
+	for (const auto &childNode : expChildNodes) {
+		ASSERT_EQ(&childNode->getFilterTree(), &filterTree);
+	}
 }
 
 TEST_F(FilterNodeTest, FilterToChild) {
 
-	sic::FilterNode parentNode;
+	sic::MockFilterTree filterTree;
+
+	sic::FilterNode parentNode(filterTree);
 
 	std::vector<sic::AbstractFilterNode *> expChildNodes;
 	expChildNodes.reserve(3);

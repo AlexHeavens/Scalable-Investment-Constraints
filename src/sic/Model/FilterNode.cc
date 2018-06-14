@@ -4,7 +4,7 @@ sic::AbstractFilterNode &
 sic::FilterNode::addChild(std::unique_ptr<const sic::Filter> childFilter) {
 
 	std::unique_ptr<sic::AbstractFilterNode> newNode(
-		new sic::FilterNode(std::move(childFilter), this));
+		new sic::FilterNode(filterTree, std::move(childFilter), this));
 	childNodes.push_back(std::move(newNode));
 	return *childNodes.back();
 }

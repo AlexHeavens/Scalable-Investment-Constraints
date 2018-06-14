@@ -3,7 +3,14 @@
 
 #include <vector>
 
+// Necessary due to cycle with AbstractFilterTree.
+namespace sic {
+class AbstractFilterNode;
+class AbstractFilterTree;
+} // namespace sic
+
 #include "sic/Base/Iterators.hh"
+#include "sic/Model/AbstractFilterTree.hh"
 #include "sic/Model/Filter.hh"
 #include "sic/Portfolio/AbstractAsset.hh"
 
@@ -74,6 +81,8 @@ public:
 	 * The number of children below the node.
 	 */
 	virtual std::size_t getChildCount() const = 0;
+
+	virtual const sic::AbstractFilterTree &getFilterTree() const = 0;
 
 	virtual ~AbstractFilterNode(){};
 };

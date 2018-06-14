@@ -52,7 +52,7 @@ TEST_F(FilterTreeTest, CreateValid) {
 	// Couple of basic calls to check sanity.
 	auto &rootNode = validTree.getRootNode();
 
-#pragma unused(rootNode)
+	ASSERT_EQ(&rootNode.getFilterTree(), &validTree);
 }
 
 TEST_F(FilterTreeTest, FilterAssetPath) {

@@ -19,6 +19,7 @@ class FilterNode : public sic::AbstractFilterNode {
 
 private:
 	const sic::AbstractFilterNode *parentNode;
+	const sic::AbstractFilterTree &filterTree;
 	sic::AbstractFilterNode::ChildNodeVector childNodes;
 
 	const std::unique_ptr<const sic::Filter> filter;
@@ -30,9 +31,11 @@ private:
 	 *
 	 * @param parentFilterNode the parent FilterNode in the filter tree.
 	 */
-	FilterNode(std::unique_ptr<const sic::Filter> filter,
+	FilterNode(const sic::AbstractFilterTree &filterTree,
+			   std::unique_ptr<const sic::Filter> filter,
 			   const sic::AbstractFilterNode *parentNode)
-		: parentNode(parentNode), filter(std::move(filter)) {}
+		: parentNode(parentNode), filterTree(filterTree),
+		  filter(std::move(filter)) {}
 
 public:
 	/**
@@ -40,8 +43,8 @@ public:
 	 *
 	 * This node will implicitly be an AllAssetsFilter, passing any Asset.
 	 */
-	FilterNode()
-		: parentNode(nullptr),
+	FilterNode(const sic::AbstractFilterTree &filterTree)
+		: parentNode(nullptr), filterTree(filterTree),
 		  filter(std::make_unique<sic::AllAssetsFilter>()) {}
 
 	~FilterNode() override {}
@@ -65,6 +68,10 @@ public:
 	getChildIterators() const override;
 
 	std::size_t getChildCount() const override { return childNodes.size(); };
+
+	const sic::AbstractFilterTree &getFilterTree() const override {
+		return filterTree;
+	}
 };
 
 } // namespace sic

@@ -35,6 +35,7 @@ public:
 		getChildIterators,
 		sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>());
 	MOCK_CONST_METHOD0(getChildCount, std::size_t());
+	MOCK_CONST_METHOD0(getFilterTree, const sic::AbstractFilterTree &());
 };
 
 } // namespace sic
