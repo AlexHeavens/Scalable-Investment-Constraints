@@ -4,41 +4,18 @@
 
 #include "sic/Portfolio.hh"
 #include "sic/Portfolio/MockAsset.hh"
+#include "sic/Portfolio/MockPosition.hh"
 
 namespace {
 
-class PortfolioTest : public testing::Test {
-
-private:
-	static sic::MockAsset mockAsset;
-	static sic::External::ID externalPositionIDCounter;
-
-public:
-	class MockPosition : public sic::Position {
-
-	public:
-		explicit MockPosition()
-			: sic::Position(mockAsset, 123.00, externalPositionIDCounter++) {}
-
-		explicit MockPosition(sic::External::ID externalID)
-			: sic::Position(mockAsset, 123.00, externalID) {}
-
-		sic::Value getReferenceValue() const { return 123.00; }
-	};
-
-	void SetUp() override { externalPositionIDCounter = 43324l; }
-};
-
-sic::MockAsset PortfolioTest::mockAsset;
-sic::External::ID PortfolioTest::externalPositionIDCounter;
+class PortfolioTest : public testing::Test {};
 
 TEST_F(PortfolioTest, CreateValidPortfolio) {
 
 	// Mock Positions
 	static constexpr int expPositionCount = 500;
-	std::unique_ptr<std::vector<sic::Position>> expPositions(
-		new std::vector<sic::Position>);
-	std::vector<sic::Position *> expPositionAddresses;
+	auto expPositions = std::make_unique<std::vector<sic::MockPosition>>();
+	std::vector<sic::MockPosition *> expPositionAddresses;
 
 	// Store the addresses of the mock positions to compare after
 	// intiialisation.  Warning: must be careful to reserve vector space to
@@ -46,8 +23,9 @@ TEST_F(PortfolioTest, CreateValidPortfolio) {
 	expPositions->reserve(expPositionCount);
 	expPositionAddresses.reserve(expPositionCount);
 
+	sic::External::ID nextPositionID = 123;
 	for (int i = 0; i < expPositionCount; i++) {
-		expPositions->push_back(MockPosition());
+		expPositions->emplace_back(nextPositionID++);
 		expPositionAddresses.push_back(&expPositions->at(i));
 	}
 
@@ -76,12 +54,12 @@ TEST_F(PortfolioTest, CreatePortfolioWithDuplicatePositions) {
 
 	constexpr sic::External::ID expExternalID = 4345543l;
 	constexpr sic::External::ID duplicatePositionExternalID = 234324l;
-	MockPosition positionA(duplicatePositionExternalID);
-	MockPosition positionB(23423535l);
-	MockPosition positionC(duplicatePositionExternalID);
+	sic::MockPosition positionA(duplicatePositionExternalID);
+	sic::MockPosition positionB(23423535l);
+	sic::MockPosition positionC(duplicatePositionExternalID);
 
-	std::unique_ptr<std::vector<sic::Position>> inputPositionVector(
-		new std::vector<sic::Position>);
+	auto inputPositionVector =
+		std::make_unique<std::vector<sic::MockPosition>>();
 	inputPositionVector->push_back(positionA);
 	inputPositionVector->push_back(positionB);
 	inputPositionVector->push_back(positionC);

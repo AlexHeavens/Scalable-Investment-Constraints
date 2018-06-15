@@ -2,9 +2,12 @@
 #define SIC_PORTFOLIO_H_
 
 #include <memory>
+#include <stdexcept>
+#include <unordered_set>
 #include <vector>
 
 #include "sic/AbstractPortfolio.hh"
+#include "sic/Portfolio/Position.hh"
 
 namespace sic {
 
@@ -13,23 +16,47 @@ namespace sic {
  *
  * @see sic::Position
  */
-class Portfolio : public sic::AbstractPortfolio {
+template <typename Position = sic::Position>
+class Portfolio : public sic::AbstractPortfolio<Position> {
 private:
-	std::unique_ptr<std::vector<sic::Position>> positions;
+	std::unique_ptr<std::vector<Position>> positions;
 
 public:
 	/**
-	 * Consruct a portfolio.
+	 * Construct a portfolio.
 	 *
 	 * @param positions a vector of positions that will be moved to the
 	 * Portfolio.
 	 *
 	 * @throws invalid_argument if input positions have a duplicate external ID.
 	 */
-	Portfolio(std::unique_ptr<std::vector<sic::Position>> positions,
-			  sic::External::ID externalID);
+	Portfolio(std::unique_ptr<std::vector<Position>> positions,
+			  sic::External::ID externalID)
+		: sic::AbstractPortfolio<Position>(externalID) {
 
-	sic::Iterators<sic::Position> getPositionIterators() override;
+		// Throw exception if positions have duplicate external ID.
+		std::unordered_set<sic::External::ID> externalIDSet;
+		for (const auto &inputPosition : *positions) {
+
+			const auto inputPositionID = inputPosition.getExternalID();
+			const auto idLookup = externalIDSet.find(inputPositionID);
+			if (idLookup != externalIDSet.end()) {
+				throw std::invalid_argument("Duplicate Portfolio Position ID");
+			}
+
+			externalIDSet.insert(inputPositionID);
+		}
+
+		this->positions = std::move(positions);
+	}
+
+	sic::Iterators<Position> getPositionIterators() override {
+
+		typename sic::Iterators<Position>::It begin(positions->begin());
+		typename sic::Iterators<Position>::It end(positions->end());
+
+		return sic::Iterators<Position>(begin, end);
+	}
 };
 
 } // namespace sic

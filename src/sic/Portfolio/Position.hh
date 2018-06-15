@@ -3,9 +3,7 @@
 
 #include <vector>
 
-#include "sic/Base/Types.hh"
-#include "sic/External.hh"
-#include "sic/Portfolio/AbstractAsset.hh"
+#include "sic/Portfolio/AbstractPosition.hh"
 
 namespace sic {
 
@@ -14,7 +12,7 @@ namespace sic {
  *
  * @see sic::Asset
  */
-class Position : public sic::External {
+class Position : public sic::AbstractPosition {
 
 public:
 	/// Vector of Positions
@@ -32,18 +30,12 @@ public:
 	 */
 	Position(sic::AbstractAsset &asset, sic::Value referenceValue,
 			 sic::External::ID externalID)
-		: sic::External(externalID), asset(asset),
+		: sic::AbstractPosition(externalID), asset(asset),
 		  referenceValue(referenceValue) {}
 
-	/**
-	 * The financial asset the position represents a quantity of.
-	 */
-	sic::AbstractAsset &getAsset() const { return asset; }
+	sic::AbstractAsset &getAsset() const override { return asset; }
 
-	/**
-	 * The value in the (unspecified) reference currency.
-	 */
-	sic::Value getReferenceValue() const { return referenceValue; }
+	sic::Value getReferenceValue() const override { return referenceValue; }
 };
 
 } // namespace sic

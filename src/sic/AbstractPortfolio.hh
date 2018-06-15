@@ -3,7 +3,7 @@
 
 #include "sic/Base/Iterators.hh"
 #include "sic/External.hh"
-#include "sic/Portfolio/Position.hh"
+#include "sic/Portfolio/AbstractPosition.hh"
 
 namespace sic {
 
@@ -12,7 +12,7 @@ namespace sic {
  *
  * @see sic::Position
  */
-class AbstractPortfolio : public sic::External {
+template <typename Position> class AbstractPortfolio : public sic::External {
 
 public:
 	/**
@@ -34,7 +34,7 @@ public:
 	 *
 	 * @returns Current and end iterators.
 	 */
-	virtual sic::Iterators<sic::Position> getPositionIterators() = 0;
+	virtual sic::Iterators<Position> getPositionIterators() = 0;
 };
 
 } // namespace sic

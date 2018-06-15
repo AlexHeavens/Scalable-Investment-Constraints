@@ -17,7 +17,7 @@ class EvaluationContext {
 
 private:
 	sic::ExternalCache<sic::Asset> assetCache;
-	sic::ExternalCache<sic::Portfolio> portfolios;
+	sic::ExternalCache<sic::Portfolio<>> portfolios;
 	sic::ExternalCache<sic::FilterTree> filterTrees;
 	sic::ExternalCache<sic::ModelPortfolio> modelPortfolios;
 	sic::ExternalCache<sic::AssetAllocation> assetAllocations;
@@ -31,7 +31,7 @@ public:
 	/**
 	 * Get the Portfolios.
 	 */
-	sic::ExternalCache<sic::Portfolio> &getPortfolioCache() {
+	sic::ExternalCache<sic::Portfolio<>> &getPortfolioCache() {
 		return portfolios;
 	}
 
