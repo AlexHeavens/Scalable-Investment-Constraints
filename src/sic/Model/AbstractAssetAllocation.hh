@@ -24,14 +24,14 @@ public:
 		: sic::External(externalID) {}
 
 	/**
-	 * The FilterTree representing the AA's structure.
-	 */
-	virtual const sic::AbstractFilterTree &getFilterTree() const = 0;
-
-	/**
 	 * Destroy the AssetAlloction.
 	 */
 	virtual ~AbstractAssetAllocation() {}
+
+	/**
+	 * The FilterTree representing the AA's structure.
+	 */
+	virtual const sic::AbstractFilterTree &getFilterTree() const = 0;
 
 	/**
 	 * Retrieve the AA Node corresponding to a FilterTree node.
