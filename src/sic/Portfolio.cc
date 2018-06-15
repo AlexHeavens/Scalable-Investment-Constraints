@@ -5,7 +5,7 @@
 
 sic::Portfolio::Portfolio(std::unique_ptr<std::vector<sic::Position>> positions,
 						  sic::External::ID externalID)
-	: sic::External(externalID) {
+	: sic::AbstractPortfolio(externalID) {
 
 	// Throw exception if positions have duplicate external ID.
 	std::unordered_set<sic::External::ID> externalIDSet;

@@ -2,12 +2,9 @@
 #define SIC_PORTFOLIO_H_
 
 #include <memory>
-#include <utility>
 #include <vector>
 
-#include "sic/Base/Iterators.hh"
-#include "sic/External.hh"
-#include "sic/Portfolio/Position.hh"
+#include "sic/AbstractPortfolio.hh"
 
 namespace sic {
 
@@ -16,7 +13,7 @@ namespace sic {
  *
  * @see sic::Position
  */
-class Portfolio : public sic::External {
+class Portfolio : public sic::AbstractPortfolio {
 private:
 	std::unique_ptr<std::vector<sic::Position>> positions;
 
@@ -32,12 +29,7 @@ public:
 	Portfolio(std::unique_ptr<std::vector<sic::Position>> positions,
 			  sic::External::ID externalID);
 
-	/**
-	 * The current and end iterators of the Portfolio's position vector.
-	 *
-	 * @returns Current and end iterators.
-	 */
-	sic::Iterators<sic::Position> getPositionIterators();
+	sic::Iterators<sic::Position> getPositionIterators() override;
 };
 
 } // namespace sic
