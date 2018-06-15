@@ -18,6 +18,10 @@ namespace sic {
  */
 template <typename Position = sic::Position>
 class Portfolio : public sic::AbstractPortfolio<Position> {
+
+	static_assert(std::is_base_of<sic::AbstractPosition, Position>::value,
+				  "Position not derived from sic::AbstractPosition");
+
 private:
 	std::unique_ptr<std::vector<Position>> positions;
 
