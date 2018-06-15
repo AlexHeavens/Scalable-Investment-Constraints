@@ -16,8 +16,7 @@ public:
 	std::mt19937 randomGen;
 	sic::EvaluationContext context;
 
-	static void generateData(sic::EvaluationContext *const context,
-							 std::mt19937 *const randomGen) {
+	static void generateFilterTrees(sic::EvaluationContext *const context) {
 
 		// Generate FilterTrees.
 		sic::External::ID nextFilterTreeID = 1000;
@@ -52,8 +51,10 @@ public:
 				nextFilterTreeID++;
 			}
 		}
+	}
 
-		// Generate Assets.
+	static void generateAssets(sic::EvaluationContext *const context,
+							   std::mt19937 *const randomGen) {
 
 		// 100 class groups, up to 4 classes per group.
 		constexpr unsigned classGroupCount = 100;
@@ -85,9 +86,9 @@ public:
 	}
 
 	void SetUp() override {
-
 		randomGen = std::mt19937(randomSeed);
-		generateData(&context, &randomGen);
+		generateFilterTrees(&context);
+		generateAssets(&context, &randomGen);
 	}
 };
 
