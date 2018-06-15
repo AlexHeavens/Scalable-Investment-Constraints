@@ -4,7 +4,6 @@
 #include <memory>
 #include <stdexcept>
 #include <unordered_set>
-#include <vector>
 
 #include "sic/AbstractPortfolio.hh"
 #include "sic/Portfolio/Position.hh"
