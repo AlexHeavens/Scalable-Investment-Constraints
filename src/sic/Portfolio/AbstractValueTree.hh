@@ -18,6 +18,11 @@ public:
 	 */
 	virtual sic::Weight
 	getNodeWeight(const sic::AbstractFilterNode &filterNode) const = 0;
+
+	/**
+	 * Destory AbstractValueTree.
+	 */
+	virtual ~AbstractValueTree() {}
 };
 
 } // namespace sic
