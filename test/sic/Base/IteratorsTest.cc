@@ -12,15 +12,13 @@ TEST_F(IteratorsTest, CreateValidFull) {
 
 	constexpr int expIntCount = 10;
 	std::vector<int> intVector;
+
 	intVector.reserve(expIntCount);
 	for (int i = 0; i < expIntCount; i++) {
 		intVector.push_back(i);
 	}
 
-	sic::Iterators<int>::It begin(intVector.begin());
-	sic::Iterators<int>::It end(intVector.end());
-
-	sic::Iterators<int> validIterators(begin, end);
+	sic::Iterators<int> validIterators(intVector);
 
 	int intCount = 0;
 	auto vectorIt = intVector.begin();
@@ -44,13 +42,39 @@ TEST_F(IteratorsTest, CreateValidEmpty) {
 
 	std::vector<int> intVector;
 
-	sic::Iterators<int>::It begin(intVector.begin());
-	sic::Iterators<int>::It end(intVector.end());
-
-	sic::Iterators<int> validIterators(begin, end);
+	sic::Iterators<int> validIterators(intVector);
 
 	ASSERT_EQ(validIterators.current(), validIterators.end());
 	ASSERT_FALSE(validIterators.remaining());
+}
+
+TEST_F(IteratorsTest, CreateValidPointerBased) {
+
+	constexpr int expIntCount = 10;
+	auto intVector = std::make_unique<std::vector<int>>();
+
+	intVector->reserve(expIntCount);
+	for (int i = 0; i < expIntCount; i++) {
+		intVector->push_back(i);
+	}
+
+	sic::Iterators<int> intIterators(intVector);
+	int intCount = 0;
+	auto vectorIt = intVector->begin();
+
+	while (intIterators.remaining()) {
+
+		ASSERT_EQ(*intIterators.current(), *vectorIt)
+			<< "Value at iterator does not match.";
+
+		intCount++;
+		vectorIt++;
+
+		intIterators.current()++;
+	}
+
+	ASSERT_EQ(intCount, expIntCount)
+		<< "Unexpected number of items iterated through.";
 }
 
 } // namespace

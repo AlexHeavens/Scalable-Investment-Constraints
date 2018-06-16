@@ -83,12 +83,8 @@ TEST_F(RegularAAFactoryTest, CreateValid) {
 		filterTrees.push_back(std::move(treePtr));
 	}
 
-	sic::Iterators<std::unique_ptr<sic::AbstractFilterTree>>::It begin(
-		filterTrees.begin());
-	sic::Iterators<std::unique_ptr<sic::AbstractFilterTree>>::It end(
-		filterTrees.end());
 	sic::Iterators<std::unique_ptr<sic::AbstractFilterTree>> filterTreesIt(
-		begin, end);
+		filterTrees);
 	MockFilterTreeSource filterTreeSource;
 	EXPECT_CALL(filterTreeSource, getItems())
 		.WillOnce(testing::Return(filterTreesIt))

@@ -54,13 +54,7 @@ public:
 	}
 
 	sic::Iterators<sic::AbstractPosition &> getPositionIterators() override {
-
-		typename sic::Iterators<sic::AbstractPosition &>::It begin(
-			positions->begin());
-		typename sic::Iterators<sic::AbstractPosition &>::It end(
-			positions->end());
-
-		return sic::Iterators<sic::AbstractPosition &>(begin, end);
+		return sic::Iterators<sic::AbstractPosition &>(positions);
 	}
 };
 

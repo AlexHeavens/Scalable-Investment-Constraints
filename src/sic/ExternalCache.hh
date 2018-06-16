@@ -17,12 +17,6 @@ class ExternalCache
 	: public sic::Source<
 		  std::pair<const sic::External::ID, std::unique_ptr<Item>>> {
 
-public:
-	typedef std::unordered_map<sic::External::ID, std::unique_ptr<Item>>
-		ItemMap;
-
-	typedef typename sic::ExternalCache<Item>::ItemMap::iterator ItemIterator;
-
 private:
 	std::unordered_map<sic::External::ID, std::unique_ptr<Item>> itemMap;
 
@@ -54,17 +48,8 @@ public:
 	typename sic::Iterators<
 		std::pair<const sic::External::ID, std::unique_ptr<Item>>>
 	getItems() {
-
-		typename sic::Iterators<
-			std::pair<const sic::External::ID, std::unique_ptr<Item>>>::It
-			begin(itemMap.begin());
-		typename sic::Iterators<
-			std::pair<const sic::External::ID, std::unique_ptr<Item>>>::It
-			end(itemMap.end());
-
 		return sic::Iterators<
-			std::pair<const sic::External::ID, std::unique_ptr<Item>>>(begin,
-																	   end);
+			std::pair<const sic::External::ID, std::unique_ptr<Item>>>(itemMap);
 	}
 };
 

@@ -1,6 +1,8 @@
 #ifndef SIC_ITERATORS_H_
 #define SIC_ITERATORS_H_
 
+#include <memory>
+
 #include <boost/range/detail/any_iterator.hpp>
 
 namespace sic {
@@ -23,9 +25,21 @@ private:
 public:
 	/**
 	 * Create an Iterator pair.
+	 *
+	 * @param collection Collection to iterator over.
 	 */
-	Iterators(sic::Iterators<Item>::It &begin, sic::Iterators<Item>::It &end)
-		: currentIt(begin), endIt(end) {}
+	template <typename CollectionType>
+	Iterators(const CollectionType &collection)
+		: currentIt(collection.begin()), endIt(collection.end()) {}
+
+	/**
+	 * Create an Iterator pair.
+	 *
+	 * @param collection Collection to iterator over.
+	 */
+	template <typename CollectionType>
+	Iterators(const std::unique_ptr<CollectionType> &collection)
+		: currentIt(collection->begin()), endIt(collection->end()) {}
 
 	/**
 	 * Assigment to an Iterators.
