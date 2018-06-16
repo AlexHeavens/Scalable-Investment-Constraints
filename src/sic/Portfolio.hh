@@ -16,7 +16,7 @@ namespace sic {
  * @see sic::Position
  */
 template <typename Position = sic::Position>
-class Portfolio : public sic::AbstractPortfolio<Position> {
+class Portfolio : public sic::AbstractPortfolio {
 
 	static_assert(std::is_base_of<sic::AbstractPosition, Position>::value,
 				  "Position not derived from sic::AbstractPosition");
@@ -35,7 +35,7 @@ public:
 	 */
 	Portfolio(std::unique_ptr<std::vector<Position>> positions,
 			  sic::External::ID externalID)
-		: sic::AbstractPortfolio<Position>(externalID) {
+		: sic::AbstractPortfolio(externalID) {
 
 		// Throw exception if positions have duplicate external ID.
 		std::unordered_set<sic::External::ID> externalIDSet;
@@ -53,12 +53,14 @@ public:
 		this->positions = std::move(positions);
 	}
 
-	sic::Iterators<Position> getPositionIterators() override {
+	sic::Iterators<sic::AbstractPosition &> getPositionIterators() override {
 
-		typename sic::Iterators<Position>::It begin(positions->begin());
-		typename sic::Iterators<Position>::It end(positions->end());
+		typename sic::Iterators<sic::AbstractPosition &>::It begin(
+			positions->begin());
+		typename sic::Iterators<sic::AbstractPosition &>::It end(
+			positions->end());
 
-		return sic::Iterators<Position>(begin, end);
+		return sic::Iterators<sic::AbstractPosition &>(begin, end);
 	}
 };
 

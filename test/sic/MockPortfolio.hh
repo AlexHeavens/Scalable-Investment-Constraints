@@ -13,7 +13,8 @@ namespace sic {
 class MockPortfolio : public sic::AbstractPortfolio {
 
 public:
-	MOCK_METHOD0(getPositionIterators, virtual sic::Iterators<sic::Position>());
+	MOCK_METHOD0(getPositionIterators,
+				 sic::Iterators<sic::AbstractPosition &>());
 };
 
 } // namespace sic

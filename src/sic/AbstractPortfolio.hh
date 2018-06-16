@@ -12,7 +12,7 @@ namespace sic {
  *
  * @see sic::Position
  */
-template <typename Position> class AbstractPortfolio : public sic::External {
+class AbstractPortfolio : public sic::External {
 
 public:
 	/**
@@ -34,7 +34,7 @@ public:
 	 *
 	 * @returns Current and end iterators.
 	 */
-	virtual sic::Iterators<Position> getPositionIterators() = 0;
+	virtual sic::Iterators<sic::AbstractPosition &> getPositionIterators() = 0;
 };
 
 } // namespace sic
