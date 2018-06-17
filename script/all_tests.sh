@@ -39,8 +39,10 @@ if [ "${ALL_TESTS_RESULT}" -eq 0 ]; then
 	printf "\n\n"
 	printf "Benchmarks:\n"
 	printf -- "-----------\n"
+	printf "(Warning: limited iterations, noisy results)!\n\n"
 
-	"${PROJECT_BIN_DIR}/benchmarks"
+	# As only a sanity check, allow short execution.
+	"${PROJECT_BIN_DIR}/benchmarks" --benchmark_min_time=0.01
 	ALL_TESTS_RESULT="$?"
 fi
 
