@@ -16,7 +16,7 @@ printf "\n\n"
 printf "CMake Build:\n"
 printf -- "------------\n"
 cmake "$PROJECT_ROOT_DIR" $CMAKE_ARGS -DCMAKE_MAKE_PROGRAM=ninja -G Ninja
-ninja tests benchmarks
+ninja tests
 MAKE_ALL_TESTS_RESULT="$?"
 ALL_TESTS_RESULT=0
 
@@ -31,18 +31,6 @@ if [ "$ALL_TESTS_RESULT" -eq 0 ]; then
 	printf -- "----------------------\n"
 
 	"${PROJECT_BIN_DIR}/tests"
-	ALL_TESTS_RESULT="$?"
-fi
-
-# Execute benchmarks as a sanity check.
-if [ "${ALL_TESTS_RESULT}" -eq 0 ]; then
-	printf "\n\n"
-	printf "Benchmarks:\n"
-	printf -- "-----------\n"
-	printf "(Warning: limited iterations, noisy results)!\n\n"
-
-	# As only a sanity check, allow short execution.
-	"${PROJECT_BIN_DIR}/benchmarks" --benchmark_min_time=0.01
 	ALL_TESTS_RESULT="$?"
 fi
 
