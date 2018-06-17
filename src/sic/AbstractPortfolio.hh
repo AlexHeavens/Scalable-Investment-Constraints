@@ -34,7 +34,15 @@ public:
 	 *
 	 * @returns Current and end iterators.
 	 */
-	virtual sic::Iterators<sic::AbstractPosition &> getPositionIterators() = 0;
+	virtual sic::Iterators<sic::AbstractPosition> getPositionIterators() = 0;
+
+	/**
+	 * The current and end iterators of the Portfolio's position vector.
+	 *
+	 * @returns Current and end iterators.
+	 */
+	virtual sic::Iterators<sic::AbstractPosition>
+	getPositionIterators() const = 0;
 };
 
 } // namespace sic

@@ -53,8 +53,13 @@ public:
 		this->positions = std::move(positions);
 	}
 
-	sic::Iterators<sic::AbstractPosition &> getPositionIterators() override {
-		return sic::Iterators<sic::AbstractPosition &>(positions);
+	sic::Iterators<sic::AbstractPosition> getPositionIterators() override {
+		return sic::Iterators<sic::AbstractPosition>(positions);
+	}
+
+	sic::Iterators<sic::AbstractPosition>
+	getPositionIterators() const override {
+		return sic::Iterators<sic::AbstractPosition>(positions);
 	}
 };
 
