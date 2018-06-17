@@ -19,12 +19,29 @@ TEST_F(ValueTreeTest, CreateValid) {
 		filterNodes.emplace_back(new sic::MockFilterNode());
 	}
 
-	auto nodeWeightMap = std::make_unique<sic::ValueTree::NodeWeightMap>();
+	std::vector<sic::Weight> nodeWeights;
+
+	nodeWeights.reserve(filterNodeCount);
 	for (int i = 0; i < filterNodeCount; i++) {
-		nodeWeightMap->insert(std::pair(filterNodes.at(i).get(), 0.1));
+		nodeWeights.push_back(0.1);
+	}
+
+	auto nodeWeightMap = std::make_unique<sic::ValueTree::NodeWeightMap>();
+
+	for (int i = 0; i < filterNodeCount; i++) {
+
+		const auto filterNodePtr = filterNodes.at(i).get();
+		const auto nodeWeight = nodeWeights.at(i);
+
+		nodeWeightMap->insert(std::pair(filterNodePtr, nodeWeight));
 	}
 
 	sic::ValueTree valueTree(std::move(nodeWeightMap));
+
+	for (int i = 0; i < filterNodeCount; i++) {
+		auto nodeWeight = valueTree.getNodeWeight(*filterNodes.at(i));
+		ASSERT_EQ(nodeWeight, nodeWeights.at(i));
+	}
 }
 
 TEST_F(ValueTreeTest, Equals) {
