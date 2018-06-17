@@ -27,8 +27,8 @@ public:
 	MOCK_METHOD1(addChild, sic::AbstractFilterNode &(const sic::Filter *));
 	MOCK_CONST_METHOD0(getParentNode, const sic::AbstractFilterNode *());
 	MOCK_CONST_METHOD0(getFilter, const sic::Filter &());
-	MOCK_METHOD1(filterToChild,
-				 sic::AbstractFilterNode *(const sic::AbstractAsset &asset));
+	MOCK_CONST_METHOD1(filterToChild, const sic::AbstractFilterNode *(
+										  const sic::AbstractAsset &asset));
 	MOCK_METHOD0(getChildIterators,
 				 sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>());
 	MOCK_CONST_METHOD0(

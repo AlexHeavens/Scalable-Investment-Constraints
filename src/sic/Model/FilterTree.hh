@@ -37,10 +37,10 @@ public:
 	 * @param path Path container to append the list of nodes in the path.
 	 */
 	void getAssetPath(const sic::AbstractAsset &asset,
-					  sic::FilterTree::Path &path);
+					  sic::FilterTree::Path &path) const;
 
-	sic::AbstractFilterNode &
-	getLeafNode(const sic::AbstractAsset &asset) override;
+	const sic::AbstractFilterNode &
+	getLeafNode(const sic::AbstractAsset &asset) const override;
 };
 
 } // namespace sic

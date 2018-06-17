@@ -58,8 +58,8 @@ public:
 	 *
 	 * If no child matches, nullptr is returned.
 	 */
-	virtual sic::AbstractFilterNode *
-	filterToChild(const sic::AbstractAsset &asset) = 0;
+	virtual const sic::AbstractFilterNode *
+	filterToChild(const sic::AbstractAsset &asset) const = 0;
 
 	/**
 	 * The current and end iterators of the node's children.

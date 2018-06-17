@@ -100,8 +100,7 @@ TEST_F(FilterTreeTest, GetLeafNode) {
 		.Times(1)
 		.WillOnce(testing::Return(true));
 
-	sic::AbstractFilterNode &returnedLeafNode =
-		validTree.getLeafNode(testAsset);
+	auto &returnedLeafNode = validTree.getLeafNode(testAsset);
 	ASSERT_EQ(&returnedLeafNode, childNodes[4]);
 }
 

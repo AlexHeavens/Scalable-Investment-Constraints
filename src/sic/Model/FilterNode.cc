@@ -9,10 +9,10 @@ sic::FilterNode::addChild(std::unique_ptr<const sic::Filter> childFilter) {
 	return *childNodes.back();
 }
 
-sic::AbstractFilterNode *
-sic::FilterNode::filterToChild(const sic::AbstractAsset &asset) {
+const sic::AbstractFilterNode *
+sic::FilterNode::filterToChild(const sic::AbstractAsset &asset) const {
 
-	sic::AbstractFilterNode *matchNode = nullptr;
+	const sic::AbstractFilterNode *matchNode = nullptr;
 	auto childIt = getChildIterators();
 	while (childIt.current() != childIt.end()) {
 

@@ -1,9 +1,13 @@
 #ifndef SIC_MODEL_ABSTRACTFILTERTREE_H_
 #define SIC_MODEL_ABSTRACTFILTERTREE_H_
 
+#include <memory>
+
+#include "sic/AbstractPortfolio.hh"
 #include "sic/External.hh"
 #include "sic/Model/AbstractFilterNode.hh"
 #include "sic/Portfolio/AbstractAsset.hh"
+#include "sic/Portfolio/AbstractValueTree.hh"
 
 namespace sic {
 
@@ -36,8 +40,8 @@ public:
 	/**
 	 * Filter an Asset to its leaf position in the tree.
 	 */
-	virtual sic::AbstractFilterNode &
-	getLeafNode(const sic::AbstractAsset &asset) = 0;
+	virtual const sic::AbstractFilterNode &
+	getLeafNode(const sic::AbstractAsset &asset) const = 0;
 
 	virtual ~AbstractFilterTree() {}
 };

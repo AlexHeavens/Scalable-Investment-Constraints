@@ -58,8 +58,8 @@ public:
 		return parentNode;
 	}
 
-	sic::AbstractFilterNode *
-	filterToChild(const sic::AbstractAsset &asset) override;
+	const sic::AbstractFilterNode *
+	filterToChild(const sic::AbstractAsset &asset) const override;
 
 	sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>
 	getChildIterators() override;

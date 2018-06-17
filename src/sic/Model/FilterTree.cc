@@ -1,9 +1,11 @@
 #include "sic/Model/FilterTree.hh"
 
-void sic::FilterTree::getAssetPath(const sic::AbstractAsset &asset,
-								   sic::FilterTree::Path &path) {
+#include "sic/Portfolio/ValueTree.hh"
 
-	sic::AbstractFilterNode *currentNode = &(this->getRootNode());
+void sic::FilterTree::getAssetPath(const sic::AbstractAsset &asset,
+								   sic::FilterTree::Path &path) const {
+
+	const sic::AbstractFilterNode *currentNode = &(this->getRootNode());
 
 	while (currentNode != nullptr) {
 
@@ -12,11 +14,11 @@ void sic::FilterTree::getAssetPath(const sic::AbstractAsset &asset,
 	}
 }
 
-sic::AbstractFilterNode &
-sic::FilterTree::getLeafNode(const sic::AbstractAsset &asset) {
+const sic::AbstractFilterNode &
+sic::FilterTree::getLeafNode(const sic::AbstractAsset &asset) const {
 
-	sic::AbstractFilterNode *currentNode = &(this->getRootNode());
-	sic::AbstractFilterNode *returnNode = nullptr;
+	const sic::AbstractFilterNode *currentNode = &(this->getRootNode());
+	const sic::AbstractFilterNode *returnNode = nullptr;
 
 	while (currentNode != nullptr) {
 
