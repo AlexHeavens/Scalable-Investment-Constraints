@@ -38,11 +38,14 @@ public:
 		return nodeWeightMap->find(&filterNode)->second;
 	}
 
-	/**
-	 * Compare equivalence to another ValueTree.
-	 */
-	bool operator==(const ValueTree &rhs) {
-		return *this->nodeWeightMap == *rhs.nodeWeightMap;
+	bool operator==(const sic::AbstractValueTree &rhs) override {
+		if (typeid(rhs) == typeid(ValueTree)) {
+			const sic::ValueTree &rhsValueTree =
+				dynamic_cast<const ValueTree &>(rhs);
+			return *this->nodeWeightMap == *rhsValueTree.nodeWeightMap;
+		} else {
+			return false;
+		}
 	}
 };
 

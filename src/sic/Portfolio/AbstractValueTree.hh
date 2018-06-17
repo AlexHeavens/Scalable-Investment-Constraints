@@ -23,6 +23,11 @@ public:
 	 * Destory AbstractValueTree.
 	 */
 	virtual ~AbstractValueTree() {}
+
+	/**
+	 * Compare equivalence to another ValueTree.
+	 */
+	virtual bool operator==(const sic::AbstractValueTree &rhs) = 0;
 };
 
 } // namespace sic
