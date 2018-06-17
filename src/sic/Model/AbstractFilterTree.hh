@@ -43,6 +43,16 @@ public:
 	virtual const sic::AbstractFilterNode &
 	getLeafNode(const sic::AbstractAsset &asset) const = 0;
 
+	/**
+	 * Produce a value breakdown of a Portfolio against the tree's nodes.
+	 *
+	 * @param portfolio client's portfolio.
+	 * @return a mapping of the tree's grouping nodes to the weight of
+	 * portfolio's assets that fall under that node.
+	 */
+	virtual std::unique_ptr<sic::AbstractValueTree>
+	evaluate(const sic::AbstractPortfolio &portfolio) const = 0;
+
 	virtual ~AbstractFilterTree() {}
 };
 
