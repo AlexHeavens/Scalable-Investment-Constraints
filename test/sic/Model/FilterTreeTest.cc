@@ -24,26 +24,25 @@ public:
 
 	void SetUp() override {
 
-		filters.reserve(5);
-		filters[0] = new sic::MockFilter();
-		filters[1] = new sic::MockFilter();
-		filters[2] = new sic::MockFilter();
-		filters[3] = new sic::MockFilter();
-		filters[4] = new sic::MockFilter();
+		constexpr int nodeCount = 5;
+		filters.resize(nodeCount);
+		for (int i = 0; i < nodeCount; i++) {
+			filters.at(i) = new sic::MockFilter();
+		}
 
-		auto &rootNode = validTree.getRootNode();
+		auto rootNode = &validTree.getRootNode();
 
-		childNodes.reserve(5);
-		childNodes[0] =
-			&rootNode.addChild(std::unique_ptr<const sic::Filter>(filters[0]));
-		childNodes[1] =
-			&rootNode.addChild(std::unique_ptr<const sic::Filter>(filters[1]));
-		childNodes[2] =
-			&rootNode.addChild(std::unique_ptr<const sic::Filter>(filters[2]));
-		childNodes[3] = &childNodes[0]->addChild(
-			std::unique_ptr<const sic::Filter>(filters[3]));
-		childNodes[4] = &childNodes[0]->addChild(
-			std::unique_ptr<const sic::Filter>(filters[4]));
+		childNodes.resize(nodeCount);
+		childNodes.at(0) = &rootNode->addChild(
+			std::unique_ptr<const sic::Filter>(filters.at(0)));
+		childNodes.at(1) = &rootNode->addChild(
+			std::unique_ptr<const sic::Filter>(filters.at(1)));
+		childNodes.at(2) = &rootNode->addChild(
+			std::unique_ptr<const sic::Filter>(filters.at(2)));
+		childNodes.at(3) = &childNodes.at(0)->addChild(
+			std::unique_ptr<const sic::Filter>(filters.at(3)));
+		childNodes.at(4) = &childNodes.at(0)->addChild(
+			std::unique_ptr<const sic::Filter>(filters.at(4)));
 	}
 };
 
@@ -58,17 +57,17 @@ TEST_F(FilterTreeTest, CreateValid) {
 TEST_F(FilterTreeTest, FilterAssetPath) {
 
 	EXPECT_CALL(
-		dynamic_cast<const sic::MockFilter &>(childNodes[0]->getFilter()),
+		dynamic_cast<const sic::MockFilter &>(childNodes.at(0)->getFilter()),
 		evaluate(testing::Ref(testAsset)))
 		.Times(1)
 		.WillOnce(testing::Return(true));
 	EXPECT_CALL(
-		dynamic_cast<const sic::MockFilter &>(childNodes[3]->getFilter()),
+		dynamic_cast<const sic::MockFilter &>(childNodes.at(3)->getFilter()),
 		evaluate(testing::Ref(testAsset)))
 		.Times(1)
 		.WillOnce(testing::Return(false));
 	EXPECT_CALL(
-		dynamic_cast<const sic::MockFilter &>(childNodes[4]->getFilter()),
+		dynamic_cast<const sic::MockFilter &>(childNodes.at(4)->getFilter()),
 		evaluate(testing::Ref(testAsset)))
 		.Times(1)
 		.WillOnce(testing::Return(true));
@@ -77,31 +76,31 @@ TEST_F(FilterTreeTest, FilterAssetPath) {
 	validTree.getAssetPath(testAsset, path);
 
 	ASSERT_EQ(path.size(), 3);
-	ASSERT_EQ(path[0], &(validTree.getRootNode()));
-	ASSERT_EQ(path[1], childNodes[0]);
-	ASSERT_EQ(path[2], childNodes[4]);
+	ASSERT_EQ(path.at(0), &validTree.getRootNode());
+	ASSERT_EQ(path.at(1), childNodes.at(0));
+	ASSERT_EQ(path.at(2), childNodes.at(4));
 }
 
 TEST_F(FilterTreeTest, GetLeafNode) {
 
 	EXPECT_CALL(
-		dynamic_cast<const sic::MockFilter &>(childNodes[0]->getFilter()),
+		dynamic_cast<const sic::MockFilter &>(childNodes.at(0)->getFilter()),
 		evaluate(testing::Ref(testAsset)))
 		.Times(1)
 		.WillOnce(testing::Return(true));
 	EXPECT_CALL(
-		dynamic_cast<const sic::MockFilter &>(childNodes[3]->getFilter()),
+		dynamic_cast<const sic::MockFilter &>(childNodes.at(3)->getFilter()),
 		evaluate(testing::Ref(testAsset)))
 		.Times(1)
 		.WillOnce(testing::Return(false));
 	EXPECT_CALL(
-		dynamic_cast<const sic::MockFilter &>(childNodes[4]->getFilter()),
+		dynamic_cast<const sic::MockFilter &>(childNodes.at(4)->getFilter()),
 		evaluate(testing::Ref(testAsset)))
 		.Times(1)
 		.WillOnce(testing::Return(true));
 
 	auto &returnedLeafNode = validTree.getLeafNode(testAsset);
-	ASSERT_EQ(&returnedLeafNode, childNodes[4]);
+	ASSERT_EQ(&returnedLeafNode, childNodes.at(4));
 }
 
 } // namespace
