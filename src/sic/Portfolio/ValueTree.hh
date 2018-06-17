@@ -37,6 +37,13 @@ public:
 	getNodeWeight(const sic::AbstractFilterNode &filterNode) const override {
 		return nodeWeightMap->find(&filterNode)->second;
 	}
+
+	/**
+	 * Compare equivalence to another ValueTree.
+	 */
+	bool operator==(const ValueTree &rhs) {
+		return *this->nodeWeightMap == *rhs.nodeWeightMap;
+	}
 };
 
 } // namespace sic
