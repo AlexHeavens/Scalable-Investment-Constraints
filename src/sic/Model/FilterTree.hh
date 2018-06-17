@@ -41,6 +41,9 @@ public:
 
 	const sic::AbstractFilterNode &
 	getLeafNode(const sic::AbstractAsset &asset) const override;
+
+	std::unique_ptr<sic::AbstractValueTree>
+	evaluate(const sic::AbstractPortfolio &portfolio) const override;
 };
 
 } // namespace sic

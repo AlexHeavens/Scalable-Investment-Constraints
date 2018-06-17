@@ -20,6 +20,8 @@ public:
 
 	MOCK_METHOD0(getRootNode, sic::AbstractFilterNode &());
 	MOCK_CONST_METHOD0(getRootNode, sic::AbstractFilterNode &());
+	MOCK_CONST_METHOD1(evaluate, std::unique_ptr<sic::AbstractValueTree>(
+									 const sic::AbstractPortfolio &portfolio));
 };
 
 } // namespace sic

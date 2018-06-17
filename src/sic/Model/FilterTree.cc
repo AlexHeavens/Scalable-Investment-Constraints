@@ -28,3 +28,43 @@ sic::FilterTree::getLeafNode(const sic::AbstractAsset &asset) const {
 
 	return *returnNode;
 }
+
+std::unique_ptr<sic::AbstractValueTree>
+sic::FilterTree::evaluate(const sic::AbstractPortfolio &portfolio) const {
+
+	auto nodeWeightMap = std::make_unique<sic::ValueTree::NodeWeightMap>();
+
+	const auto totalPortfolioValue = portfolio.getTotalReferenceValue();
+
+	auto positions = portfolio.getPositionIterators();
+	while (positions.remaining()) {
+		const auto &position = *positions.current();
+
+		const auto &asset = position.getAsset();
+		const auto &assetLeafNode = getLeafNode(asset);
+		const sic::Weight positionWeight =
+			position.getReferenceValue() / totalPortfolioValue;
+
+		// Add position weight to all nodes in its tree path.
+		const sic::AbstractFilterNode *pathNode = &assetLeafNode;
+		while (pathNode != nullptr) {
+
+			auto mapNodeLookup = nodeWeightMap->find(pathNode);
+			if (mapNodeLookup != nodeWeightMap->end()) {
+				const auto prevNodeWeight = mapNodeLookup->second;
+				(*nodeWeightMap)[pathNode] = prevNodeWeight + positionWeight;
+			} else {
+				nodeWeightMap->insert(std::pair(pathNode, positionWeight));
+			}
+
+			pathNode = pathNode->getParentNode();
+		}
+
+		positions.current()++;
+	}
+
+	auto valueTreePtr = new sic::ValueTree(std::move(nodeWeightMap));
+	std::unique_ptr<sic::AbstractValueTree> valueTree(valueTreePtr);
+
+	return valueTree;
+}

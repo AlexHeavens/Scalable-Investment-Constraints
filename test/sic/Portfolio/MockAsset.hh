@@ -16,6 +16,8 @@ public:
 	explicit MockAsset(sic::External::ID externalID = 1)
 		: sic::AbstractAsset(externalID) {}
 
+	MockAsset(const MockAsset &rhs) : sic::AbstractAsset(rhs) {}
+
 	MOCK_CONST_METHOD1(hasClass, bool(sic::AbstractAsset::Class));
 };
 
