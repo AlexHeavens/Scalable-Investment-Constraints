@@ -43,6 +43,11 @@ public:
 	 */
 	virtual sic::Iterators<sic::AbstractPosition>
 	getPositionIterators() const = 0;
+
+	/**
+	 * The summed reference value of the positions.
+	 */
+	virtual sic::Value getTotalReferenceValue() const = 0;
 };
 
 } // namespace sic

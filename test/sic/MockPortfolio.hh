@@ -16,6 +16,7 @@ public:
 	MOCK_METHOD0(getPositionIterators, sic::Iterators<sic::AbstractPosition>());
 	MOCK_CONST_METHOD0(getPositionIterators,
 					   sic::Iterators<sic::AbstractPosition>());
+	MOCK_CONST_METHOD0(getTotalReferenceValue, sic::Value());
 };
 
 } // namespace sic

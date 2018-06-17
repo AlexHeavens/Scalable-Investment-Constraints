@@ -23,6 +23,15 @@ class Portfolio : public sic::AbstractPortfolio {
 
 private:
 	std::unique_ptr<std::vector<Position>> positions;
+	const sic::Value totalReferenceValue;
+
+	static sic::Value sumPositions(const std::vector<Position> &positions) {
+		sic::Value sum = 0.0;
+		for (auto &position : positions) {
+			sum += position.getReferenceValue();
+		}
+		return sum;
+	}
 
 public:
 	/**
@@ -35,7 +44,8 @@ public:
 	 */
 	Portfolio(std::unique_ptr<std::vector<Position>> positions,
 			  sic::External::ID externalID)
-		: sic::AbstractPortfolio(externalID) {
+		: sic::AbstractPortfolio(externalID),
+		  totalReferenceValue(sumPositions(*positions)) {
 
 		// Throw exception if positions have duplicate external ID.
 		std::unordered_set<sic::External::ID> externalIDSet;
@@ -60,6 +70,10 @@ public:
 	sic::Iterators<sic::AbstractPosition>
 	getPositionIterators() const override {
 		return sic::Iterators<sic::AbstractPosition>(positions);
+	}
+
+	sic::Value getTotalReferenceValue() const override {
+		return totalReferenceValue;
 	}
 };
 
