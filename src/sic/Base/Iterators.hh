@@ -29,7 +29,7 @@ public:
 	 * @param collection Collection to iterator over.
 	 */
 	template <typename CollectionType>
-	Iterators(const CollectionType &collection)
+	explicit Iterators(const CollectionType &collection)
 		: currentIt(collection.begin()), endIt(collection.end()) {}
 
 	/**
@@ -38,9 +38,14 @@ public:
 	 * @param collection Collection to iterator over.
 	 */
 	template <typename CollectionType>
-	Iterators(const std::unique_ptr<CollectionType> &collection)
+	explicit Iterators(const std::unique_ptr<CollectionType> &collection)
 		: currentIt(collection->begin()), endIt(collection->end()) {}
 
+	Iterators(const Iterators<Item> &rhs)
+		: currentIt(rhs.currentIt), endIt(rhs.endIt) {}
+
+	Iterators(Iterators<Item> &rhs)
+		: currentIt(rhs.currentIt), endIt(rhs.endIt) {}
 	/**
 	 * Assigment to an Iterators.
 	 */
