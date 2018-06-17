@@ -29,6 +29,7 @@ protected:
 	 */
 	virtual ~AbstractPosition() {}
 
+public:
 	/**
 	 * The financial asset the position represents a quantity of.
 	 */
