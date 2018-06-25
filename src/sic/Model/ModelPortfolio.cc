@@ -30,9 +30,12 @@ sic::ModelPortfolio::ModelPortfolio(
 		sum += assetEntry.second.target;
 	}
 
+	// Check within tolerance of acceptable rounding errors.
 	constexpr auto tol = sic::Tolerance<sic::Weight>();
-	constexpr auto epsilon = std::numeric_limits<sic::Weight>::epsilon();
-	if (sum < (1.0 - tol - epsilon) or sum > (1.0 + tol + epsilon)) {
+	constexpr auto minSum = 1.0 - tol;
+	constexpr auto maxSum = 1.0 + tol;
+
+	if (sum < minSum or sum > maxSum) {
 		throw std::invalid_argument(
 			"ModelPortfolio Asset weights must sum to 1.0.");
 	}

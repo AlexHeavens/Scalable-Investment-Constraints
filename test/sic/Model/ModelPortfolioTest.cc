@@ -167,8 +167,9 @@ TEST_F(ModelPortfolioTest, CreateValidAssetsSum100Percent) {
 
 		// Offset one Asset weight by the maximum tolerance allowed.
 		const sic::Weight assetWeight =
-			(i == 0) ? perAssetTargetWeight + sic::Tolerance<sic::Weight>()
-					 : perAssetTargetWeight;
+			(i == 0)
+				? perAssetTargetWeight + 0.99 * sic::Tolerance<sic::Weight>()
+				: perAssetTargetWeight;
 		const sic::WeightRange adjustedWeightRange(
 			perAssetMinWeight, assetWeight, perAssetMaxWeight);
 
@@ -193,8 +194,9 @@ TEST_F(ModelPortfolioTest, CreateValidAssetsSum100Percent) {
 
 		// Offset one Asset weight by the maximum tolerance allowed.
 		const sic::Weight assetWeight =
-			(i == 0) ? perAssetTargetWeight - sic::Tolerance<sic::Weight>()
-					 : perAssetTargetWeight;
+			(i == 0)
+				? perAssetTargetWeight - 0.99 * sic::Tolerance<sic::Weight>()
+				: perAssetTargetWeight;
 		const sic::WeightRange adjustedWeightRange(
 			perAssetMinWeight, assetWeight, perAssetMaxWeight);
 
@@ -231,9 +233,9 @@ TEST_F(ModelPortfolioTest, CreateInvalidAssetsSum100Percent) {
 
 		// Offset one Asset weight by just over the maximum tolerance.
 		const sic::Weight assetWeight =
-			(i == 0) ? perAssetTargetWeight + sic::Tolerance<sic::Weight>() +
-						   std::numeric_limits<sic::Weight>::epsilon()
-					 : perAssetTargetWeight;
+			(i == 0)
+				? perAssetTargetWeight + 1.01 * sic::Tolerance<sic::Weight>()
+				: perAssetTargetWeight;
 		const sic::WeightRange adjustedWeightRange(
 			perAssetMinWeight, assetWeight, perAssetMaxWeight);
 
@@ -252,21 +254,24 @@ TEST_F(ModelPortfolioTest, CreateInvalidAssetsSum100Percent) {
 		ASSERT_EQ(expError, e.what());
 	}
 
-	// Overweight, still valid.
+	// Underweight, invalid.
 	auto invalidUnderAssetList = new sic::ModelPortfolio::AssetWeightMap();
 	std::unique_ptr<sic::ModelPortfolio::AssetWeightMap>
 		invalidUnderAssetWeightsMapPtr(invalidUnderAssetList);
 
 	std::vector<std::unique_ptr<const sic::MockAsset>> underAssets;
 	underAssets.reserve(expAssetCount);
+
+	sic::Weight sum = 0.0;
+
 	for (int i = 0; i < expAssetCount; i++) {
 		const auto assetID = static_cast<sic::External::ID>(i);
 
 		// Offset one Asset weight by just over the maximum tolerance.
 		const sic::Weight assetWeight =
-			(i == 0) ? perAssetTargetWeight - sic::Tolerance<sic::Weight>() -
-						   std::numeric_limits<sic::Weight>::epsilon()
-					 : perAssetTargetWeight;
+			(i == 0)
+				? perAssetTargetWeight - 1.01 * sic::Tolerance<sic::Weight>()
+				: perAssetTargetWeight;
 		const sic::WeightRange adjustedWeightRange(
 			perAssetMinWeight, assetWeight, perAssetMaxWeight);
 
@@ -274,7 +279,10 @@ TEST_F(ModelPortfolioTest, CreateInvalidAssetsSum100Percent) {
 			std::make_unique<const sic::MockAsset>(assetID));
 		invalidUnderAssetWeightsMapPtr->insert(
 			{underAssets.at(i).get(), adjustedWeightRange});
+
+		sum += assetWeight;
 	}
+
 	try {
 		const sic::ModelPortfolio invalidUnderMPF(
 			std::move(invalidUnderAssetWeightsMapPtr), expExternalID);
