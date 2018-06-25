@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <random>
+#include <stdexcept>
 #include <vector>
 
 #include "sic/Base/Iterators.hh"
@@ -41,6 +42,13 @@ resevoirSample(sic::Iterators<Item> iterators, size_t sampleCount) {
 		}
 
 		iterators.current()++;
+	}
+
+	if (itemsSeen < sampleCount) {
+		throw std::invalid_argument(
+			"Population size (" + std::to_string(itemsSeen) +
+			") is smaller than requested sample count (" +
+			std::to_string(sampleCount) + ").");
 	}
 
 	return samples;
