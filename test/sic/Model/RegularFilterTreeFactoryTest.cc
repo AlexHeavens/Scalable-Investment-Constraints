@@ -9,19 +9,27 @@ class RegularFilterTreeFactoryTest : public testing::Test {
 public:
 	static void assertNode(const sic::AbstractFilterNode &node,
 						   unsigned expMaxDepth, unsigned nodeDepth,
-						   unsigned expNodeDegree) {
+						   unsigned expNodeDegree, bool expLeaf) {
 
-		if (nodeDepth == expMaxDepth) {
-			ASSERT_EQ(node.getChildCount(), 0);
+		const auto childCount = node.getChildCount();
+		if (expLeaf) {
+			ASSERT_EQ(childCount, 0) << "Expecting leaf node.";
 		} else {
 
-			ASSERT_EQ(node.getChildCount(), expNodeDegree);
+			const auto childDepth = nodeDepth + 1;
 
-			auto children = node.getChildIterators();
-			while (children.current() != children.end()) {
-				assertNode(**(children.current()), expMaxDepth, nodeDepth + 1,
-						   expNodeDegree);
-				children.current()++;
+			ASSERT_EQ(childCount, expNodeDegree)
+				<< "Unexpected number of children for regular tree node.";
+
+			for (std::size_t childIndex = 0; childIndex < childCount;
+				 childIndex++) {
+
+				const auto &childNode = node.getChild(childIndex);
+				const auto expLeaf =
+					childDepth == expMaxDepth or childIndex == childCount - 1;
+
+				assertNode(childNode, expMaxDepth, childDepth, expNodeDegree,
+						   expLeaf);
 			}
 		}
 	}
@@ -40,8 +48,9 @@ TEST_F(RegularFilterTreeFactoryTest, CreateValid) {
 	factory.create(filterTree);
 
 	auto &rootNode = filterTree.getRootNode();
+	const auto expRootIsLeaf = false;
 	RegularFilterTreeFactoryTest::assertNode(rootNode, expDepth, 1,
-											 expNodeDegree);
+											 expNodeDegree, expRootIsLeaf);
 }
 
 TEST_F(RegularFilterTreeFactoryTest, getPathClasses) {

@@ -29,19 +29,17 @@ void RegularFilterTreeFactory::generateNode(sic::AbstractFilterNode &node,
 	node.addChild(std::move(filter));
 
 	nextClassJump += nodeClassJump;
-	currentDepth++;
+	const auto childDepth = currentDepth + 1;
 
-	if (currentDepth == depth) {
+	if (childDepth == depth) {
 		return;
 	}
 
-	// Recurse to new depth if necessary.
-	auto childIterators = node.getChildIterators();
-	while (childIterators.current() != childIterators.end()) {
-		auto &childNode = **((childIterators.current()));
-		generateNode(childNode, currentDepth);
-
-		childIterators.current()++;
+	// Recurse to children, ignoring the last nodes that are AllAssets
+	// catch-alls.
+	for (unsigned childIndex = 0; childIndex < nodeDegree - 1; childIndex++) {
+		auto &childNode = node.getChild(childIndex);
+		generateNode(childNode, childDepth);
 	}
 }
 
