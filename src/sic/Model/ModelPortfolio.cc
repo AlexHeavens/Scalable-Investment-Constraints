@@ -1,6 +1,5 @@
 #include "sic/Model/ModelPortfolio.hh"
 
-#include <limits>
 #include <stdexcept>
 #include <unordered_set>
 
