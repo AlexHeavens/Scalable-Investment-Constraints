@@ -22,7 +22,7 @@ public:
 	 * Construct a FilterTree.
 	 */
 	FilterTree(sic::External::ID externalID)
-		: sic::AbstractFilterTree(externalID), rootNode(*this) {}
+		: sic::AbstractFilterTree(externalID), rootNode(*this, 0) {}
 
 	sic::AbstractFilterNode &getRootNode() override { return rootNode; }
 

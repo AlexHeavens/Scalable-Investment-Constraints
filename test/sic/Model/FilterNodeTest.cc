@@ -8,13 +8,31 @@
 
 namespace {
 
-class FilterNodeTest : public testing::Test {};
+class FilterNodeTest : public testing::Test {
+
+public:
+	sic::MockFilterTree filterTree;
+	sic::FilterNode parentNode;
+	std::vector<sic::AbstractFilterNode *> expChildNodes;
+
+	FilterNodeTest() : parentNode(filterTree, 0) {}
+
+	void SetUp() override {
+		expChildNodes.resize(3);
+		expChildNodes.at(0) =
+			&parentNode.addChild(std::make_unique<sic::MockFilter>());
+		expChildNodes.at(1) =
+			&parentNode.addChild(std::make_unique<sic::MockFilter>());
+		expChildNodes.at(2) =
+			&parentNode.addChild(std::make_unique<sic::MockFilter>());
+	}
+};
 
 TEST_F(FilterNodeTest, CreateValid) {
 
 	sic::MockFilterTree filterTree;
 
-	sic::FilterNode parentNode(filterTree);
+	sic::FilterNode parentNode(filterTree, 0);
 	ASSERT_EQ(&parentNode.getFilterTree(), &filterTree);
 	ASSERT_EQ(parentNode.getChildCount(), 0);
 
@@ -53,19 +71,6 @@ TEST_F(FilterNodeTest, CreateValid) {
 
 TEST_F(FilterNodeTest, FilterToChild) {
 
-	sic::MockFilterTree filterTree;
-
-	sic::FilterNode parentNode(filterTree);
-
-	std::vector<sic::AbstractFilterNode *> expChildNodes;
-	expChildNodes.reserve(3);
-	expChildNodes[0] =
-		&parentNode.addChild(std::make_unique<sic::MockFilter>());
-	expChildNodes[1] =
-		&parentNode.addChild(std::make_unique<sic::MockFilter>());
-	expChildNodes[2] =
-		&parentNode.addChild(std::make_unique<sic::MockFilter>());
-
 	sic::MockAsset testAsset;
 
 	EXPECT_CALL(
@@ -82,6 +87,13 @@ TEST_F(FilterNodeTest, FilterToChild) {
 	const sic::AbstractFilterNode *returnedNode =
 		parentNode.filterToChild(testAsset);
 	ASSERT_EQ(returnedNode, expChildNodes[1]);
+}
+
+TEST_F(FilterNodeTest, getChild) {
+
+	ASSERT_EQ(&parentNode.getChild(0), expChildNodes.at(0));
+	ASSERT_EQ(&parentNode.getChild(1), expChildNodes.at(1));
+	ASSERT_EQ(&parentNode.getChild(2), expChildNodes.at(2));
 }
 
 } // namespace

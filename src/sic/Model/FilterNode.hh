@@ -21,8 +21,8 @@ private:
 	const sic::AbstractFilterNode *parentNode;
 	const sic::AbstractFilterTree &filterTree;
 	sic::AbstractFilterNode::ChildNodeVector childNodes;
-
 	const std::unique_ptr<const sic::Filter> filter;
+	const std::size_t parentIndex;
 
 	/**
 	 * Create a non-root filter tree FilterNode.
@@ -33,9 +33,10 @@ private:
 	 */
 	FilterNode(const sic::AbstractFilterTree &filterTree,
 			   std::unique_ptr<const sic::Filter> filter,
-			   const sic::AbstractFilterNode *parentNode)
+			   const sic::AbstractFilterNode *parentNode,
+			   std::size_t parentIndex)
 		: parentNode(parentNode), filterTree(filterTree),
-		  filter(std::move(filter)) {}
+		  filter(std::move(filter)), parentIndex(parentIndex) {}
 
 public:
 	/**
@@ -43,11 +44,10 @@ public:
 	 *
 	 * This node will implicitly be an AllAssetsFilter, passing any Asset.
 	 */
-	FilterNode(const sic::AbstractFilterTree &filterTree)
+	FilterNode(const sic::AbstractFilterTree &filterTree, size_t parentIndex)
 		: parentNode(nullptr), filterTree(filterTree),
-		  filter(std::make_unique<sic::AllAssetsFilter>()) {}
-
-	~FilterNode() override {}
+		  filter(std::make_unique<sic::AllAssetsFilter>()),
+		  parentIndex(parentIndex) {}
 
 	const sic::Filter &getFilter() const override { return *filter; }
 
@@ -71,6 +71,12 @@ public:
 
 	const sic::AbstractFilterTree &getFilterTree() const override {
 		return filterTree;
+	}
+
+	virtual std::size_t getParentIndex() const override { return parentIndex; }
+
+	sic::AbstractFilterNode &getChild(size_t index) const override {
+		return *childNodes.at(index);
 	}
 };
 

@@ -84,6 +84,19 @@ public:
 
 	virtual const sic::AbstractFilterTree &getFilterTree() const = 0;
 
+	/**
+	 * The index of this node in its parent's list of children.
+	 */
+	virtual std::size_t getParentIndex() const = 0;
+
+	/**
+	 * Retreive a child node with a given index.
+	 */
+	virtual sic::AbstractFilterNode &getChild(std::size_t index) const = 0;
+
+	/**
+	 * Destroy the node.
+	 */
 	virtual ~AbstractFilterNode(){};
 };
 

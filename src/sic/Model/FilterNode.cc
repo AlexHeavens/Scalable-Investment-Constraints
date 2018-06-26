@@ -3,8 +3,8 @@
 sic::AbstractFilterNode &
 sic::FilterNode::addChild(std::unique_ptr<const sic::Filter> childFilter) {
 
-	std::unique_ptr<sic::AbstractFilterNode> newNode(
-		new sic::FilterNode(filterTree, std::move(childFilter), this));
+	std::unique_ptr<sic::AbstractFilterNode> newNode(new sic::FilterNode(
+		filterTree, std::move(childFilter), this, childNodes.size()));
 	childNodes.push_back(std::move(newNode));
 	return *childNodes.back();
 }
