@@ -51,6 +51,4 @@ ModelPortfolio::getAssetWeightIterators() {
 		assetWeights);
 }
 
-size_t ModelPortfolio::getAssetCount() const { return assetWeights->size(); }
-
 } // namespace sic

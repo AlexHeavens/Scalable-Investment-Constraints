@@ -3,11 +3,8 @@
 
 #include <unordered_map>
 
-#include "sic/Base/Iterators.hh"
-#include "sic/Base/Types.hh"
 #include "sic/External.hh"
 #include "sic/Model/AbstractModelPortfolio.hh"
-#include "sic/Portfolio/AbstractAsset.hh"
 
 namespace sic {
 
@@ -42,19 +39,10 @@ public:
 		std::unique_ptr<sic::ModelPortfolio::AssetWeightMap> assetWeights,
 		sic::External::ID externalID);
 
-	/**
-	 * The begin and end iterators of the ModelPortfolio's Asset/Weight-Range
-	 * pairs.
-	 *
-	 * @returns Current and end iterators.
-	 */
 	sic::Iterators<std::pair<const sic::AbstractAsset *const, sic::WeightRange>>
-	getAssetWeightIterators();
+	getAssetWeightIterators() override;
 
-	/**
-	 * Get the number of Assets stored in the MPF.
-	 */
-	size_t getAssetCount() const;
+	std::size_t getAssetCount() const override { return assetWeights->size(); }
 };
 
 } // namespace sic

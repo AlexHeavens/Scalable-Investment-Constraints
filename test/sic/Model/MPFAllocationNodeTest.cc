@@ -1,19 +1,16 @@
 #include <gtest/gtest.h>
 
 #include "sic/Model/MPFAllocationNode.hh"
+#include "sic/Model/MockModelPortfolio.hh"
 
 namespace {
 
-class MPFAllocationNodeTest : public testing::Test {
-
-public:
-	class MockModelPortfolio : public sic::AbstractModelPortfolio {};
-};
+class MPFAllocationNodeTest : public testing::Test {};
 
 TEST_F(MPFAllocationNodeTest, CreateValid) {
 
 	const sic::WeightRange expRange(0.1, 0.1, 0.1);
-	const MockModelPortfolio expMPF;
+	const sic::MockModelPortfolio expMPF;
 
 	sic::MPFAllocationNode validNode(expMPF, expRange);
 
