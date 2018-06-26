@@ -4,7 +4,7 @@
 
 namespace sic {
 
-void sic::RegularAAFactory::addAANodes(
+void RegularAAFactory::addAANodes(
 	const sic::AbstractFilterNode &node, sic::Weight parentWeight,
 	sic::AssetAllocation::FilterNodeMap *filterNodeMap) {
 
@@ -52,7 +52,7 @@ void sic::RegularAAFactory::addAANodes(
 	}
 }
 
-std::unique_ptr<sic::AbstractAssetAllocation> sic::RegularAAFactory::create() {
+std::unique_ptr<sic::AbstractAssetAllocation> RegularAAFactory::create() {
 
 	// Take FilterTrees in a cyclic manner from the source.
 	if (!filterTrees.remaining()) {

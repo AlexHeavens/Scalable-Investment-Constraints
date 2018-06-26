@@ -5,8 +5,10 @@
 #include "sic/Model/Filter/AllAssetsFilter.hh"
 #include "sic/Model/Filter/AssetClassFilter.hh"
 
-void sic::RegularFilterTreeFactory::generateNode(sic::AbstractFilterNode &node,
-												 unsigned currentDepth) {
+namespace sic {
+
+void RegularFilterTreeFactory::generateNode(sic::AbstractFilterNode &node,
+											unsigned currentDepth) {
 
 	if (currentDepth >= depth) {
 		throw std::invalid_argument(
@@ -44,7 +46,7 @@ void sic::RegularFilterTreeFactory::generateNode(sic::AbstractFilterNode &node,
 }
 
 std::unique_ptr<sic::FilterTree>
-sic::RegularFilterTreeFactory::create(sic::External::ID externalID) {
+RegularFilterTreeFactory::create(sic::External::ID externalID) {
 
 	auto returnTree = std::make_unique<sic::FilterTree>(externalID);
 
@@ -53,7 +55,7 @@ sic::RegularFilterTreeFactory::create(sic::External::ID externalID) {
 	return returnTree;
 }
 
-void sic::RegularFilterTreeFactory::create(sic::FilterTree &filterTree) {
+void RegularFilterTreeFactory::create(sic::FilterTree &filterTree) {
 
 	constexpr unsigned currentDepth = 1;
 
@@ -63,7 +65,7 @@ void sic::RegularFilterTreeFactory::create(sic::FilterTree &filterTree) {
 }
 
 std::unique_ptr<sic::AbstractAsset::ClassSet>
-sic::RegularFilterTreeFactory::getPathClasses(
+RegularFilterTreeFactory::getPathClasses(
 	const std::vector<unsigned> &path) const {
 
 	unsigned classGroup = 0;
@@ -82,3 +84,5 @@ sic::RegularFilterTreeFactory::getPathClasses(
 
 	return classes;
 }
+
+} // namespace sic

@@ -1,7 +1,9 @@
 #include "sic/Model/FilterNode.hh"
 
+namespace sic {
+
 sic::AbstractFilterNode &
-sic::FilterNode::addChild(std::unique_ptr<const sic::Filter> childFilter) {
+FilterNode::addChild(std::unique_ptr<const sic::Filter> childFilter) {
 
 	std::unique_ptr<sic::AbstractFilterNode> newNode(new sic::FilterNode(
 		filterTree, std::move(childFilter), this, childNodes.size()));
@@ -10,7 +12,7 @@ sic::FilterNode::addChild(std::unique_ptr<const sic::Filter> childFilter) {
 }
 
 const sic::AbstractFilterNode *
-sic::FilterNode::filterToChild(const sic::AbstractAsset &asset) const {
+FilterNode::filterToChild(const sic::AbstractAsset &asset) const {
 
 	const sic::AbstractFilterNode *matchNode = nullptr;
 	auto childIt = getChildIterators();
@@ -29,11 +31,13 @@ sic::FilterNode::filterToChild(const sic::AbstractAsset &asset) const {
 }
 
 sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>
-sic::FilterNode::getChildIterators() {
+FilterNode::getChildIterators() {
 	return sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>(childNodes);
 }
 
 sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>
-sic::FilterNode::getChildIterators() const {
+FilterNode::getChildIterators() const {
 	return sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>(childNodes);
 }
+
+} // namespace sic

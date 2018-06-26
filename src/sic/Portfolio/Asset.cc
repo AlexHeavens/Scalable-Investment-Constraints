@@ -1,15 +1,15 @@
 #include "sic/Portfolio/Asset.hh"
 
-sic::Asset::Asset(const sic::Asset &rhs)
-	: sic::AbstractAsset(rhs.getExternalID()) {
+namespace sic {
+
+Asset::Asset(const sic::Asset &rhs) : sic::AbstractAsset(rhs.getExternalID()) {
 
 	// Deep copy classes to avoid damaging input.
 	classes = std::make_unique<sic::AbstractAsset::ClassSet>(*rhs.classes);
 }
 
-sic::Asset::Asset(
-	sic::External::ID externalID,
-	std::experimental::optional<std::unique_ptr<ClassSet>> classes)
+Asset::Asset(sic::External::ID externalID,
+			 std::experimental::optional<std::unique_ptr<ClassSet>> classes)
 	: sic::AbstractAsset(externalID) {
 
 	if (classes) {
@@ -19,11 +19,13 @@ sic::Asset::Asset(
 	}
 }
 
-sic::Iterators<sic::AbstractAsset::Class> sic::Asset::getClassIterators() {
+sic::Iterators<sic::AbstractAsset::Class> Asset::getClassIterators() {
 	return sic::Iterators<sic::AbstractAsset::Class>(classes);
 }
 
-bool sic::Asset::hasClass(sic::AbstractAsset::Class assetClass) const {
+bool Asset::hasClass(sic::AbstractAsset::Class assetClass) const {
 	const auto search = classes->find(assetClass);
 	return search != classes->end();
 }
+
+} // namespace sic

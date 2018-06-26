@@ -2,7 +2,9 @@
 
 #include "sic/Portfolio/ValueTree.hh"
 
-sic::AbstractFilterNode *sic::FilterTree::node_iterator::getNextNode() const {
+namespace sic {
+
+sic::AbstractFilterNode *FilterTree::node_iterator::getNextNode() const {
 
 	sic::AbstractFilterNode *nextNode = nullptr;
 
@@ -42,8 +44,8 @@ sic::AbstractFilterNode *sic::FilterTree::node_iterator::getNextNode() const {
 	return nextNode;
 }
 
-void sic::FilterTree::getAssetPath(const sic::AbstractAsset &asset,
-								   sic::FilterTree::Path &path) const {
+void FilterTree::getAssetPath(const sic::AbstractAsset &asset,
+							  sic::FilterTree::Path &path) const {
 
 	const sic::AbstractFilterNode *currentNode = &(this->getRootNode());
 
@@ -55,7 +57,7 @@ void sic::FilterTree::getAssetPath(const sic::AbstractAsset &asset,
 }
 
 const sic::AbstractFilterNode &
-sic::FilterTree::getLeafNode(const sic::AbstractAsset &asset) const {
+FilterTree::getLeafNode(const sic::AbstractAsset &asset) const {
 
 	const sic::AbstractFilterNode *currentNode = &(this->getRootNode());
 	const sic::AbstractFilterNode *returnNode = nullptr;
@@ -70,7 +72,7 @@ sic::FilterTree::getLeafNode(const sic::AbstractAsset &asset) const {
 }
 
 std::unique_ptr<sic::AbstractValueTree>
-sic::FilterTree::evaluate(const sic::AbstractPortfolio &portfolio) const {
+FilterTree::evaluate(const sic::AbstractPortfolio &portfolio) const {
 
 	auto nodeWeightMap = std::make_unique<sic::ValueTree::NodeWeightMap>();
 
@@ -108,3 +110,5 @@ sic::FilterTree::evaluate(const sic::AbstractPortfolio &portfolio) const {
 
 	return valueTree;
 }
+
+} // namespace sic
