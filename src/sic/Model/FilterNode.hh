@@ -73,6 +73,8 @@ public:
 		return filterTree;
 	}
 
+	bool isLeaf() const override { return childNodes.empty(); }
+
 	virtual std::size_t getParentIndex() const override { return parentIndex; }
 
 	sic::AbstractFilterNode &getChild(size_t index) const override {

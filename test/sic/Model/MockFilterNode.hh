@@ -36,6 +36,7 @@ public:
 		sic::Iterators<std::unique_ptr<sic::AbstractFilterNode>>());
 	MOCK_CONST_METHOD0(getChildCount, std::size_t());
 	MOCK_CONST_METHOD0(getFilterTree, const sic::AbstractFilterTree &());
+	MOCK_CONST_METHOD0(isLeaf, bool());
 	MOCK_CONST_METHOD0(getParentIndex, std::size_t());
 	MOCK_CONST_METHOD1(getChild, sic::AbstractFilterNode &(std::size_t));
 };

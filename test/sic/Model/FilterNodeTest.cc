@@ -96,4 +96,12 @@ TEST_F(FilterNodeTest, getChild) {
 	ASSERT_EQ(&parentNode.getChild(2), expChildNodes.at(2));
 }
 
+TEST_F(FilterNodeTest, isLeaf) {
+
+	ASSERT_FALSE(parentNode.isLeaf());
+	ASSERT_TRUE(expChildNodes.at(0)->isLeaf());
+	ASSERT_TRUE(expChildNodes.at(1)->isLeaf());
+	ASSERT_TRUE(expChildNodes.at(2)->isLeaf());
+}
+
 } // namespace

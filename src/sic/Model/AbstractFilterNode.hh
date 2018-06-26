@@ -85,6 +85,11 @@ public:
 	virtual const sic::AbstractFilterTree &getFilterTree() const = 0;
 
 	/**
+	 * If the node is a leaf node in the tree.
+	 */
+	virtual bool isLeaf() const = 0;
+
+	/**
 	 * The index of this node in its parent's list of children.
 	 */
 	virtual std::size_t getParentIndex() const = 0;
