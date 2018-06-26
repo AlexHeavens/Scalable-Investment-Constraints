@@ -194,4 +194,32 @@ TEST_F(FilterTreeTest, EvaluatePortfolio) {
 		<< "Generated ValueTree does not match expected.";
 }
 
+TEST_F(FilterTreeTest, begin_end_nodes) {
+
+	auto beginIt = validTree.begin_nodes();
+	ASSERT_EQ(beginIt,
+			  sic::FilterTree::node_iterator(&validTree.getRootNode()));
+
+	beginIt++;
+	ASSERT_EQ(&(*beginIt), childNodes.at(0));
+
+	beginIt++;
+	ASSERT_EQ(beginIt, sic::FilterTree::node_iterator(childNodes.at(3)));
+
+	beginIt++;
+	ASSERT_EQ(beginIt, sic::FilterTree::node_iterator(childNodes.at(4)));
+
+	beginIt++;
+	ASSERT_EQ(beginIt, sic::FilterTree::node_iterator(childNodes.at(1)));
+
+	beginIt++;
+	ASSERT_EQ(beginIt, sic::FilterTree::node_iterator(childNodes.at(2)));
+
+	auto endIt = validTree.end_nodes();
+	ASSERT_EQ(endIt, sic::FilterTree::node_iterator(nullptr));
+
+	beginIt++;
+	ASSERT_EQ(beginIt, endIt);
+}
+
 } // namespace

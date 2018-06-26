@@ -19,6 +19,47 @@ private:
 
 public:
 	/**
+	 * Iterator for the nodes of the tree.
+	 *
+	 * Searches through the tree in a depth-first manner, starting with the
+	 * root.
+	 */
+	class node_iterator : public std::iterator<std::forward_iterator_tag,
+											   const sic::AbstractFilterNode> {
+	private:
+		sic::AbstractFilterNode *currentNode;
+
+		/**
+		 * The node that the iterator will next choose.
+		 */
+		sic::AbstractFilterNode *getNextNode() const;
+
+	public:
+		explicit node_iterator(sic::AbstractFilterNode *currentNode)
+			: currentNode(currentNode) {}
+
+		node_iterator &operator++() {
+			currentNode = getNextNode();
+			return *this;
+		}
+
+		node_iterator operator++(int) {
+			currentNode = getNextNode();
+			return *this;
+		}
+
+		bool operator==(node_iterator other) const {
+			return currentNode == other.currentNode;
+		}
+
+		bool operator!=(node_iterator other) const {
+			return currentNode != other.currentNode;
+		}
+
+		sic::AbstractFilterNode &operator*() const { return *currentNode; }
+	};
+
+	/**
 	 * Construct a FilterTree.
 	 */
 	FilterTree(sic::External::ID externalID)
@@ -44,6 +85,16 @@ public:
 
 	std::unique_ptr<sic::AbstractValueTree>
 	evaluate(const sic::AbstractPortfolio &portfolio) const override;
+
+	/**
+	 * Begin iterator for the tree nodes.
+	 */
+	node_iterator begin_nodes() { return node_iterator(&getRootNode()); }
+
+	/**
+	 * End iterator for the tree nodes.
+	 */
+	node_iterator end_nodes() { return node_iterator(nullptr); }
 };
 
 } // namespace sic
