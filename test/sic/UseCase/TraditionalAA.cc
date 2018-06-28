@@ -9,7 +9,7 @@
 
 namespace {
 
-class TraditionalAAUseCase : public testing::Test {
+class TraditionalAA : public testing::Test {
 
 public:
 	static constexpr int randomSeed = 34534;
@@ -92,7 +92,7 @@ public:
 	}
 };
 
-TEST_F(TraditionalAAUseCase, Execute) {
+TEST_F(TraditionalAA, FilterAsset) {
 
 	auto startTime = std::chrono::high_resolution_clock::now();
 
