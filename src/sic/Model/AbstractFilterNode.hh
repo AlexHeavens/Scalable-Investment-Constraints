@@ -82,6 +82,9 @@ public:
 	 */
 	virtual std::size_t getChildCount() const = 0;
 
+	/**
+	 * The FilterTree the node is part of.
+	 */
 	virtual const sic::AbstractFilterTree &getFilterTree() const = 0;
 
 	/**
