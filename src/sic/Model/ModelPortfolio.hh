@@ -1,8 +1,6 @@
 #ifndef SIC_MODELPORTFOLIO_H_
 #define SIC_MODELPORTFOLIO_H_
 
-#include <unordered_map>
-
 #include "sic/External.hh"
 #include "sic/Model/AbstractModelPortfolio.hh"
 
@@ -14,16 +12,8 @@ namespace sic {
 class ModelPortfolio : public sic::AbstractModelPortfolio,
 					   public sic::External {
 
-public:
-	/// A map of Assets to weights used by MPFs.
-	typedef std::unordered_map<const sic::AbstractAsset *, sic::WeightRange>
-		AssetWeightMap;
-
-	/// Iterator for a ModelPortfolio's Asset/Weight pairs.
-	typedef sic::ModelPortfolio::AssetWeightMap::iterator AssetWeightIterator;
-
 private:
-	std::unique_ptr<sic::ModelPortfolio::AssetWeightMap> assetWeights;
+	std::unique_ptr<sic::AbstractAsset::AssetWeightMap> assetWeights;
 
 public:
 	/**
@@ -36,7 +26,7 @@ public:
 	 * @param externalID ID of the MPF in the external system.
 	 */
 	ModelPortfolio(
-		std::unique_ptr<sic::ModelPortfolio::AssetWeightMap> assetWeights,
+		std::unique_ptr<sic::AbstractAsset::AssetWeightMap> assetWeights,
 		sic::External::ID externalID);
 
 	sic::Iterators<std::pair<const sic::AbstractAsset *const, sic::WeightRange>>

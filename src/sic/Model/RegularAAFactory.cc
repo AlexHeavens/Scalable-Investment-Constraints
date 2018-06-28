@@ -75,7 +75,7 @@ void RegularAAFactory::genMPFs(
 		const auto &assets = leafAssets.second;
 
 		auto assetWeights =
-			std::make_unique<sic::ModelPortfolio::AssetWeightMap>();
+			std::make_unique<sic::AbstractAsset::AssetWeightMap>();
 		for (auto asset : assets) {
 			assetWeights->insert(std::pair(asset, assetsWeightRange));
 		}

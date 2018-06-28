@@ -2,8 +2,10 @@
 #define SIC_ABSTRACTASSET_H_
 
 #include <memory>
+#include <unordered_map>
 #include <unordered_set>
 
+#include "sic/Base/Types.hh"
 #include "sic/External.hh"
 
 namespace sic {
@@ -17,6 +19,10 @@ namespace sic {
 class AbstractAsset : public sic::External {
 
 public:
+	/// A map of Assets to weights used by models.
+	typedef std::unordered_map<const sic::AbstractAsset *, sic::WeightRange>
+		AssetWeightMap;
+
 	typedef unsigned Class;
 	typedef std::unordered_set<sic::AbstractAsset::Class> ClassSet;
 	typedef sic::AbstractAsset::ClassSet::iterator ClassIterator;

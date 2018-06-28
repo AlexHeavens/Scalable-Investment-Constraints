@@ -8,7 +8,7 @@
 namespace sic {
 
 ModelPortfolio::ModelPortfolio(
-	std::unique_ptr<sic::ModelPortfolio::AssetWeightMap> assetWeights,
+	std::unique_ptr<sic::AbstractAsset::AssetWeightMap> assetWeights,
 	sic::External::ID externalID)
 	: sic::External(externalID) {
 
