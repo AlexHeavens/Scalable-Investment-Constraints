@@ -30,9 +30,10 @@ public:
 	/**
 	 * The ModelPortfolio the node follows.
 	 */
-	const sic::AbstractModelPortfolio &getModelPortfolio() const {
-		return mpf;
-	}
+	const sic::AbstractModelPortfolio &getModelPortfolio() const { return mpf; }
+
+	void attachToTopAssetWeights(
+		sic::AbstractAsset::AssetWeightMap *assetTopWeights) const override;
 };
 
 } // namespace sic

@@ -30,6 +30,13 @@ public:
 	const sic::WeightRange &getWeightRange() const override {
 		return weightRange;
 	}
+
+	void attachToTopAssetWeights(
+		sic::AbstractAsset::AssetWeightMap *assetTopWeights) const override {
+
+		// Most nodes do not have directly attached Assets.
+#pragma unused(assetTopWeights)
+	}
 };
 
 } // namespace sic

@@ -23,6 +23,13 @@ public:
 	virtual const sic::WeightRange &getWeightRange() const = 0;
 
 	/**
+	 * Add the a set of to-top weights those for Assets directly attached to
+	 * this node.
+	 */
+	virtual void attachToTopAssetWeights(
+		sic::AbstractAsset::AssetWeightMap *assetTopWeights) const = 0;
+
+	/**
 	 * Destroy the node.
 	 */
 	virtual ~AbstractAssetAllocationNode() {}

@@ -14,6 +14,9 @@ class MockAssetAllocationNode : public sic::AbstractAssetAllocationNode {
 
 public:
 	MOCK_CONST_METHOD0(getWeightRange, const sic::WeightRange &());
+	MOCK_CONST_METHOD1(
+		attachToTopAssetWeights,
+		void(sic::AbstractAsset::AssetWeightMap *assetTopWeights));
 };
 
 } // namespace sic
