@@ -2,6 +2,7 @@
 #define SIC_MODEL_ABSTRACTASSETALLOCATIONNODE_H_
 
 #include "sic/Base/Types.hh"
+#include "sic/Portfolio/AbstractAsset.hh"
 
 namespace sic {
 
@@ -21,6 +22,9 @@ public:
 	 */
 	virtual const sic::WeightRange &getWeightRange() const = 0;
 
+	/**
+	 * Destroy the node.
+	 */
 	virtual ~AbstractAssetAllocationNode() {}
 };
 
