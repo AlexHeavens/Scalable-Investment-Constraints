@@ -45,7 +45,7 @@ ModelPortfolio::ModelPortfolio(
 }
 
 sic::Iterators<std::pair<const sic::AbstractAsset *const, sic::WeightRange>>
-ModelPortfolio::getAssetWeightIterators() {
+ModelPortfolio::getAssetWeightIterators() const {
 	return sic::Iterators<
 		std::pair<const sic::AbstractAsset *const, sic::WeightRange>>(
 		assetWeights);

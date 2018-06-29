@@ -30,7 +30,7 @@ public:
 		sic::External::ID externalID);
 
 	sic::Iterators<std::pair<const sic::AbstractAsset *const, sic::WeightRange>>
-	getAssetWeightIterators() override;
+	getAssetWeightIterators() const override;
 
 	std::size_t getAssetCount() const override { return assetWeights->size(); }
 };

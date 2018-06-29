@@ -24,7 +24,7 @@ public:
 	 */
 	virtual sic::Iterators<
 		std::pair<const sic::AbstractAsset *const, sic::WeightRange>>
-	getAssetWeightIterators() = 0;
+	getAssetWeightIterators() const = 0;
 
 	/**
 	 * Get the number of Assets stored in the MPF.

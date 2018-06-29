@@ -10,9 +10,9 @@ namespace sic {
 class MockModelPortfolio : public sic::AbstractModelPortfolio {
 
 public:
-	MOCK_METHOD0(getAssetWeightIterators,
-				 sic::Iterators<std::pair<const sic::AbstractAsset *const,
-										  sic::WeightRange>>());
+	MOCK_CONST_METHOD0(getAssetWeightIterators,
+					   sic::Iterators<std::pair<const sic::AbstractAsset *const,
+												sic::WeightRange>>());
 	MOCK_CONST_METHOD0(getAssetCount, std::size_t());
 };
 
