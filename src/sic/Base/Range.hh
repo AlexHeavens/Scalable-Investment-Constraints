@@ -31,6 +31,11 @@ public:
 		}
 	}
 
+	/**
+	 * Create a range where the min, target and max are the same.
+	 */
+	explicit Range(Type target) : min(target), target(target), max(target) {}
+
 	bool operator==(const Range<Type> &rhs) const {
 		return this->min == rhs.min and this->target == rhs.target and
 			   this->max == rhs.max;
