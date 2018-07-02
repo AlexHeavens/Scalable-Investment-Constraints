@@ -56,7 +56,7 @@ FilterTree::evaluate(const sic::AbstractPortfolio &portfolio) const {
 				const auto prevNodeWeight = mapNodeLookup->second;
 				(*nodeWeightMap)[pathNode] = prevNodeWeight + positionWeight;
 			} else {
-				nodeWeightMap->insert(std::pair(pathNode, positionWeight));
+				nodeWeightMap->insert(std::make_pair(pathNode, positionWeight));
 			}
 
 			pathNode = pathNode->getParentNode();
