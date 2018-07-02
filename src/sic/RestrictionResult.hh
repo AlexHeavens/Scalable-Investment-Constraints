@@ -16,6 +16,11 @@ protected:
 
 public:
 	/**
+	 * The number of decimal places that weights will be serialised to.
+	 */
+	static constexpr int weightDecimalPointPrecision = 6;
+
+	/**
 	 * Produce a string representation of the Result.
 	 */
 	virtual std::string serialise() const = 0;
