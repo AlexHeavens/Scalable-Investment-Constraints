@@ -2,6 +2,7 @@
 #define SIC_MODEL_ASSETALLOCATION_NODE_H_
 
 #include "sic/Base/Types.hh"
+#include "sic/Base/Variable.hh"
 #include "sic/Model/AbstractAssetAllocationNode.hh"
 
 namespace sic {
@@ -35,7 +36,7 @@ public:
 		sic::AbstractAsset::AssetWeightMap *assetTopWeights) const override {
 
 		// Most nodes do not have directly attached Assets.
-#pragma unused(assetTopWeights)
+		unused(assetTopWeights)
 	}
 };
 
