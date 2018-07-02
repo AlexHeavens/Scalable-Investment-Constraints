@@ -20,10 +20,20 @@ public:
 
 	MOCK_METHOD0(getRootNode, sic::AbstractFilterNode &());
 	MOCK_CONST_METHOD0(getRootNode, sic::AbstractFilterNode &());
-	MOCK_CONST_METHOD1(evaluate, std::unique_ptr<sic::AbstractValueTree>(
-									 const sic::AbstractPortfolio &portfolio));
+	MOCK_CONST_METHOD1(
+		evaluateRaw,
+		sic::AbstractValueTree *(const sic::AbstractPortfolio &portfolio));
 	MOCK_CONST_METHOD0(begin_nodes, node_iterator());
 	MOCK_CONST_METHOD0(end_nodes, node_iterator());
+
+	/**
+	 * GMock-compatible wrapper for evaluate.
+	 */
+	std::unique_ptr<sic::AbstractValueTree>
+	evaluate(const sic::AbstractPortfolio &portfolio) const override {
+		auto *valueTreeRawPtr = evaluateRaw(portfolio);
+		return std::unique_ptr<sic::AbstractValueTree>(valueTreeRawPtr);
+	}
 };
 
 } // namespace sic
