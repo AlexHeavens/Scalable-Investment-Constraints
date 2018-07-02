@@ -22,7 +22,7 @@ set(DOXYGEN_CONFIG "${DOC_DIR}/doxygen-config")
 # Build Properties
 set(PROJECT_EXE "project_prog")
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 
 set(COMMON_FLAGS "-Werror -Wall -Wextra")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
