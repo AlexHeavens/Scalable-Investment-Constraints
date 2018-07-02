@@ -24,6 +24,11 @@ public:
 	 * Get the result state.
 	 */
 	virtual State getState() const = 0;
+
+	/**
+	 * Destroy the RestrictionResult.
+	 */
+	virtual ~RestrictionResult(){};
 };
 
 } // namespace sic
