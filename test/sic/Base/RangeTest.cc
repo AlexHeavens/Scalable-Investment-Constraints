@@ -14,7 +14,7 @@ TEST_F(RangeTest, CreateValid) {
 	constexpr float expMin = expTarget - std::numeric_limits<float>::epsilon();
 	constexpr float expMax = expTarget + std::numeric_limits<float>::epsilon();
 
-	sic::Range validRange(expMin, expTarget, expMax);
+	sic::Range<float> validRange(expMin, expTarget, expMax);
 
 	ASSERT_EQ(validRange.min, expMin);
 	ASSERT_EQ(validRange.target, expTarget);
@@ -29,7 +29,7 @@ TEST_F(RangeTest, CreateInvalidMin) {
 	const std::string expError = "Range min must be less or equal to target.";
 
 	try {
-		sic::Range validRange(expMin, expTarget, expMax);
+		sic::Range<float> validRange(expMin, expTarget, expMax);
 		FAIL() << "Able to create Range with min > target.";
 	} catch (std::invalid_argument &e) {
 		ASSERT_EQ(e.what(), expError);
@@ -45,7 +45,7 @@ TEST_F(RangeTest, CreateInvalidMax) {
 		"Range max must be greater or equal to target.";
 
 	try {
-		sic::Range validRange(expMin, expTarget, expMax);
+		sic::Range<float> validRange(expMin, expTarget, expMax);
 		FAIL() << "Able to create Range with max < target.";
 	} catch (std::invalid_argument &e) {
 		ASSERT_EQ(e.what(), expError);
