@@ -24,6 +24,11 @@ protected:
 	 */
 	External(sic::External::ID id) : id(id) {}
 
+	/**
+	 * Copy construct an External.:
+	 */
+	External(const sic::External &other) : id(other.id) {}
+
 public:
 	/**
 	 * Get the object's external ID representation.
