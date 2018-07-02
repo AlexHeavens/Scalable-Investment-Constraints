@@ -1,6 +1,7 @@
 #ifndef SIC_MODEL_ASSETALLOCATION_H_
 #define SIC_MODEL_ASSETALLOCATION_H_
 
+#include "sic/Base/Variable.hh"
 #include "sic/Model/AbstractAssetAllocation.hh"
 
 namespace sic {
@@ -50,6 +51,9 @@ public:
 	getAANodeIterators() const override {
 		return sic::Iterators<FilterNodeMap::value_type>(filterNodeMap);
 	};
+
+	std::unique_ptr<ResultVector> generateRestrictionResults(
+		const sic::AbstractPortfolio &portfolio) const override;
 };
 
 } // namespace sic

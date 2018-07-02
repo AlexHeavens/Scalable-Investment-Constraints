@@ -21,6 +21,9 @@ public:
 						   const sic::AbstractFilterNode &filterNode));
 	MOCK_CONST_METHOD0(getAANodeIterators,
 					   sic::Iterators<FilterNodeMap::value_type>());
+	MOCK_CONST_METHOD1(
+		generateRestrictionResults,
+		std::unique_ptr<ResultVector>(const sic::AbstractPortfolio &portfolio));
 };
 
 } // namespace sic

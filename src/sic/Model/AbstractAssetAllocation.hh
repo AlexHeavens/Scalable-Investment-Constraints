@@ -8,6 +8,7 @@
 #include "sic/Model/AbstractAssetAllocationNode.hh"
 #include "sic/Model/AbstractFilterNode.hh"
 #include "sic/Model/AbstractFilterTree.hh"
+#include "sic/RestrictionResult.hh"
 
 namespace sic {
 
@@ -21,6 +22,7 @@ public:
 	using FilterNodeMap = std::unordered_map<
 		const sic::AbstractFilterNode *,
 		const std::unique_ptr<sic::AbstractAssetAllocationNode>>;
+	using ResultVector = std::vector<std::unique_ptr<sic::RestrictionResult>>;
 
 	/**
 	 * Construct an AbstractAssetAllocation.
@@ -52,6 +54,13 @@ public:
 	 */
 	virtual sic::Iterators<FilterNodeMap::value_type>
 	getAANodeIterators() const = 0;
+
+	/**
+	 * Generate results indicating if a given Portfolio passes the AA weight
+	 * ranges.
+	 */
+	virtual std::unique_ptr<ResultVector> generateRestrictionResults(
+		const sic::AbstractPortfolio &portfolio) const = 0;
 };
 
 } // namespace sic
