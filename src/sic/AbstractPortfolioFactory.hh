@@ -16,12 +16,12 @@ public:
 	/**
 	 * Generate a new Portfolio.
 	 */
-	virtual std::unique_ptr<sic::AbstractPortfolio> create();
+	virtual std::unique_ptr<sic::AbstractPortfolio> create() = 0;
 
 	/**
 	 * Destroy the factory.
 	 */
-	virtual ~AbstractPortfolioFactory();
+	virtual ~AbstractPortfolioFactory(){};
 };
 
 } // namespace sic
