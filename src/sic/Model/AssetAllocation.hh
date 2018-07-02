@@ -1,12 +1,7 @@
 #ifndef SIC_MODEL_ASSETALLOCATION_H_
 #define SIC_MODEL_ASSETALLOCATION_H_
 
-#include <memory>
-#include <unordered_map>
-
 #include "sic/Model/AbstractAssetAllocation.hh"
-#include "sic/Model/AbstractAssetAllocationNode.hh"
-#include "sic/Model/AbstractFilterNode.hh"
 
 namespace sic {
 
@@ -23,12 +18,6 @@ namespace sic {
 class AssetAllocation : public sic::AbstractAssetAllocation {
 
 public:
-	/// The mapping of filter nodes to AA nodes an AA contains.
-	typedef std::unordered_map<
-		const sic::AbstractFilterNode *,
-		const std::unique_ptr<sic::AbstractAssetAllocationNode>>
-		FilterNodeMap;
-
 private:
 	const sic::AbstractFilterTree &filterTree;
 	const std::unique_ptr<sic::AssetAllocation::FilterNodeMap> filterNodeMap;
@@ -55,6 +44,11 @@ public:
 	const sic::AbstractAssetAllocationNode &
 	getAANode(const sic::AbstractFilterNode &filterNode) const override {
 		return *(filterNodeMap->at(&filterNode));
+	};
+
+	sic::Iterators<FilterNodeMap::value_type>
+	getAANodeIterators() const override {
+		return sic::Iterators<FilterNodeMap::value_type>(filterNodeMap);
 	};
 };
 
