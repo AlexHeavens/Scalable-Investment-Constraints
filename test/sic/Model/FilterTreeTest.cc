@@ -127,7 +127,7 @@ TEST_F(FilterTreeTest, EvaluatePortfolio) {
 	positions->emplace_back(assets.at(3), 0.1, 3);
 	positions->emplace_back(assets.at(0), 0.2, 4);
 
-	sic::Portfolio portfolio(std::move(positions), 123);
+	sic::Portfolio<> portfolio(std::move(positions), 123);
 
 	EXPECT_CALL(
 		dynamic_cast<const sic::MockFilter &>(childNodes.at(0)->getFilter()),

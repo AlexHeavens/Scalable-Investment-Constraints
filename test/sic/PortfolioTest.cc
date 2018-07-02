@@ -39,7 +39,8 @@ TEST_F(PortfolioTest, CreateValidPortfolio) {
 	// Create Portfolio
 	constexpr sic::External::ID expExternalID = 34345l;
 
-	sic::Portfolio validPortfolio(std::move(expPositions), expExternalID);
+	sic::Portfolio<sic::MockPosition> validPortfolio(std::move(expPositions),
+													 expExternalID);
 
 	// Check Portolio Positions
 	auto positionIterators = validPortfolio.getPositionIterators();
@@ -80,8 +81,8 @@ TEST_F(PortfolioTest, CreatePortfolioWithDuplicatePositions) {
 	const std::string expExceptionString = "Duplicate Portfolio Position ID";
 
 	try {
-		sic::Portfolio duplicatePositionPortfolio(std::move(positions),
-												  expExternalID);
+		sic::Portfolio<sic::MockPosition> duplicatePositionPortfolio(
+			std::move(positions), expExternalID);
 		FAIL() << "Able to create Portfolio with duplicate Position.";
 	} catch (const std::invalid_argument &e) {
 		ASSERT_EQ(expExceptionString, e.what());
