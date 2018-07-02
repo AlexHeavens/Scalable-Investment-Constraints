@@ -17,6 +17,7 @@ public:
 	MOCK_CONST_METHOD0(getPositionIterators,
 					   sic::Iterators<sic::AbstractPosition>());
 	MOCK_CONST_METHOD0(getTotalReferenceValue, sic::Value());
+	MOCK_CONST_METHOD0(getPositionCount, std::size_t());
 };
 
 } // namespace sic
