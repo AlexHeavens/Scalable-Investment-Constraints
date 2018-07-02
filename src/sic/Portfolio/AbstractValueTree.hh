@@ -11,7 +11,19 @@ namespace sic {
  */
 class AbstractValueTree {
 
+protected:
+	/**
+	 * Construct an AbstractValueTree.
+	 *
+	 * This is protected to avoid instantiation of a purely abstract class.
+	 */
+	AbstractValueTree() = default;
+
 public:
+	/// Storage mapping of FilterTree nodes to their weight in the Portfolio.
+	typedef std::unordered_map<const sic::AbstractFilterNode *, sic::Weight>
+		NodeWeightMap;
+
 	/**
 	 * Retrieve the to-top weight of the Positions that fall under a specific
 	 * FilterNode in the client's Portfolio.
@@ -28,6 +40,12 @@ public:
 	 * Compare equivalence to another ValueTree.
 	 */
 	virtual bool operator==(const sic::AbstractValueTree &rhs) = 0;
+
+	/**
+	 * Iterators over the nodes / weights of the ValueTree.
+	 */
+	virtual sic::Iterators<NodeWeightMap::value_type>
+	getNodeWeightIterators() const = 0;
 };
 
 } // namespace sic

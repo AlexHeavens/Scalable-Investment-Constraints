@@ -18,11 +18,6 @@ namespace sic {
  */
 class ValueTree : public sic::AbstractValueTree {
 
-public:
-	/// Storage mapping of FilterTree nodes to their weight in the Portfolio.
-	typedef std::unordered_map<const sic::AbstractFilterNode *, sic::Weight>
-		NodeWeightMap;
-
 private:
 	const std::unique_ptr<NodeWeightMap> nodeWeightMap;
 
@@ -46,6 +41,11 @@ public:
 		} else {
 			return false;
 		}
+	}
+
+	sic::Iterators<NodeWeightMap::value_type>
+	getNodeWeightIterators() const override {
+		return sic::Iterators<NodeWeightMap::value_type>(*nodeWeightMap);
 	}
 };
 

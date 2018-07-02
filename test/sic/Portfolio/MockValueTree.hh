@@ -19,6 +19,8 @@ public:
 		unused(other);
 		return false;
 	}
+	MOCK_CONST_METHOD0(getNodeWeightIterators,
+					   sic::Iterators<NodeWeightMap::value_type>());
 };
 
 } // namespace sic
