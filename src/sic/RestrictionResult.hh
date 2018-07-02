@@ -31,6 +31,11 @@ public:
 	virtual State getState() const = 0;
 
 	/**
+	 * Compare the result to another.
+	 */
+	virtual bool operator==(const sic::RestrictionResult &other) const = 0;
+
+	/**
 	 * Destroy the RestrictionResult.
 	 */
 	virtual ~RestrictionResult(){};

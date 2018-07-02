@@ -26,6 +26,17 @@ public:
 	std::string serialise() const override;
 
 	State getState() const override;
+
+	bool operator==(const sic::RestrictionResult &other) const override {
+		const sic::AANodeRestrictionResult *otherCast =
+			dynamic_cast<const sic::AANodeRestrictionResult *>(&other);
+		bool match = false;
+		if (otherCast != nullptr) {
+			match = &aaNode == &otherCast->aaNode and
+					nodeWeight == otherCast->nodeWeight;
+		}
+		return match;
+	}
 };
 
 } // namespace sic

@@ -47,4 +47,21 @@ TEST_F(AANodeRestrictionResultTest, CreateFail) {
 	ASSERT_EQ(result.serialise(), expSerialisation);
 }
 
+TEST_F(AANodeRestrictionResultTest, Equals) {
+
+	sic::MockAssetAllocationNode aaNode1, aaNode2;
+	const sic::Weight nodeWeight1 = 0.300001;
+	const sic::Weight nodeWeight2 = 0.300000;
+
+	sic::AANodeRestrictionResult result1(aaNode1, nodeWeight1);
+	sic::AANodeRestrictionResult result2(aaNode1, nodeWeight1);
+
+	sic::AANodeRestrictionResult result3(aaNode1, nodeWeight2);
+	sic::AANodeRestrictionResult result4(aaNode2, nodeWeight1);
+
+	ASSERT_TRUE(result1 == result2);
+	ASSERT_FALSE(result1 == result3);
+	ASSERT_FALSE(result1 == result4);
+}
+
 } // namespace
