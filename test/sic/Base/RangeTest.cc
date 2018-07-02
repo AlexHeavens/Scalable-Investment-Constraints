@@ -66,4 +66,13 @@ TEST_F(RangeTest, Equality) {
 	ASSERT_FALSE(range1 == range4);
 }
 
+TEST_F(RangeTest, ConstructSingleValueRange) {
+
+	const sic::Range<float> range1(0.5);
+
+	ASSERT_EQ(range1.min, 0.5);
+	ASSERT_EQ(range1.target, 0.5);
+	ASSERT_EQ(range1.max, 0.5);
+}
+
 } // namespace
