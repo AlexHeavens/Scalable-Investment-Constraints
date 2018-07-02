@@ -33,7 +33,7 @@ public:
 	/**
 	 * The financial asset the position represents a quantity of.
 	 */
-	virtual sic::AbstractAsset &getAsset() const = 0;
+	virtual const sic::AbstractAsset &getAsset() const = 0;
 
 	/**
 	 * The value in the (unspecified) reference currency.

@@ -27,9 +27,6 @@ public:
 	typedef std::unordered_set<sic::AbstractAsset::Class> ClassSet;
 	typedef sic::AbstractAsset::ClassSet::iterator ClassIterator;
 
-	explicit AbstractAsset(const sic::AbstractAsset &other)
-		: sic::External(other) {}
-
 	/**
 	 * Copy construct the AbstractAsset.
 	 */

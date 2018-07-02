@@ -15,19 +15,19 @@ namespace sic {
 class Position : public sic::AbstractPosition {
 
 private:
-	sic::AbstractAsset &asset;
+	const sic::AbstractAsset &asset;
 	sic::Value referenceValue;
 
 public:
 	/**
 	 * Create a position of a specific asset.
 	 */
-	Position(sic::AbstractAsset &asset, sic::Value referenceValue,
+	Position(const sic::AbstractAsset &asset, sic::Value referenceValue,
 			 sic::External::ID externalID)
 		: sic::AbstractPosition(externalID), asset(asset),
 		  referenceValue(referenceValue) {}
 
-	sic::AbstractAsset &getAsset() const override { return asset; }
+	const sic::AbstractAsset &getAsset() const override { return asset; }
 
 	sic::Value getReferenceValue() const override { return referenceValue; }
 };
