@@ -31,7 +31,7 @@ static void FilterTree_getLeafNode(benchmark::State &state) {
 
 	for (auto _ : state) {
 		const auto &leafNode = tree.getLeafNode(asset);
-#pragma unused(leafNode)
+		unused(leafNode);
 	}
 }
 
@@ -84,11 +84,11 @@ static void FilterTree_evaluatePortfolio(benchmark::State &state) {
 
 	constexpr sic::External::ID portfolioID = 123;
 
-	sic::Portfolio portfolio(std::move(positions), portfolioID);
+	sic::Portfolio<> portfolio(std::move(positions), portfolioID);
 
 	for (auto _ : state) {
 		const auto &valueTree = tree.evaluate(portfolio);
-#pragma unused(valueTree)
+		unused(valueTree);
 	}
 }
 
