@@ -27,6 +27,9 @@ public:
 	typedef std::unordered_set<sic::AbstractAsset::Class> ClassSet;
 	typedef sic::AbstractAsset::ClassSet::iterator ClassIterator;
 
+	explicit AbstractAsset(const sic::AbstractAsset &other)
+		: sic::External(other) {}
+
 	/**
 	 * Construct an AbstractAsset.
 	 *
@@ -38,7 +41,8 @@ public:
 	 * the identifier used to ensure the external system can match their Asset
 	 * to these results.
 	 */
-	AbstractAsset(sic::External::ID externalID) : sic::External(externalID){};
+	AbstractAsset(sic::External::ID externalID = 0)
+		: sic::External(externalID){};
 
 	/**
 	 * Destroy an AbstractAsset.
