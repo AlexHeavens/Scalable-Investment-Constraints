@@ -13,11 +13,10 @@ namespace sic {
 class MockAsset : public sic::AbstractAsset {
 
 public:
-	explicit MockAsset(sic::External::ID externalID = 1)
+	MockAsset(sic::External::ID externalID = 0)
 		: sic::AbstractAsset(externalID) {}
-
-	MockAsset(const MockAsset &rhs) : sic::AbstractAsset(rhs) {}
-
+	explicit MockAsset(const sic::MockAsset &other)
+		: sic::AbstractAsset(other) {}
 	MOCK_CONST_METHOD1(hasClass, bool(sic::AbstractAsset::Class));
 };
 

@@ -28,6 +28,12 @@ public:
 	typedef sic::AbstractAsset::ClassSet::iterator ClassIterator;
 
 	/**
+	 * Copy construct the AbstractAsset.
+	 */
+	explicit AbstractAsset(const sic::AbstractAsset &other)
+		: sic::External(other) {}
+
+	/**
 	 * Construct an AbstractAsset.
 	 *
 	 * Without a clean way to inherity from an "AbstractExternal", it is

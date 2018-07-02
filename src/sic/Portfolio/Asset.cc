@@ -2,7 +2,7 @@
 
 namespace sic {
 
-Asset::Asset(const sic::Asset &rhs) : sic::AbstractAsset(rhs.getExternalID()) {
+Asset::Asset(const sic::Asset &rhs) : sic::AbstractAsset(rhs) {
 
 	// Deep copy classes to avoid damaging input.
 	classes = std::make_unique<sic::AbstractAsset::ClassSet>(*rhs.classes);
