@@ -32,7 +32,7 @@ private:
 	sic::Iterators<std::unique_ptr<sic::AbstractFilterTree>> filterTrees;
 	const std::vector<std::unique_ptr<sic::AbstractAsset>> &assetSource;
 	const size_t mpfAssetCount;
-	sic::External::ID nextAAID, nextMPFID;
+	sic::External::ID nextAAID, nextNodeID, nextMPFID;
 
 	void genLeafNodeAssetMap(const sic::AbstractFilterTree &filterTree,
 							 NodeAssets *leafNodeAssets) const;
@@ -43,13 +43,12 @@ private:
 
 	void genAANodes(const sic::AbstractFilterTree &filterTree,
 					const NodeMPFMap &nodeMPFMap,
-					sic::AssetAllocation::FilterNodeMap *filterNodeMap) const;
+					sic::AssetAllocation::FilterNodeMap *filterNodeMap);
 
-	void
-	genChildAANodes(const sic::AbstractFilterNode &node,
-					const sic::Weight parentWeight,
-					const NodeMPFMap &nodeMPFMap,
-					sic::AssetAllocation::FilterNodeMap *filterNodeMap) const;
+	void genChildAANodes(const sic::AbstractFilterNode &node,
+						 const sic::Weight parentWeight,
+						 const NodeMPFMap &nodeMPFMap,
+						 sic::AssetAllocation::FilterNodeMap *filterNodeMap);
 
 public:
 	/**
@@ -60,12 +59,14 @@ public:
 	 * @param assetSource assets to randomly assign to the generated MPFs.
 	 * @param mpfAssetCount assets added to each created MPF.
 	 * @param initialAAID ID from which AA IDs will be assigned.
+	 * @param initialNodeID  ID from which node IDs will be assigned.
 	 * @param initialMPFID ID from which MPF IDs will be assigned.
 	 */
 	RegularAAFactory(
 		sic::Source<std::unique_ptr<sic::AbstractFilterTree>> &filterTreeSource,
 		const std::vector<std::unique_ptr<sic::AbstractAsset>> &assetSource,
 		const std::size_t mpfAssetCount, sic::External::ID initialAAID = 0,
+		sic::External::ID initialNodeID = 0,
 		sic::External::ID initialMPFID = 0);
 
 	Result create() override;

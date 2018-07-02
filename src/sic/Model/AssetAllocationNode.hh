@@ -21,9 +21,12 @@ public:
 	 *
 	 * @param weightRange range of the summed weights that Assets in this node
 	 * must follow.
+	 * @param externalID ID of the node in the external system.
 	 */
-	AssetAllocationNode(const sic::WeightRange &weightRange)
-		: weightRange(weightRange) {}
+	AssetAllocationNode(const sic::WeightRange &weightRange,
+						sic::External::ID externalID)
+		: sic::AbstractAssetAllocationNode(externalID),
+		  weightRange(weightRange){};
 
 	/**
 	 * The weight range of the node.

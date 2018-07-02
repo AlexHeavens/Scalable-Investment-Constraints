@@ -12,11 +12,13 @@ TEST_F(MPFAllocationNodeTest, CreateValid) {
 
 	const sic::WeightRange expRange(0.1, 0.1, 0.1);
 	const sic::MockModelPortfolio expMPF;
+	const sic::External::ID expID = 123;
 
-	sic::MPFAllocationNode validNode(expMPF, expRange);
+	sic::MPFAllocationNode validNode(expMPF, expRange, expID);
 
 	ASSERT_EQ(validNode.getWeightRange(), expRange);
 	ASSERT_EQ(&validNode.getModelPortfolio(), &expMPF);
+	ASSERT_EQ(validNode.getExternalID(), expID);
 }
 
 TEST_F(MPFAllocationNodeTest, attachToTopAssetWeights) {
@@ -38,8 +40,9 @@ TEST_F(MPFAllocationNodeTest, attachToTopAssetWeights) {
 		assetWeightIts(mpfWeights);
 
 	const sic::WeightRange nodeWeight(0.4, 0.5, 0.6);
+	const sic::External::ID expID = 123;
 
-	sic::MPFAllocationNode mpfNode(mpf, nodeWeight);
+	sic::MPFAllocationNode mpfNode(mpf, nodeWeight, expID);
 
 	EXPECT_CALL(mpf, getAssetWeightIterators())
 		.WillOnce(testing::Return(assetWeightIts));

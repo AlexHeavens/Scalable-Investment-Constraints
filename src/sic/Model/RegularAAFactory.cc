@@ -91,13 +91,13 @@ void RegularAAFactory::genMPFs(
 
 void RegularAAFactory::genAANodes(
 	const sic::AbstractFilterTree &filterTree, const NodeMPFMap &nodeMPFMap,
-	sic::AssetAllocation::FilterNodeMap *filterNodeMap) const {
+	sic::AssetAllocation::FilterNodeMap *filterNodeMap) {
 
 	// Add root AA node.
 	const auto &rootNode = filterTree.getRootNode();
 	const sic::WeightRange rootNodeWeights(1.0, 1.0, 1.0);
-	auto rootAANode =
-		std::make_unique<sic::AssetAllocationNode>(rootNodeWeights);
+	auto rootAANode = std::make_unique<sic::AssetAllocationNode>(
+		rootNodeWeights, nextNodeID++);
 	filterNodeMap->insert(std::make_pair(&rootNode, std::move(rootAANode)));
 
 	// Recursively add child AA nodes.
@@ -107,7 +107,7 @@ void RegularAAFactory::genAANodes(
 void RegularAAFactory::genChildAANodes(
 	const sic::AbstractFilterNode &node, const sic::Weight parentWeight,
 	const NodeMPFMap &nodeMPFMap,
-	sic::AssetAllocation::FilterNodeMap *filterNodeMap) const {
+	sic::AssetAllocation::FilterNodeMap *filterNodeMap) {
 
 	const auto childCount = node.getChildCount();
 
@@ -122,13 +122,14 @@ void RegularAAFactory::genChildAANodes(
 	auto childIts = node.getChildIterators();
 	for (std::size_t i = 0; i < childCount - 1; i++) {
 		const auto &child = node.getChild(i);
+		const auto nodeID = nextNodeID++;
 
 		sic::AbstractAssetAllocationNode *newNodePtr = nullptr;
 		if (child.isLeaf()) {
 			const auto &mpf = *nodeMPFMap.at(&child);
-			newNodePtr = new sic::MPFAllocationNode(mpf, nodeRange);
+			newNodePtr = new sic::MPFAllocationNode(mpf, nodeRange, nodeID);
 		} else {
-			newNodePtr = new sic::AssetAllocationNode(nodeRange);
+			newNodePtr = new sic::AssetAllocationNode(nodeRange, nodeID);
 		}
 
 		std::unique_ptr<sic::AbstractAssetAllocationNode> newNode(newNodePtr);
@@ -142,7 +143,8 @@ void RegularAAFactory::genChildAANodes(
 
 	const sic::WeightRange allAssetsRange(0.0, 0.0, 0.0);
 	std::unique_ptr<sic::AbstractAssetAllocationNode> lastNode =
-		std::make_unique<sic::AssetAllocationNode>(allAssetsRange);
+		std::make_unique<sic::AssetAllocationNode>(allAssetsRange,
+												   nextNodeID++);
 
 	filterNodeMap->insert(std::make_pair(&lastChild, std::move(lastNode)));
 
@@ -159,11 +161,11 @@ RegularAAFactory::RegularAAFactory(
 	sic::Source<std::unique_ptr<sic::AbstractFilterTree>> &filterTreeSource,
 	const std::vector<std::unique_ptr<sic::AbstractAsset>> &assetSource,
 	const std::size_t mpfAssetCount, sic::External::ID initialAAID,
-	sic::External::ID initialMPFID)
+	sic::External::ID initialNodeID, sic::External::ID initialMPFID)
 	: filterTreeSource(filterTreeSource),
 	  filterTrees(filterTreeSource.getItems()), assetSource(assetSource),
 	  mpfAssetCount(mpfAssetCount), nextAAID(initialAAID),
-	  nextMPFID(initialMPFID) {}
+	  nextNodeID(initialNodeID), nextMPFID(initialMPFID) {}
 
 sic::RegularAAFactory::Result RegularAAFactory::create() {
 

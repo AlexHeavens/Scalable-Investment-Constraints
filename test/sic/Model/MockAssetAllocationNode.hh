@@ -13,6 +13,9 @@ namespace sic {
 class MockAssetAllocationNode : public sic::AbstractAssetAllocationNode {
 
 public:
+	MockAssetAllocationNode(sic::External::ID externalID = 0)
+		: sic::AbstractAssetAllocationNode(externalID) {}
+
 	MOCK_CONST_METHOD0(getWeightRange, const sic::WeightRange &());
 	MOCK_CONST_METHOD1(
 		attachToTopAssetWeights,

@@ -22,10 +22,12 @@ public:
 	 * @param mpf MPF Assets that fall into this node must follow.
 	 * @param weightRange range of the summed weights that Assets in this node
 	 * must follow.
+	 * @param externalID the ID of the node in the external system.
 	 */
 	MPFAllocationNode(const sic::AbstractModelPortfolio &mpf,
-					  const sic::WeightRange &weightRange)
-		: sic::AssetAllocationNode(weightRange), mpf(mpf) {}
+					  const sic::WeightRange &weightRange,
+					  sic::External::ID externalID)
+		: sic::AssetAllocationNode(weightRange, externalID), mpf(mpf) {}
 
 	/**
 	 * The ModelPortfolio the node follows.

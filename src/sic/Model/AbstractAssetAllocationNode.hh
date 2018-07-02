@@ -2,6 +2,7 @@
 #define SIC_MODEL_ABSTRACTASSETALLOCATIONNODE_H_
 
 #include "sic/Base/Types.hh"
+#include "sic/External.hh"
 #include "sic/Portfolio/AbstractAsset.hh"
 
 namespace sic {
@@ -14,7 +15,16 @@ namespace sic {
  *
  * @see sic::AssetAllocation
  */
-class AbstractAssetAllocationNode {
+class AbstractAssetAllocationNode : public sic::External {
+
+protected:
+	/**
+	 * Construct a node.
+	 *
+	 * @param externalID ID of the node in the external system.
+	 */
+	AbstractAssetAllocationNode(sic::External::ID externalID = 0)
+		: sic::External(externalID){};
 
 public:
 	/**
