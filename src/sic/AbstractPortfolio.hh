@@ -48,6 +48,11 @@ public:
 	 * The summed reference value of the positions.
 	 */
 	virtual sic::Value getTotalReferenceValue() const = 0;
+
+	/**
+	 *  The number of Positions the Portfolio holds.
+	 */
+	virtual std::size_t getPositionCount() const = 0;
 };
 
 } // namespace sic

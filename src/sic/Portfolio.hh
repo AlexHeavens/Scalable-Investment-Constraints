@@ -75,6 +75,8 @@ public:
 	sic::Value getTotalReferenceValue() const override {
 		return totalReferenceValue;
 	}
+
+	std::size_t getPositionCount() const override { return positions->size(); }
 };
 
 } // namespace sic
