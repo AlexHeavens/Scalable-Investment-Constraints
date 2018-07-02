@@ -8,15 +8,22 @@ namespace sic {
  */
 class RestrictionResult {
 
+public:
+	enum class State { Pass = 0, Fail = 1 };
+
 protected:
 	RestrictionResult() = default;
-	virtual ~RestrictionResult() = default;
 
 public:
 	/**
 	 * Produce a string representation of the Result.
 	 */
 	virtual std::string serialise() const = 0;
+
+	/**
+	 * Get the result state.
+	 */
+	virtual State getState() const = 0;
 };
 
 } // namespace sic
