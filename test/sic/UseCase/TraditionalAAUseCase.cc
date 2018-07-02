@@ -92,6 +92,8 @@ public:
 	}
 };
 
+constexpr int TraditionalAAUseCase::randomSeed;
+
 TEST_F(TraditionalAAUseCase, Execute) {
 
 	auto startTime = std::chrono::high_resolution_clock::now();
