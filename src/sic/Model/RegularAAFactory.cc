@@ -18,7 +18,7 @@ void RegularAAFactory::genLeafNodeAssetMap(
 			const auto &nodeFilter = node.getFilter();
 			if (typeid(nodeFilter) != typeid(sic::AllAssetsFilter)) {
 				const sic::AbstractFilterNode *aNode = &node;
-				leafNodeAssets->insert(std::pair(
+				leafNodeAssets->insert(std::make_pair(
 					aNode, std::vector<const sic::AbstractAsset *>()));
 			}
 		}
@@ -77,14 +77,14 @@ void RegularAAFactory::genMPFs(
 		auto assetWeights =
 			std::make_unique<sic::AbstractAsset::AssetWeightMap>();
 		for (auto asset : assets) {
-			assetWeights->insert(std::pair(asset, assetsWeightRange));
+			assetWeights->insert(std::make_pair(asset, assetsWeightRange));
 		}
 
 		sic::AbstractModelPortfolio *mpf =
 			new sic::ModelPortfolio(std::move(assetWeights), nextMPFID++);
 		std::unique_ptr<sic::AbstractModelPortfolio> mpfPtr(mpf);
 		newMPFs->push_back(std::move(mpfPtr));
-		const std::pair nodeMPFPair(leafNode, mpf);
+		const auto nodeMPFPair = std::make_pair(leafNode, mpf);
 		nodeMPFMap->insert(nodeMPFPair);
 	}
 }

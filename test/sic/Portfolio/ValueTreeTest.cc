@@ -33,7 +33,7 @@ TEST_F(ValueTreeTest, CreateValid) {
 		const auto filterNodePtr = filterNodes.at(i).get();
 		const auto nodeWeight = nodeWeights.at(i);
 
-		nodeWeightMap->insert(std::pair(filterNodePtr, nodeWeight));
+		nodeWeightMap->insert(std::make_pair(filterNodePtr, nodeWeight));
 	}
 
 	sic::ValueTree valueTree(std::move(nodeWeightMap));
@@ -58,12 +58,12 @@ TEST_F(ValueTreeTest, Equals) {
 	auto nodeWeightMapB = std::make_unique<sic::ValueTree::NodeWeightMap>();
 	auto nodeWeightMapC = std::make_unique<sic::ValueTree::NodeWeightMap>();
 	for (int i = 0; i < filterNodeCount; i++) {
-		nodeWeightMapA->insert(std::pair(filterNodes.at(i).get(), 0.2));
-		nodeWeightMapB->insert(std::pair(filterNodes.at(i).get(), 0.2));
+		nodeWeightMapA->insert(std::make_pair(filterNodes.at(i).get(), 0.2));
+		nodeWeightMapB->insert(std::make_pair(filterNodes.at(i).get(), 0.2));
 
 		const sic::Weight filterNodeCWeight = (i <= 1) ? 0.05 : 0.3;
 		nodeWeightMapC->insert(
-			std::pair(filterNodes.at(i).get(), filterNodeCWeight));
+			std::make_pair(filterNodes.at(i).get(), filterNodeCWeight));
 	}
 
 	sic::ValueTree treeA(std::move(nodeWeightMapA));

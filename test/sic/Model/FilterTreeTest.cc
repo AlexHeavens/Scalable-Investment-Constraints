@@ -178,12 +178,12 @@ TEST_F(FilterTreeTest, EvaluatePortfolio) {
 	auto expValueTreeNodeMap =
 		std::make_unique<sic::ValueTree::NodeWeightMap>();
 
-	expValueTreeNodeMap->insert(std::pair(rootNode, 1));
-	expValueTreeNodeMap->insert(std::pair(childNodes.at(0), 0.7));
-	expValueTreeNodeMap->insert(std::pair(childNodes.at(1), 0.2));
-	expValueTreeNodeMap->insert(std::pair(childNodes.at(2), 0.1));
-	expValueTreeNodeMap->insert(std::pair(childNodes.at(3), 0.5));
-	expValueTreeNodeMap->insert(std::pair(childNodes.at(4), 0.2));
+	expValueTreeNodeMap->insert(std::make_pair(rootNode, 1));
+	expValueTreeNodeMap->insert(std::make_pair(childNodes.at(0), 0.7));
+	expValueTreeNodeMap->insert(std::make_pair(childNodes.at(1), 0.2));
+	expValueTreeNodeMap->insert(std::make_pair(childNodes.at(2), 0.1));
+	expValueTreeNodeMap->insert(std::make_pair(childNodes.at(3), 0.5));
+	expValueTreeNodeMap->insert(std::make_pair(childNodes.at(4), 0.2));
 
 	std::unique_ptr<sic::AbstractValueTree> expValueTree(
 		new sic::ValueTree(std::move(expValueTreeNodeMap)));
