@@ -109,7 +109,7 @@ TEST_F(TraditionalAAUseCase, Execute) {
 			auto &asset = *(assets.current()->second);
 
 			auto &leaf = filterTree.getLeafNode(asset);
-#pragma unused(leaf)
+			unused(leaf);
 
 			assets.current()++;
 		}

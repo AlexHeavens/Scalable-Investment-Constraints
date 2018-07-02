@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "sic/Base/Variable.hh"
 #include "sic/Model/AssetAllocation.hh"
 #include "sic/Model/MockAssetAllocationNode.hh"
 #include "sic/Model/MockFilterNode.hh"
@@ -57,7 +58,7 @@ TEST_F(AssetAllocationTest, EmptyNodeMap) {
 	try {
 		sic::AssetAllocation aa(filterTree, std::move(nullPtrFilterNodeMap),
 								aaID);
-#pragma unused(aa)
+		unused(aa);
 
 		FAIL()
 			<< "Able to pass filter tree node with null pointer filterNodeMap.";
@@ -73,7 +74,7 @@ TEST_F(AssetAllocationTest, EmptyNodeMap) {
 	try {
 		sic::AssetAllocation aa(filterTree, std::move(emptyFilterNodeMap),
 								aaID);
-#pragma unused(aa)
+		unused(aa);
 
 		FAIL() << "Able to pass filter tree node with empty filterNodeMap.";
 	} catch (const std::invalid_argument &e) {
@@ -115,7 +116,7 @@ TEST_F(AssetAllocationTest, MapUnknownFilterTreeNode) {
 		"filterNodeMap contains FilterNode from an unknown tree.";
 	try {
 		sic::AssetAllocation aa(filterTree, std::move(filterNodeMap), aaID);
-#pragma unused(aa)
+		unused(aa);
 
 		FAIL() << "Able to pass filter tree node from unknown tree.";
 	} catch (const std::invalid_argument &e) {
