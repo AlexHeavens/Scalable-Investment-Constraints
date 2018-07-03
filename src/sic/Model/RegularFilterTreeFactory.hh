@@ -34,10 +34,10 @@ public:
 	RegularFilterTreeFactory(unsigned depth, unsigned nodeDegree)
 		: depth(depth), nodeDegree(nodeDegree), nextClassJump(nodeClassJump) {}
 
-	std::unique_ptr<sic::FilterTree>
+	std::unique_ptr<sic::AbstractFilterTree>
 	create(sic::External::ID externalID) override;
 
-	void create(sic::FilterTree &filterTree) override;
+	void create(sic::AbstractFilterTree &filterTree) override;
 
 	/**
 	 * Return the classes necessary to follow a path through the generated tree.
@@ -49,6 +49,7 @@ public:
 	std::unique_ptr<sic::AbstractAsset::ClassSet>
 	getPathClasses(const std::vector<unsigned> &path) const;
 };
+
 } // namespace sic
 
 #endif // SIC_REGULARFILTERTREEFACTORY_H_

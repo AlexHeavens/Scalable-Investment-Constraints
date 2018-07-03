@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "sic/Model/FilterTree.hh"
 #include "sic/Model/RegularFilterTreeFactory.hh"
 
 namespace {

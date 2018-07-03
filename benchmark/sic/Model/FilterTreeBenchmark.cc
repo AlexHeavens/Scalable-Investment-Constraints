@@ -1,5 +1,6 @@
 #include <benchmark/benchmark.h>
 
+#include "sic/Model/FilterTree.hh"
 #include "sic/Model/RegularFilterTreeFactory.hh"
 #include "sic/Portfolio.hh"
 #include "sic/Portfolio/Asset.hh"

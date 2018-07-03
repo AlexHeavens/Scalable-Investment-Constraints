@@ -4,6 +4,7 @@
 
 #include "sic/Model/Filter/AllAssetsFilter.hh"
 #include "sic/Model/Filter/AssetClassFilter.hh"
+#include "sic/Model/FilterTree.hh"
 
 namespace sic {
 
@@ -43,17 +44,18 @@ void RegularFilterTreeFactory::generateNode(sic::AbstractFilterNode &node,
 	}
 }
 
-std::unique_ptr<sic::FilterTree>
+std::unique_ptr<sic::AbstractFilterTree>
 RegularFilterTreeFactory::create(sic::External::ID externalID) {
 
-	auto returnTree = std::make_unique<sic::FilterTree>(externalID);
+	std::unique_ptr<AbstractFilterTree> returnTree(
+		new sic::FilterTree(externalID));
 
 	create(*returnTree);
 
 	return returnTree;
 }
 
-void RegularFilterTreeFactory::create(sic::FilterTree &filterTree) {
+void RegularFilterTreeFactory::create(sic::AbstractFilterTree &filterTree) {
 
 	constexpr unsigned currentDepth = 1;
 

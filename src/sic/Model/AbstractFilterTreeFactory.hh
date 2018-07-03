@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "sic/Model/FilterTree.hh"
+#include "sic/Model/AbstractFilterTree.hh"
 
 namespace sic {
 
@@ -13,10 +13,16 @@ namespace sic {
 class AbstractFilterTreeFactory {
 
 public:
-	virtual std::unique_ptr<sic::FilterTree>
+	/**
+	 * Construct a FilterTree.
+	 */
+	virtual std::unique_ptr<sic::AbstractFilterTree>
 	create(sic::External::ID externalID) = 0;
 
-	virtual void create(sic::FilterTree &filterTree) = 0;
+	/**
+	 * Construct the nodes of a FilterTree on an empty one.
+	 */
+	virtual void create(sic::AbstractFilterTree &filterTree) = 0;
 };
 
 } // namespace sic
