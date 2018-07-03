@@ -60,6 +60,13 @@ public:
 	}
 
 	/**
+	 * Compare equivalence to another Iterators.
+	 */
+	bool operator==(const sic::Iterators<Item> &other) const {
+		return currentIt == other.currentIt and endIt == other.endIt;
+	}
+
+	/**
 	 * The (modifiable) current iterator.
 	 */
 	sic::Iterators<Item>::It &current() { return currentIt; }

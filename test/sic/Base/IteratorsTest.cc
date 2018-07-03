@@ -77,4 +77,40 @@ TEST_F(IteratorsTest, CreateValidPointerBased) {
 		<< "Unexpected number of items iterated through.";
 }
 
+TEST_F(IteratorsTest, ComparisonOperator) {
+
+	constexpr int expIntCount1 = 10;
+	std::vector<int> intVector1, intVector2;
+
+	intVector1.reserve(expIntCount1);
+	intVector2.reserve(expIntCount1);
+	for (int i = 0; i < expIntCount1; i++) {
+		intVector1.push_back(i);
+		intVector2.push_back(i);
+	}
+
+	constexpr int expIntCount2 = 5;
+	std::vector<int> intVector3;
+
+	intVector3.reserve(expIntCount2);
+	for (int i = 0; i < expIntCount2; i++) {
+		intVector3.push_back(i);
+	}
+
+	sic::Iterators<int> intIterators1(intVector1);
+	sic::Iterators<int> intIterators2(intVector1);
+
+	sic::Iterators<int> intIterators3(intVector1);
+	intIterators3.current()++;
+	sic::Iterators<int> intIterators4(intVector3);
+	sic::Iterators<int> intIterators5(intVector2);
+
+	ASSERT_TRUE(intIterators1 == intIterators1);
+	ASSERT_TRUE(intIterators1 == intIterators2);
+
+	ASSERT_FALSE(intIterators1 == intIterators3);
+	ASSERT_FALSE(intIterators1 == intIterators4);
+	ASSERT_FALSE(intIterators1 == intIterators5);
+}
+
 } // namespace
