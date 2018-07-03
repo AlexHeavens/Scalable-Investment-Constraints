@@ -41,14 +41,18 @@ public:
 	explicit Iterators(const std::unique_ptr<CollectionType> &collection)
 		: currentIt(collection->begin()), endIt(collection->end()) {}
 
-	Iterators(const Iterators<Item> &rhs)
-		: currentIt(rhs.currentIt), endIt(rhs.endIt) {}
-
-	Iterators(Iterators<Item> &rhs)
-		: currentIt(rhs.currentIt), endIt(rhs.endIt) {}
 	/**
-	 * Assigment to an Iterators.
+	 * Copy construct Iterators.
 	 */
+	Iterators(const Iterators<Item> &other)
+		: currentIt(other.currentIt), endIt(other.endIt) {}
+
+	/**
+	 * Copy construct Iterators.
+	 */
+	Iterators(Iterators<Item> &other)
+		: currentIt(other.currentIt), endIt(other.endIt) {}
+
 	Iterators<Item> &operator=(const Iterators<Item> &lhs) {
 		this->currentIt = lhs.currentIt;
 		this->endIt = lhs.endIt;
