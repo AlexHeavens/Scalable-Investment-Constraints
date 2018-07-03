@@ -19,9 +19,9 @@ public:
 		It;
 
 private:
-	sic::Iterators<Item>::It beginIt;
+	const sic::Iterators<Item>::It beginIt;
 	sic::Iterators<Item>::It currentIt;
-	sic::Iterators<Item>::It endIt;
+	const sic::Iterators<Item>::It endIt;
 
 public:
 	/**
@@ -58,13 +58,6 @@ public:
 		: beginIt(other.beginIt), currentIt(other.currentIt),
 		  endIt(other.endIt) {}
 
-	Iterators<Item> &operator=(const Iterators<Item> &lhs) {
-		this->beginIt = lhs.beginIt;
-		this->currentIt = lhs.currentIt;
-		this->endIt = lhs.endIt;
-		return *this;
-	}
-
 	/**
 	 * Compare equivalence to another Iterators.
 	 */
@@ -76,7 +69,7 @@ public:
 	/**
 	 * The (fixed) begin iterator.
 	 */
-	const sic::Iterators<Item>::It &begin() { return beginIt; }
+	const sic::Iterators<Item>::It &begin() const { return beginIt; }
 
 	/**
 	 * The (modifiable) current iterator.
@@ -86,7 +79,7 @@ public:
 	/**
 	 * The (fixed) end iterator.
 	 */
-	sic::Iterators<Item>::It &end() { return endIt; }
+	const sic::Iterators<Item>::It &end() const { return endIt; }
 
 	/**
 	 * If there are remaining items to iterator through.
