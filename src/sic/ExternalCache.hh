@@ -3,6 +3,8 @@
 
 #include <unordered_map>
 
+#include <boost/range/adaptor/map.hpp>
+
 #include "sic/Base/Source.hh"
 #include "sic/External.hh"
 
@@ -13,9 +15,7 @@ namespace sic {
  * EvaluationContext.
  */
 template <typename Item>
-class ExternalCache
-	: public sic::Source<
-		  std::pair<const sic::External::ID, std::unique_ptr<Item>>> {
+class ExternalCache : public sic::Source<std::unique_ptr<Item>> {
 
 private:
 	std::unordered_map<sic::External::ID, std::unique_ptr<Item>> itemMap;
@@ -42,11 +42,9 @@ public:
 		return *itemMap.at(itemID);
 	}
 
-	typename sic::Iterators<
-		std::pair<const sic::External::ID, std::unique_ptr<Item>>>
-	getItems() const override {
-		return sic::Iterators<
-			std::pair<const sic::External::ID, std::unique_ptr<Item>>>(itemMap);
+	typename sic::Iterators<std::unique_ptr<Item>> getItems() const override {
+		return sic::Iterators<std::unique_ptr<Item>>(
+			itemMap | boost::adaptors::map_values);
 	}
 
 	std::size_t size() const override { return itemMap.size(); }

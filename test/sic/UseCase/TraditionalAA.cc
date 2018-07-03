@@ -5,7 +5,10 @@
 #include <random>
 
 #include "sic/EvaluationContext.hh"
+#include "sic/Model/FilterTree.hh"
+#include "sic/Model/RegularAAFactory.hh"
 #include "sic/Model/RegularFilterTreeFactory.hh"
+#include "sic/Portfolio/Asset.hh"
 
 namespace {
 
@@ -44,7 +47,7 @@ public:
 
 				context->getFilterTreeCache().add(
 					std::make_unique<sic::FilterTree>(nextFilterTreeID));
-				auto &filterTree =
+				sic::AbstractFilterTree &filterTree =
 					context->getFilterTreeCache().get(nextFilterTreeID);
 
 				filterTreeFactory.create(filterTree);
@@ -100,13 +103,13 @@ TEST_F(TraditionalAA, FilterAsset) {
 
 	while (filterTrees.remaining()) {
 
-		auto &filterTree = *(filterTrees.current()->second);
+		auto &filterTree = **filterTrees.current();
 
 		auto assets = context.getAssetCache().getItems();
 
 		while (assets.remaining()) {
 
-			auto &asset = *(assets.current()->second);
+			auto &asset = **assets.current();
 
 			auto &leaf = filterTree.getLeafNode(asset);
 			unused(leaf);
