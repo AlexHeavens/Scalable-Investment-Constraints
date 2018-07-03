@@ -87,10 +87,42 @@ public:
 		}
 	}
 
+	static void generateAssetAllocations(sic::EvaluationContext *context) {
+
+		const sic::Source<std::unique_ptr<sic::AbstractFilterTree>>
+			&filterTreeSource = context->getFilterTreeCache();
+		const auto &assetSource = context->getAssetCache();
+		auto &aaSource = context->getAssetAllocationCache();
+		auto &mpfSource = context->getModelPortfolioCache();
+
+		constexpr int mpfAssetCount = 5;
+
+		sic::RegularAAFactory factory(filterTreeSource, assetSource,
+									  mpfAssetCount);
+
+		constexpr int aasPerFilterTree = 10;
+		const int filterTreeCount = filterTreeSource.size();
+		const int aaCount = filterTreeCount * aasPerFilterTree;
+
+		for (int i = 0; i < aaCount; i++) {
+			auto newAAMPFs = factory.create();
+			std::unique_ptr<sic::AbstractAssetAllocation> &newAA =
+				newAAMPFs.first;
+			const auto &newMPFs = newAAMPFs.second;
+
+			aaSource.add(std::move(newAA));
+
+			for (auto &newMPF : *newMPFs) {
+				mpfSource.add(std::move(newMPF));
+			}
+		}
+	}
+
 	void SetUp() override {
 		randomGen = std::mt19937(randomSeed);
 		generateFilterTrees(&context);
 		generateAssets(&context, &randomGen);
+		generateAssetAllocations(&context);
 	}
 };
 
