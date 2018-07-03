@@ -94,6 +94,8 @@ public:
 	}
 };
 
+constexpr int TraditionalAA::randomSeed;
+
 TEST_F(TraditionalAA, FilterAsset) {
 
 	auto startTime = std::chrono::high_resolution_clock::now();
