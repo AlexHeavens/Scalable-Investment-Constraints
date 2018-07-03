@@ -14,7 +14,19 @@ public:
 	/**
 	 * Retrieve iterators for the items of type ItemType.
 	 */
-	virtual typename sic::Iterators<ItemType> getItems() = 0;
+	virtual typename sic::Iterators<ItemType> getItems() const = 0;
+
+	/**
+	 * Number of items the Source provides.
+	 */
+	virtual std::size_t size() const = 0;
+
+	/**
+	 * End iterator.
+	 */
+	typename sic::Iterators<ItemType>::It end() const {
+		return getItems().end();
+	};
 };
 
 } // namespace sic

@@ -42,15 +42,14 @@ public:
 		return *itemMap.at(itemID);
 	}
 
-	/**
-	 * Retrieve iterators for items held in cache.
-	 */
 	typename sic::Iterators<
 		std::pair<const sic::External::ID, std::unique_ptr<Item>>>
-	getItems() {
+	getItems() const override {
 		return sic::Iterators<
 			std::pair<const sic::External::ID, std::unique_ptr<Item>>>(itemMap);
 	}
+
+	std::size_t size() const override { return itemMap.size(); }
 };
 
 } // namespace sic

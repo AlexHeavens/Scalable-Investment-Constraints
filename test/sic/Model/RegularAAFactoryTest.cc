@@ -87,9 +87,10 @@ public:
 		: public sic::Source<std::unique_ptr<sic::AbstractFilterTree>> {
 
 	public:
-		MOCK_METHOD0(
+		MOCK_CONST_METHOD0(
 			getItems,
 			sic::Iterators<std::unique_ptr<sic::AbstractFilterTree>>());
+		MOCK_CONST_METHOD0(size, std::size_t());
 	};
 };
 
