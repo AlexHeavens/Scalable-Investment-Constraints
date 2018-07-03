@@ -28,6 +28,17 @@ TEST_F(CollectionTest, Construct) {
 	sic::Collection<int, std::vector<int>> intCollection(intVector);
 
 	ASSERT_EQ(intCollection.size(), intVector.size());
+	ASSERT_TRUE(intCollection.getItems() == expIterators);
+}
+
+TEST_F(CollectionTest, RangeBasedForLoop) {
+
+	sic::Collection<int, std::vector<int>> intCollection(intVector);
+
+	int index = 0;
+	for (const auto &intVal : intCollection) {
+		ASSERT_EQ(&intVal, &intVector.at(index++));
+	}
 }
 
 } // namespace

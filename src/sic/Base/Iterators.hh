@@ -19,6 +19,7 @@ public:
 		It;
 
 private:
+	sic::Iterators<Item>::It beginIt;
 	sic::Iterators<Item>::It currentIt;
 	sic::Iterators<Item>::It endIt;
 
@@ -30,7 +31,8 @@ public:
 	 */
 	template <typename CollectionType>
 	explicit Iterators(const CollectionType &collection)
-		: currentIt(collection.begin()), endIt(collection.end()) {}
+		: beginIt(collection.begin()), currentIt(collection.begin()),
+		  endIt(collection.end()) {}
 
 	/**
 	 * Create an Iterator pair.
@@ -39,21 +41,25 @@ public:
 	 */
 	template <typename CollectionType>
 	explicit Iterators(const std::unique_ptr<CollectionType> &collection)
-		: currentIt(collection->begin()), endIt(collection->end()) {}
+		: beginIt(collection->begin()), currentIt(collection->begin()),
+		  endIt(collection->end()) {}
 
 	/**
 	 * Copy construct Iterators.
 	 */
 	Iterators(const Iterators<Item> &other)
-		: currentIt(other.currentIt), endIt(other.endIt) {}
+		: beginIt(other.beginIt), currentIt(other.currentIt),
+		  endIt(other.endIt) {}
 
 	/**
 	 * Copy construct Iterators.
 	 */
 	Iterators(Iterators<Item> &other)
-		: currentIt(other.currentIt), endIt(other.endIt) {}
+		: beginIt(other.beginIt), currentIt(other.currentIt),
+		  endIt(other.endIt) {}
 
 	Iterators<Item> &operator=(const Iterators<Item> &lhs) {
+		this->beginIt = lhs.beginIt;
 		this->currentIt = lhs.currentIt;
 		this->endIt = lhs.endIt;
 		return *this;
@@ -63,8 +69,14 @@ public:
 	 * Compare equivalence to another Iterators.
 	 */
 	bool operator==(const sic::Iterators<Item> &other) const {
-		return currentIt == other.currentIt and endIt == other.endIt;
+		return beginIt == other.beginIt and currentIt == other.currentIt and
+			   endIt == other.endIt;
 	}
+
+	/**
+	 * The (fixed) begin iterator.
+	 */
+	const sic::Iterators<Item>::It &begin() { return beginIt; }
 
 	/**
 	 * The (modifiable) current iterator.
@@ -74,12 +86,17 @@ public:
 	/**
 	 * The (fixed) end iterator.
 	 */
-	const sic::Iterators<Item>::It &end() { return endIt; }
+	sic::Iterators<Item>::It &end() { return endIt; }
 
 	/**
 	 * If there are remaining items to iterator through.
 	 */
 	bool remaining() const { return currentIt != endIt; }
+
+	/**
+	 * Reset current iterator to the initial (begin) iterator.
+	 */
+	void reset() { currentIt = beginIt; }
 };
 
 } // namespace sic

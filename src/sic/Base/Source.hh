@@ -22,6 +22,27 @@ public:
 	virtual std::size_t size() const = 0;
 
 	/**
+<<<<<<< Updated upstream
+=======
+	 * Item at a given index of the Source,
+	 *
+	 * <b>Note:</b> by default this is implemented as a naive O(N) iteration. It
+	 * should be overriden where the underlying collection type allows direct
+	 * index access.
+	 */
+	virtual ItemType &at(const std::size_t &index) const {
+		return *std::next(begin(), index);
+	}
+
+	/**
+>>>>>>> Stashed changes
+	 * Begin iterator.
+	 */
+	typename sic::Iterators<ItemType>::It begin() const {
+		return getItems().begin();
+	}
+
+	/**
 	 * End iterator.
 	 */
 	typename sic::Iterators<ItemType>::It end() const {
