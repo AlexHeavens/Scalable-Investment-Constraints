@@ -1,7 +1,6 @@
 #ifndef SIC_MODELPORTFOLIO_H_
 #define SIC_MODELPORTFOLIO_H_
 
-#include "sic/External.hh"
 #include "sic/Model/AbstractModelPortfolio.hh"
 
 namespace sic {
@@ -9,8 +8,7 @@ namespace sic {
 /**
  * A simple weighted Asset list portfolio model.
  */
-class ModelPortfolio : public sic::AbstractModelPortfolio,
-					   public sic::External {
+class ModelPortfolio : public sic::AbstractModelPortfolio {
 
 private:
 	std::unique_ptr<sic::AbstractAsset::AssetWeightMap> assetWeights;

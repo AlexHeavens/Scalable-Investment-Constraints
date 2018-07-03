@@ -3,6 +3,7 @@
 
 #include "sic/Base/Iterators.hh"
 #include "sic/Base/Types.hh"
+#include "sic/External.hh"
 #include "sic/Portfolio/AbstractAsset.hh"
 
 namespace sic {
@@ -13,7 +14,18 @@ namespace sic {
  * This is an abstract representation of a ModelPortfolio to allow for mock
  * testing.
  */
-class AbstractModelPortfolio {
+class AbstractModelPortfolio : public sic::External {
+
+protected:
+	/**
+	 * Construct an AbstractModelPortfolio.
+	 *
+	 * This is protected to prevent instantiation of an abstract class.
+	 *
+	 * @param externalID ID of the MPF in the external system.
+	 */
+	AbstractModelPortfolio(sic::External::ID externalID = 0)
+		: sic::External(externalID) {}
 
 public:
 	/**

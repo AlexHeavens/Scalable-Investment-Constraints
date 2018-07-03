@@ -10,7 +10,7 @@ namespace sic {
 ModelPortfolio::ModelPortfolio(
 	std::unique_ptr<sic::AbstractAsset::AssetWeightMap> assetWeights,
 	sic::External::ID externalID)
-	: sic::External(externalID) {
+	: sic::AbstractModelPortfolio(externalID) {
 
 	if (assetWeights->empty()) {
 		throw std::invalid_argument(
