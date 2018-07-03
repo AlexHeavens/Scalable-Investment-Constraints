@@ -99,7 +99,8 @@ TEST_F(AssetAllocationTest, EmptyNodeMap) {
 
 TEST_F(AssetAllocationTest, MapUnknownFilterTreeNode) {
 
-	sic::MockFilterNode knownNode1, unknownNode, knownNode2;
+	testing::NiceMock<sic::MockFilterNode> knownNode1, knownNode2;
+	sic::MockFilterNode unknownNode;
 	const sic::MockFilterTree filterTree;
 	const sic::MockFilterTree unknownFilterTree;
 
@@ -114,7 +115,7 @@ TEST_F(AssetAllocationTest, MapUnknownFilterTreeNode) {
 	filterNodeMap->insert(std::make_pair(&knownNode2, std::move(aaNode3)));
 
 	// Difficult to predict path through node map, so may or may not query other
-	// nodes for their filter tree.  Results in some warnings in testing.
+	// nodes for their filter tree.
 	ON_CALL(knownNode1, getFilterTree())
 		.WillByDefault(testing::ReturnRef(filterTree));
 	ON_CALL(knownNode2, getFilterTree())
