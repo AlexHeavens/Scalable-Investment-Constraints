@@ -104,7 +104,13 @@ public:
 		const int filterTreeCount = filterTreeSource.size();
 		const int aaCount = filterTreeCount * aasPerFilterTree;
 
+		constexpr int logEvery = 10;
 		for (int i = 0; i < aaCount; i++) {
+
+			if (i % logEvery == 0) {
+				std::cout << "Generating AA " << i << "\n";
+			}
+
 			auto newAAMPFs = factory.create();
 			std::unique_ptr<sic::AbstractAssetAllocation> &newAA =
 				newAAMPFs.first;
