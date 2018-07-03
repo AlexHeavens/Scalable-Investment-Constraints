@@ -25,7 +25,7 @@ private:
 
 public:
 	/**
-	 * Create an Iterator pair.
+	 * Create an Iterator pair from collection.
 	 *
 	 * @param collection Collection to iterator over.
 	 */
@@ -35,7 +35,7 @@ public:
 		  endIt(collection.end()) {}
 
 	/**
-	 * Create an Iterator pair.
+	 * Create an Iterator pair from collection.
 	 *
 	 * @param collection Collection to iterator over.
 	 */
@@ -43,6 +43,15 @@ public:
 	explicit Iterators(const std::unique_ptr<CollectionType> &collection)
 		: beginIt(collection->begin()), currentIt(collection->begin()),
 		  endIt(collection->end()) {}
+
+	/**
+	 * Create an Iterator pair from range  iterators.
+	 */
+	template <typename CollectionType>
+	explicit Iterators(std::pair<typename CollectionType::iterator,
+								 typename CollectionType::iterator>
+						   range)
+		: beginIt(range.first), currentIt(range.first), endIt(range.second) {}
 
 	/**
 	 * Copy construct Iterators.
