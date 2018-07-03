@@ -158,12 +158,12 @@ void RegularAAFactory::genChildAANodes(
 }
 
 RegularAAFactory::RegularAAFactory(
-	sic::Source<std::unique_ptr<sic::AbstractFilterTree>> &filterTreeSource,
-	const std::vector<std::unique_ptr<sic::AbstractAsset>> &assetSource,
+	const sic::Source<std::unique_ptr<sic::AbstractFilterTree>>
+		&filterTreeSource,
+	const sic::Source<std::unique_ptr<sic::AbstractAsset>> &assetSource,
 	const std::size_t mpfAssetCount, sic::External::ID initialAAID,
 	sic::External::ID initialNodeID, sic::External::ID initialMPFID)
-	: filterTreeSource(filterTreeSource),
-	  filterTrees(filterTreeSource.getItems()), assetSource(assetSource),
+	: filterTrees(filterTreeSource.getItems()), assetSource(assetSource),
 	  mpfAssetCount(mpfAssetCount), nextAAID(initialAAID),
 	  nextNodeID(initialNodeID), nextMPFID(initialMPFID) {}
 
@@ -171,7 +171,7 @@ sic::RegularAAFactory::Result RegularAAFactory::create() {
 
 	// Take FilterTrees in a cyclic manner from the source.
 	if (!filterTrees.remaining()) {
-		filterTrees = filterTreeSource.getItems();
+		filterTrees.reset();
 	}
 	const auto &filterTree = **filterTrees.current();
 	filterTrees.current()++;

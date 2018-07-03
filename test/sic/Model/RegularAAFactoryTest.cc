@@ -69,7 +69,7 @@ public:
 		ASSERT_EQ(childWeights.target, 0.0)
 			<< "Catch all node does not have 0 target weight.";
 
-		childIts = node.getChildIterators();
+		childIts.reset();
 		for (int i = 0; i < childCount; i++) {
 
 			const auto &childNode = *childIts.current();
@@ -92,6 +92,15 @@ public:
 			sic::Iterators<std::unique_ptr<sic::AbstractFilterTree>>());
 		MOCK_CONST_METHOD0(size, std::size_t());
 	};
+
+	class MockAssetSource
+		: public sic::Source<std::unique_ptr<sic::AbstractAsset>> {
+
+	public:
+		MOCK_CONST_METHOD0(
+			getItems, sic::Iterators<std::unique_ptr<sic::AbstractAsset>>());
+		MOCK_CONST_METHOD0(size, std::size_t());
+	};
 };
 
 TEST_F(RegularAAFactoryTest, CreateValid) {
@@ -110,12 +119,12 @@ TEST_F(RegularAAFactoryTest, CreateValid) {
 
 	sic::Iterators<std::unique_ptr<sic::AbstractFilterTree>> filterTreesIt(
 		filterTrees);
+
 	MockFilterTreeSource filterTreeSource;
 	EXPECT_CALL(filterTreeSource, getItems())
-		.WillOnce(testing::Return(filterTreesIt))
 		.WillOnce(testing::Return(filterTreesIt));
 
-	std::vector<std::unique_ptr<sic::AbstractAsset>> assetSource;
+	std::vector<std::unique_ptr<sic::AbstractAsset>> assets;
 
 	// 100 class groups, up to 4 classes per group.
 	constexpr unsigned classGroupCount = 100;
@@ -140,9 +149,14 @@ TEST_F(RegularAAFactoryTest, CreateValid) {
 			assetClasses->insert(groupClass);
 		}
 
-		assetSource.emplace_back(
-			new sic::Asset(assetID, std::move(assetClasses)));
+		assets.emplace_back(new sic::Asset(assetID, std::move(assetClasses)));
 	}
+
+	sic::Iterators<std::unique_ptr<sic::AbstractAsset>> assetIt(assets);
+
+	testing::NiceMock<MockAssetSource> assetSource;
+	ON_CALL(assetSource, getItems()).WillByDefault(testing::Return(assetIt));
+	ON_CALL(assetSource, size()).WillByDefault(testing::Return(assets.size()));
 
 	constexpr size_t expMPFAssetCount = 8;
 	constexpr sic::External::ID expInitialAAID = 123;

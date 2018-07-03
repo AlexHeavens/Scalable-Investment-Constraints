@@ -22,8 +22,6 @@ public:
 	virtual std::size_t size() const = 0;
 
 	/**
-<<<<<<< Updated upstream
-=======
 	 * Item at a given index of the Source,
 	 *
 	 * <b>Note:</b> by default this is implemented as a naive O(N) iteration. It
@@ -35,7 +33,6 @@ public:
 	}
 
 	/**
->>>>>>> Stashed changes
 	 * Begin iterator.
 	 */
 	typename sic::Iterators<ItemType>::It begin() const {

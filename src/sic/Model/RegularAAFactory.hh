@@ -28,9 +28,8 @@ public:
 	static constexpr sic::Weight TARGET_WEIGHT_TOL = 0.1;
 
 private:
-	sic::Source<std::unique_ptr<sic::AbstractFilterTree>> &filterTreeSource;
 	sic::Iterators<std::unique_ptr<sic::AbstractFilterTree>> filterTrees;
-	const std::vector<std::unique_ptr<sic::AbstractAsset>> &assetSource;
+	const sic::Source<std::unique_ptr<sic::AbstractAsset>> &assetSource;
 	const size_t mpfAssetCount;
 	sic::External::ID nextAAID, nextNodeID, nextMPFID;
 
@@ -63,8 +62,9 @@ public:
 	 * @param initialMPFID ID from which MPF IDs will be assigned.
 	 */
 	RegularAAFactory(
-		sic::Source<std::unique_ptr<sic::AbstractFilterTree>> &filterTreeSource,
-		const std::vector<std::unique_ptr<sic::AbstractAsset>> &assetSource,
+		const sic::Source<std::unique_ptr<sic::AbstractFilterTree>>
+			&filterTreeSource,
+		const sic::Source<std::unique_ptr<sic::AbstractAsset>> &assetSource,
 		const std::size_t mpfAssetCount, sic::External::ID initialAAID = 0,
 		sic::External::ID initialNodeID = 0,
 		sic::External::ID initialMPFID = 0);
