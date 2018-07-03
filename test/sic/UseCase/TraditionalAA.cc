@@ -3,7 +3,9 @@
 #include <chrono>
 #include <iostream>
 #include <random>
+#include <utility>
 
+#include "sic/AAPortfolioFactory.hh"
 #include "sic/EvaluationContext.hh"
 #include "sic/Model/FilterTree.hh"
 #include "sic/Model/RegularAAFactory.hh"
@@ -124,11 +126,44 @@ public:
 		}
 	}
 
+	static void generatePortfolios(sic::EvaluationContext *context) {
+
+		const auto &aaSource = context->getAssetAllocationCache();
+		auto &portfolioSource = context->getPortfolioCache();
+
+		unused(portfolioSource);
+
+		constexpr int portfoliosPerAA = 1000;
+		constexpr sic::Value portfolioValue = 1000000.0;
+
+		constexpr int logEvery = 50000;
+		int portfolioCount = 0;
+
+		for (const auto &aa : aaSource) {
+
+			sic::AAPortfolioFactory factory(*aa, portfolioValue);
+
+			for (int i = 0; i < portfoliosPerAA; i++) {
+
+				if (portfolioCount % logEvery == 0) {
+					std::cout << "Generating Portfolio " << portfolioCount
+							  << "\n";
+				}
+
+				auto newPortfolio = factory.create();
+				portfolioSource.add(std::move(newPortfolio));
+
+				portfolioCount++;
+			}
+		}
+	}
+
 	void SetUp() override {
 		randomGen = std::mt19937(randomSeed);
 		generateFilterTrees(&context);
 		generateAssets(&context, &randomGen);
 		generateAssetAllocations(&context);
+		generatePortfolios(&context);
 	}
 };
 
