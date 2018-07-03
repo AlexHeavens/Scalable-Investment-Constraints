@@ -33,13 +33,12 @@ public:
 
 		// Typical cross-bank number of FilterTrees.
 		std::vector<FilterTreeParameters> filterTreeParams;
+		filterTreeParams.emplace_back(5, 3, 5);
 		filterTreeParams.emplace_back(5, 3, 4);
-		filterTreeParams.emplace_back(5, 3, 3);
 		filterTreeParams.emplace_back(5, 2, 5);
-		filterTreeParams.emplace_back(5, 2, 3);
+		filterTreeParams.emplace_back(5, 2, 4);
 
 		for (auto &filterTreeParam : filterTreeParams) {
-
 			sic::RegularFilterTreeFactory filterTreeFactory(
 				filterTreeParam.treeDepth, filterTreeParam.nodeDegree);
 
