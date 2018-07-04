@@ -36,8 +36,11 @@ std::unique_ptr<sic::AbstractPortfolio> AAPortfolioFactory::create() {
 		positions->emplace_back(asset, positionRefValue, positionID);
 	}
 
-	auto newPortfolioRawPtr =
-		new sic::Portfolio<>(std::move(positions), nextPortfolioID++);
+	auto aaVector = std::make_unique<sic::Portfolio<>::AAVector>();
+	aaVector->push_back(&aa);
+
+	auto newPortfolioRawPtr = new sic::Portfolio<>(
+		std::move(positions), nextPortfolioID++, std::move(aaVector));
 
 	std::unique_ptr<sic::AbstractPortfolio> newPortfolio(newPortfolioRawPtr);
 

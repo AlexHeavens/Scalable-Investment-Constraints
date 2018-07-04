@@ -3,6 +3,15 @@
 
 #include "sic/Base/Iterators.hh"
 #include "sic/External.hh"
+
+namespace sic {
+
+class AbstractPortfolio;
+class AbstractAssetAllocation;
+
+} // namespace sic
+
+#include "sic/Model/AbstractAssetAllocation.hh"
 #include "sic/Portfolio/AbstractPosition.hh"
 
 namespace sic {
@@ -53,6 +62,12 @@ public:
 	 *  The number of Positions the Portfolio holds.
 	 */
 	virtual std::size_t getPositionCount() const = 0;
+
+	/**
+	 * Retrieve the AssetAllocations the Portfolio must follow.
+	 */
+	virtual sic::Iterators<const sic::AbstractAssetAllocation *>
+	getAssetAllocations() const = 0;
 };
 
 } // namespace sic

@@ -21,9 +21,13 @@ class Portfolio : public sic::AbstractPortfolio {
 	static_assert(std::is_base_of<sic::AbstractPosition, Position>::value,
 				  "Position not derived from sic::AbstractPosition");
 
+public:
+	using AAVector = std::vector<const sic::AbstractAssetAllocation *>;
+
 private:
 	std::unique_ptr<std::vector<Position>> positions;
 	const sic::Value totalReferenceValue;
+	std::unique_ptr<AAVector> aaVector;
 
 	static sic::Value sumPositions(const std::vector<Position> &positions) {
 		sic::Value sum = 0.0;
@@ -39,13 +43,17 @@ public:
 	 *
 	 * @param positions a vector of positions that will be moved to the
 	 * Portfolio.
+	 * @param externalID ID of the Portfolio in the external system.
+	 * @param aaVector the AAs the Portfolio must follow.
 	 *
 	 * @throws invalid_argument if input positions have a duplicate external ID.
 	 */
 	Portfolio(std::unique_ptr<std::vector<Position>> positions,
-			  sic::External::ID externalID)
+			  sic::External::ID externalID,
+			  std::unique_ptr<AAVector> aaVector = {})
 		: sic::AbstractPortfolio(externalID),
-		  totalReferenceValue(sumPositions(*positions)) {
+		  totalReferenceValue(sumPositions(*positions)),
+		  aaVector(std::move(aaVector)) {
 
 		// Throw exception if positions have duplicate external ID.
 		std::unordered_set<sic::External::ID> externalIDSet;
@@ -77,6 +85,11 @@ public:
 	}
 
 	std::size_t getPositionCount() const override { return positions->size(); }
+
+	sic::Iterators<const sic::AbstractAssetAllocation *>
+	getAssetAllocations() const override {
+		return sic::Iterators<const sic::AbstractAssetAllocation *>(aaVector);
+	}
 };
 
 } // namespace sic
