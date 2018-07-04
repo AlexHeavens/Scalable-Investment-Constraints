@@ -4,6 +4,13 @@
 #include <memory>
 #include <unordered_map>
 
+namespace sic {
+
+class AbstractPortfolio;
+class AbstractAssetAllocation;
+
+} // namespace sic
+
 #include "sic/External.hh"
 #include "sic/Model/AbstractAssetAllocationNode.hh"
 #include "sic/Model/AbstractFilterNode.hh"
