@@ -19,9 +19,11 @@ class TraditionalAA : public testing::Test {
 public:
 	static constexpr int randomSeed = 34534;
 	std::mt19937 randomGen;
-	sic::EvaluationContext context;
+	static sic::EvaluationContext context;
+	static bool setup;
 
-	static void generateFilterTrees(sic::EvaluationContext *const context) {
+	static void
+	generateFilterTrees(sic::EvaluationContext *const evaluationContext) {
 
 		// Generate FilterTrees.
 		sic::External::ID nextFilterTreeID = 1000;
@@ -46,10 +48,11 @@ public:
 
 			for (unsigned i = 0; i < filterTreeParam.treeCount; i++) {
 
-				context->getFilterTreeCache().add(
+				evaluationContext->getFilterTreeCache().add(
 					std::make_unique<sic::FilterTree>(nextFilterTreeID));
 				sic::AbstractFilterTree &filterTree =
-					context->getFilterTreeCache().get(nextFilterTreeID);
+					evaluationContext->getFilterTreeCache().get(
+						nextFilterTreeID);
 
 				filterTreeFactory.create(filterTree);
 				nextFilterTreeID++;
@@ -57,7 +60,7 @@ public:
 		}
 	}
 
-	static void generateAssets(sic::EvaluationContext *const context,
+	static void generateAssets(sic::EvaluationContext *const evaluationContext,
 							   std::mt19937 *const randomGen) {
 
 		// 100 class groups, up to 4 classes per group.
@@ -85,17 +88,18 @@ public:
 
 			auto asset =
 				std::make_unique<sic::Asset>(assetID, std::move(assetClasses));
-			context->getAssetCache().add(std::move(asset));
+			evaluationContext->getAssetCache().add(std::move(asset));
 		}
 	}
 
-	static void generateAssetAllocations(sic::EvaluationContext *context) {
+	static void
+	generateAssetAllocations(sic::EvaluationContext *evaluationContext) {
 
 		const sic::Source<std::unique_ptr<sic::AbstractFilterTree>>
-			&filterTreeSource = context->getFilterTreeCache();
-		const auto &assetSource = context->getAssetCache();
-		auto &aaSource = context->getAssetAllocationCache();
-		auto &mpfSource = context->getModelPortfolioCache();
+			&filterTreeSource = evaluationContext->getFilterTreeCache();
+		const auto &assetSource = evaluationContext->getAssetCache();
+		auto &aaSource = evaluationContext->getAssetAllocationCache();
+		auto &mpfSource = evaluationContext->getModelPortfolioCache();
 
 		constexpr int mpfAssetCount = 5;
 
@@ -126,12 +130,10 @@ public:
 		}
 	}
 
-	static void generatePortfolios(sic::EvaluationContext *context) {
+	static void generatePortfolios(sic::EvaluationContext *evaluationContext) {
 
-		const auto &aaSource = context->getAssetAllocationCache();
-		auto &portfolioSource = context->getPortfolioCache();
-
-		unused(portfolioSource);
+		const auto &aaSource = evaluationContext->getAssetAllocationCache();
+		auto &portfolioSource = evaluationContext->getPortfolioCache();
 
 		constexpr int portfoliosPerAA = 1000;
 		constexpr sic::Value portfolioValue = 1000000.0;
@@ -141,7 +143,8 @@ public:
 
 		for (const auto &aa : aaSource) {
 
-			sic::AAPortfolioFactory factory(*aa, portfolioValue);
+			sic::AAPortfolioFactory factory(*aa, portfolioValue,
+											portfolioCount);
 
 			for (int i = 0; i < portfoliosPerAA; i++) {
 
@@ -159,15 +162,24 @@ public:
 	}
 
 	void SetUp() override {
+
+		if (setup) {
+			return;
+		}
+
 		randomGen = std::mt19937(randomSeed);
 		generateFilterTrees(&context);
 		generateAssets(&context, &randomGen);
 		generateAssetAllocations(&context);
 		generatePortfolios(&context);
+
+		setup = true;
 	}
 };
 
 constexpr int TraditionalAA::randomSeed;
+sic::EvaluationContext TraditionalAA::context;
+bool TraditionalAA::setup = false;
 
 TEST_F(TraditionalAA, FilterAsset) {
 
@@ -197,8 +209,26 @@ TEST_F(TraditionalAA, FilterAsset) {
 	auto finishTime = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double, std::milli> durationMilliseconds =
 		finishTime - startTime;
-	std::cout << "TraditionalAAUseCase Wall Time (ms): "
+	std::cout << "TraditionalAAUseCase::FilterAsset Wall Time (ms): "
 			  << durationMilliseconds.count() << std::endl;
+}
+
+TEST_F(TraditionalAA, GenerateRestrictionResults) {
+
+	auto startTime = std::chrono::high_resolution_clock::now();
+
+	for (const auto &portfolio : context.getPortfolioCache()) {
+		for (const auto &aa : portfolio->getAssetAllocations()) {
+			auto results = aa->generateRestrictionResults(*portfolio);
+		}
+	}
+
+	auto finishTime = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double, std::milli> durationMilliseconds =
+		finishTime - startTime;
+	std::cout
+		<< "TraditionalAAUseCase::GenerateRestrictionResults Wall Time (ms): "
+		<< durationMilliseconds.count() << std::endl;
 }
 
 } // namespace
