@@ -54,6 +54,9 @@ public:
 
 	std::unique_ptr<ResultVector> generateRestrictionResults(
 		const sic::AbstractPortfolio &portfolio) const override;
+
+	std::unique_ptr<sic::AbstractAsset::AssetWeightMap>
+	getAssetToTopWeights() const override;
 };
 
 } // namespace sic

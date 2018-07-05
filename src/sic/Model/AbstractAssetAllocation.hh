@@ -68,6 +68,13 @@ public:
 	 */
 	virtual std::unique_ptr<ResultVector> generateRestrictionResults(
 		const sic::AbstractPortfolio &portfolio) const = 0;
+
+	/**
+	 * Retreive the weights of the model Assets as a proportion of total model
+	 * value.
+	 */
+	virtual std::unique_ptr<sic::AbstractAsset::AssetWeightMap>
+	getAssetToTopWeights() const = 0;
 };
 
 } // namespace sic

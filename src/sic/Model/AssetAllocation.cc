@@ -53,4 +53,19 @@ AssetAllocation::generateRestrictionResults(
 	return results;
 }
 
+std::unique_ptr<sic::AbstractAsset::AssetWeightMap>
+AssetAllocation::getAssetToTopWeights() const {
+
+	auto assetToTopWeights =
+		std::make_unique<sic::AbstractAsset::AssetWeightMap>();
+
+	for (const auto &filterAANodePair : getAANodeIterators()) {
+
+		auto &aaNode = *filterAANodePair.second;
+		aaNode.attachToTopAssetWeights(assetToTopWeights.get());
+	}
+
+	return assetToTopWeights;
+}
+
 } // namespace sic

@@ -24,6 +24,15 @@ public:
 	MOCK_CONST_METHOD1(
 		generateRestrictionResults,
 		std::unique_ptr<ResultVector>(const sic::AbstractPortfolio &portfolio));
+	MOCK_CONST_METHOD0(getAssetToTopWeightsRaw,
+					   sic::AbstractAsset::AssetWeightMap *());
+
+	std::unique_ptr<sic::AbstractAsset::AssetWeightMap>
+	getAssetToTopWeights() const override {
+		std::unique_ptr<sic::AbstractAsset::AssetWeightMap> assetToTopWeights(
+			getAssetToTopWeightsRaw());
+		return assetToTopWeights;
+	}
 };
 
 } // namespace sic
