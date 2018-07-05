@@ -4,10 +4,7 @@
 #include <vector>
 
 #include "sic/AAPortfolioFactory.hh"
-#include "sic/Base/Variable.hh"
 #include "sic/Model/MockAssetAllocation.hh"
-#include "sic/Model/MockAssetAllocationNode.hh"
-#include "sic/Model/MockFilterNode.hh"
 #include "sic/Portfolio/MockAsset.hh"
 #include "sic/Portfolio/Position.hh"
 
@@ -17,10 +14,6 @@ class AAPortfolioFactoryTest : public testing::Test {
 
 public:
 	sic::MockAssetAllocation aa;
-	std::vector<const sic::MockAssetAllocationNode *> aaNodes;
-	std::vector<std::unique_ptr<sic::MockFilterNode>> filterNodes;
-	sic::AbstractAssetAllocation::FilterNodeMap filterNodeMap;
-	std::unique_ptr<sic::AAPortfolioFactory> factory;
 	std::vector<sic::MockAsset> aaAssets;
 	std::vector<sic::Weight> aaAssetWeights;
 	std::vector<sic::Value> expPositionValues;
@@ -28,24 +21,8 @@ public:
 
 	static constexpr int aaAssetCount = 5;
 	static constexpr sic::Value expPortfolioRefValue = 123.00;
-	static constexpr int aaNodeCount = 3;
 
 	void SetUp() override {
-
-		filterNodes.reserve(aaNodeCount);
-		for (int i = 0; i < aaNodeCount; i++) {
-			filterNodes.emplace_back(new sic::MockFilterNode());
-		}
-
-		aaNodes.reserve(aaNodeCount);
-		for (int i = 0; i < aaNodeCount; i++) {
-			const auto newAANodeRawPtr = new sic::MockAssetAllocationNode();
-			std::unique_ptr<sic::AbstractAssetAllocationNode> newAANode(
-				newAANodeRawPtr);
-			filterNodeMap.insert(
-				std::make_pair(filterNodes.at(i).get(), std::move(newAANode)));
-			aaNodes.emplace_back(newAANodeRawPtr);
-		}
 
 		aaAssets.reserve(aaAssetCount);
 		for (int i = 0; i < aaAssetCount; i++) {
@@ -72,47 +49,32 @@ public:
 			const auto expID = static_cast<sic::External::ID>(i);
 			expPositions.emplace_back(aaAssets.at(i), expValue, expID);
 		}
-
-		factory =
-			std::make_unique<sic::AAPortfolioFactory>(aa, expPortfolioRefValue);
-	}
-
-	void addNode0Weights(sic::AbstractAsset::AssetWeightMap *assetWeightMap) {
-		assetWeightMap->emplace(&aaAssets.at(0),
-								sic::WeightRange(aaAssetWeights.at(0)));
-		assetWeightMap->emplace(&aaAssets.at(3),
-								sic::WeightRange(aaAssetWeights.at(3)));
-		assetWeightMap->emplace(&aaAssets.at(4),
-								sic::WeightRange(aaAssetWeights.at(4)));
-	}
-	void addNode2Weights(sic::AbstractAsset::AssetWeightMap *assetWeightMap) {
-		assetWeightMap->emplace(&aaAssets.at(1),
-								sic::WeightRange(aaAssetWeights.at(1)));
-		assetWeightMap->emplace(&aaAssets.at(2),
-								sic::WeightRange(aaAssetWeights.at(2)));
 	}
 };
 
 constexpr int AAPortfolioFactoryTest::aaAssetCount;
 constexpr sic::Value AAPortfolioFactoryTest::expPortfolioRefValue;
-constexpr int AAPortfolioFactoryTest::aaNodeCount;
 
 TEST_F(AAPortfolioFactoryTest, create) {
 
-	sic::Iterators<sic::AbstractAssetAllocation::FilterNodeMap::value_type>
-		nodeIts(filterNodeMap);
-	EXPECT_CALL(aa, getAANodeIterators()).WillOnce(testing::Return(nodeIts));
+	auto assetWeightMap = new sic::AbstractAsset::AssetWeightMap();
+	assetWeightMap->emplace(&aaAssets.at(0),
+							sic::WeightRange(aaAssetWeights.at(0)));
+	assetWeightMap->emplace(&aaAssets.at(3),
+							sic::WeightRange(aaAssetWeights.at(3)));
+	assetWeightMap->emplace(&aaAssets.at(4),
+							sic::WeightRange(aaAssetWeights.at(4)));
+	assetWeightMap->emplace(&aaAssets.at(1),
+							sic::WeightRange(aaAssetWeights.at(1)));
+	assetWeightMap->emplace(&aaAssets.at(2),
+							sic::WeightRange(aaAssetWeights.at(2)));
 
-	EXPECT_CALL(*aaNodes.at(0), attachToTopAssetWeights(testing::_))
-		.WillOnce(
-			testing::Invoke(this, &AAPortfolioFactoryTest::addNode0Weights));
-	EXPECT_CALL(*aaNodes.at(1), attachToTopAssetWeights(testing::_))
-		.WillOnce(testing::Return());
-	EXPECT_CALL(*aaNodes.at(2), attachToTopAssetWeights(testing::_))
-		.WillOnce(
-			testing::Invoke(this, &AAPortfolioFactoryTest::addNode2Weights));
+	EXPECT_CALL(aa, getAssetToTopWeightsRaw())
+		.WillOnce(testing::Return(assetWeightMap));
 
-	auto portfolio = factory->create();
+	sic::AAPortfolioFactory factory(aa, expPortfolioRefValue);
+
+	auto portfolio = factory.create();
 
 	ASSERT_EQ(portfolio->getPositionCount(), aaAssetCount)
 		<< "Unexpected number of Positions in created Portfolio.  Should "

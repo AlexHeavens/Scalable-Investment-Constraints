@@ -18,9 +18,7 @@ private:
 	const sic::AbstractAssetAllocation &aa;
 	const sic::Value portfolioReferenceValue;
 	sic::External::ID nextPortfolioID, nextPositionID;
-
-	void initialiseToTopWeights(
-		sic::AbstractAsset::AssetWeightMap *assetToTopWeights) const;
+	std::unique_ptr<sic::AbstractAsset::AssetWeightMap> assetToTopWeights;
 
 public:
 	/**
@@ -34,7 +32,11 @@ public:
 					   sic::External::ID initialPositionID = 0)
 		: aa(aa), portfolioReferenceValue(portfolioReferenceValue),
 		  nextPortfolioID(initialPortfolioID),
-		  nextPositionID(initialPositionID) {}
+		  nextPositionID(initialPositionID) {
+
+		auto toTopWeights = aa.getAssetToTopWeights();
+		assetToTopWeights = std::move(toTopWeights);
+	}
 
 	std::unique_ptr<sic::AbstractPortfolio> create() override;
 };
