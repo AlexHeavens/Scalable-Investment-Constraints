@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include "sic/AANodeRestrictionResult.hh"
+#include "sic/AssetRestrictionResult.hh"
 
 namespace sic {
 
@@ -48,6 +49,57 @@ AssetAllocation::generateRestrictionResults(
 		results->push_back(std::move(result));
 
 		nodeWeightIts.current()++;
+	}
+
+	const auto portfolioValue = portfolio.getTotalReferenceValue();
+	std::unordered_map<const sic::AbstractAsset *, sic::Weight>
+		portfolioAssetWeights;
+
+	for (const auto &position : portfolio.getPositionIterators()) {
+		const auto &asset = position.getAsset();
+		const auto positionWeight =
+			position.getReferenceValue() / portfolioValue;
+
+		const auto assetLookup = portfolioAssetWeights.find(&asset);
+		if (assetLookup != portfolioAssetWeights.end()) {
+			assetLookup->second = assetLookup->second + positionWeight;
+		} else {
+			portfolioAssetWeights.insert(
+				std::make_pair(&asset, positionWeight));
+		}
+	}
+
+	auto modelAssetWeights = getAssetToTopWeights();
+	for (const auto &portfolioAssetWeight : portfolioAssetWeights) {
+
+		const sic::AbstractAsset &asset = *(portfolioAssetWeight.first);
+		const auto &portfolioWeight = portfolioAssetWeight.second;
+		const auto modelAssetWeightLookup = modelAssetWeights->find(&asset);
+
+		if (modelAssetWeightLookup != modelAssetWeights->end()) {
+			sic::WeightRange assetModelWeights(modelAssetWeightLookup->second);
+
+			auto assetResult = std::make_unique<sic::AssetRestrictionResult>(
+				asset, portfolioWeight, assetModelWeights);
+			results->push_back(std::move(assetResult));
+		} else {
+			sic::WeightRange assetModelWeights(0.0, 0.0, 0.0);
+
+			auto assetResult = std::make_unique<sic::AssetRestrictionResult>(
+				asset, portfolioWeight, assetModelWeights);
+			results->push_back(std::move(assetResult));
+		}
+	}
+
+	for (const auto &modelAssetWeightPair : *modelAssetWeights) {
+		const auto &asset = *(modelAssetWeightPair.first);
+
+		if (portfolioAssetWeights.find(&asset) == portfolioAssetWeights.end()) {
+			const auto &modelAssetWeight = modelAssetWeightPair.second;
+			auto assetResult = std::make_unique<sic::AssetRestrictionResult>(
+				asset, 0.0, modelAssetWeight);
+			results->push_back(std::move(assetResult));
+		}
 	}
 
 	return results;

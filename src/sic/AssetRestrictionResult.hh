@@ -51,7 +51,7 @@ public:
 
 		return match;
 	}
-}; // namespace sic
+};
 
 } // namespace sic
 

@@ -32,6 +32,12 @@ public:
 	}
 
 	/**
+	 * Copy constructor.
+	 */
+	Range(const Range<Type> &other)
+		: min(other.min), target(other.target), max(other.max) {}
+
+	/**
 	 * Create a range where the min, target and max are the same.
 	 */
 	explicit Range(Type target) : min(target), target(target), max(target) {}

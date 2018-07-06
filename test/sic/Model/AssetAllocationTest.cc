@@ -9,6 +9,7 @@
 #include "sic/Model/MockFilterNode.hh"
 #include "sic/Model/MockFilterTree.hh"
 #include "sic/Portfolio/MockAsset.hh"
+#include "sic/Portfolio/MockPosition.hh"
 #include "sic/Portfolio/MockValueTree.hh"
 
 namespace {
@@ -17,10 +18,13 @@ class AssetAllocationTest : public testing::Test {
 public:
 	static constexpr int filterNodeCount = 6;
 	static constexpr int assetCount = 8;
+	static constexpr sic::Value portfolioValue = 10000.0;
 	sic::MockFilterTree filterTree;
 	sic::MockPortfolio portfolio;
 	std::vector<std::unique_ptr<sic::MockFilterNode>> filterNodes;
 	std::vector<sic::WeightRange> aaNodeWeights;
+	std::vector<sic::MockPosition> positions;
+	static constexpr int positionCount = 10;
 
 	struct AssetTestParameter {
 		sic::MockAsset asset;
@@ -29,7 +33,7 @@ public:
 		const bool inModel;
 
 		AssetTestParameter(const sic::Weight toTopWeight,
-						   const sic::WeightRange weightRange,
+						   const sic::WeightRange &weightRange,
 						   const bool inModel)
 			: toTopWeight(toTopWeight), weightRange(weightRange),
 			  inModel(inModel) {}
@@ -61,6 +65,11 @@ public:
 		assets.emplace_back(0.1, sic::WeightRange(0.0, 0.0, 0.0), false);
 		assets.emplace_back(0.1, sic::WeightRange(0.0, 0.0, 0.0), false);
 		assets.emplace_back(0.2, sic::WeightRange(0.09, 0.1, 0.11), true);
+
+		positions.reserve(positionCount);
+		for (int i = 0; i < positionCount; i++) {
+			positions.emplace_back();
+		}
 	}
 
 	void
@@ -98,6 +107,8 @@ public:
 
 constexpr int AssetAllocationTest::filterNodeCount;
 constexpr int AssetAllocationTest::assetCount;
+constexpr sic::Value AssetAllocationTest::portfolioValue;
+constexpr int AssetAllocationTest::positionCount;
 
 TEST_F(AssetAllocationTest, CreateValid) {
 
@@ -210,6 +221,10 @@ TEST_F(AssetAllocationTest, MapUnknownFilterTreeNode) {
 
 TEST_F(AssetAllocationTest, generateRestrictionResults) {
 
+	sic::Iterators<sic::AbstractPosition> positionIts(positions);
+	EXPECT_CALL(testing::Const(portfolio), getPositionIterators())
+		.WillOnce(testing::Return(positionIts));
+
 	for (int i = 0; i < filterNodeCount; i++) {
 		EXPECT_CALL(*filterNodes.at(i), getFilterTree())
 			.WillOnce(testing::ReturnRef(filterTree));
@@ -252,7 +267,66 @@ TEST_F(AssetAllocationTest, generateRestrictionResults) {
 	EXPECT_CALL(valueTree, getNodeWeightIterators())
 		.WillOnce(testing::Return(nodeWeightIts));
 
-	constexpr int expResultCount = filterNodeCount;
+	EXPECT_CALL(portfolio, getTotalReferenceValue())
+		.WillOnce(testing::Return(portfolioValue));
+
+	EXPECT_CALL(positions.at(0), getAsset())
+		.WillOnce(testing::ReturnRef(assets.at(0).asset));
+	EXPECT_CALL(positions.at(1), getAsset())
+		.WillOnce(testing::ReturnRef(assets.at(0).asset));
+
+	EXPECT_CALL(positions.at(2), getAsset())
+		.WillOnce(testing::ReturnRef(assets.at(1).asset));
+
+	EXPECT_CALL(positions.at(3), getAsset())
+		.WillOnce(testing::ReturnRef(assets.at(2).asset));
+	EXPECT_CALL(positions.at(4), getAsset())
+		.WillOnce(testing::ReturnRef(assets.at(2).asset));
+
+	EXPECT_CALL(positions.at(5), getAsset())
+		.WillOnce(testing::ReturnRef(assets.at(3).asset));
+
+	EXPECT_CALL(positions.at(6), getAsset())
+		.WillOnce(testing::ReturnRef(assets.at(4).asset));
+
+	EXPECT_CALL(positions.at(7), getAsset())
+		.WillOnce(testing::ReturnRef(assets.at(5).asset));
+
+	EXPECT_CALL(positions.at(8), getAsset())
+		.WillOnce(testing::ReturnRef(assets.at(6).asset));
+
+	EXPECT_CALL(positions.at(9), getAsset())
+		.WillOnce(testing::ReturnRef(assets.at(7).asset));
+
+	EXPECT_CALL(positions.at(0), getReferenceValue())
+		.WillOnce(testing::Return(0.06));
+	EXPECT_CALL(positions.at(1), getReferenceValue())
+		.WillOnce(testing::Return(0.04));
+
+	EXPECT_CALL(positions.at(2), getReferenceValue())
+		.WillOnce(testing::Return(0.09));
+
+	EXPECT_CALL(positions.at(3), getReferenceValue())
+		.WillOnce(testing::Return(0.2));
+	EXPECT_CALL(positions.at(4), getReferenceValue())
+		.WillOnce(testing::Return(0.1));
+
+	EXPECT_CALL(positions.at(5), getReferenceValue())
+		.WillOnce(testing::Return(0.1));
+
+	EXPECT_CALL(positions.at(6), getReferenceValue())
+		.WillOnce(testing::Return(0.1));
+
+	EXPECT_CALL(positions.at(7), getReferenceValue())
+		.WillOnce(testing::Return(0.1));
+
+	EXPECT_CALL(positions.at(8), getReferenceValue())
+		.WillOnce(testing::Return(0.1));
+
+	EXPECT_CALL(positions.at(9), getReferenceValue())
+		.WillOnce(testing::Return(0.2));
+
+	constexpr int expResultCount = filterNodeCount + assetCount;
 	std::vector<std::unique_ptr<sic::RestrictionResult>> expResults;
 	expResults.reserve(expResultCount);
 	for (int i = 0; i < filterNodeCount; i++) {
