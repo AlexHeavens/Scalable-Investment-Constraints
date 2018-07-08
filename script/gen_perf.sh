@@ -3,6 +3,7 @@
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 PROJECT_ROOT_DIR="${SCRIPT_DIR}/.."
 BIN_DIR="${PROJECT_ROOT_DIR}/bin"
+BUILD_DIR="${PROJECT_ROOT_DIR}/build"
 PERF_RES_DIR="$PROJECT_ROOT_DIR/perf_res"
 VIEW_PERF_SCRIPT="$SCRIPT_DIR/view_perf.sh"
 
