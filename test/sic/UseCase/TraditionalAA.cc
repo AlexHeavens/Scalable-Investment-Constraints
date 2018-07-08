@@ -217,9 +217,13 @@ TEST_F(TraditionalAA, GenerateRestrictionResults) {
 
 	auto startTime = std::chrono::high_resolution_clock::now();
 
+	std::vector<std::string> resultStrings;
 	for (const auto &portfolio : context.getPortfolioCache()) {
 		for (const auto &aa : portfolio->getAssetAllocations()) {
 			auto results = aa->generateRestrictionResults(*portfolio);
+			for (const auto &result : *results) {
+				resultStrings.emplace_back(result->serialise());
+			}
 		}
 	}
 
@@ -229,6 +233,8 @@ TEST_F(TraditionalAA, GenerateRestrictionResults) {
 	std::cout
 		<< "TraditionalAAUseCase::GenerateRestrictionResults Wall Time (ms): "
 		<< durationMilliseconds.count() << std::endl;
+
+	unused(resultStrings);
 }
 
 } // namespace
