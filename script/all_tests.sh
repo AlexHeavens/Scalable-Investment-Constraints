@@ -16,7 +16,7 @@ printf "\n\n"
 printf "CMake Build:\n"
 printf -- "------------\n"
 cmake "$PROJECT_ROOT_DIR" $CMAKE_ARGS -DCMAKE_MAKE_PROGRAM=ninja -G Ninja
-ninja tests benchmarks
+ninja
 MAKE_ALL_TESTS_RESULT="$?"
 ALL_TESTS_RESULT=0
 

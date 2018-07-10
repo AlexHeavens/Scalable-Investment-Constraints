@@ -18,6 +18,8 @@ set(TEST_DIR "${PROJECT_SOURCE_DIR}/test")
 set(BENCHMARK_DIR "${PROJECT_SOURCE_DIR}/benchmark")
 set(DOC_DIR "${PROJECT_SOURCE_DIR}/doc")
 set(DOXYGEN_CONFIG "${DOC_DIR}/doxygen-config")
+set(USE_CASE_DIR "${PROJECT_SOURCE_DIR}/use_case")
+set(USE_CASE_BIN_DIR "${BIN_DIR}/use_case")
 
 # Build Properties
 set(PROJECT_EXE "project_prog")
@@ -30,7 +32,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
 ## For profiling, ensure compile with debug flags.
-set(TEST_CASE_DEBUG_FLAGS, "-mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -ggdb -g3")
+set(DEBUG_FLAGS, "-mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -ggdb -g3")
 
 set(TEST_EXE "tests")
 set(BENCHMARK_EXE "benchmarks")
@@ -109,11 +111,23 @@ target_include_directories("${PROJECT_EXE}" PUBLIC "${SRC_DIR}")
 add_executable("${TEST_EXE}" ${SOURCES} ${TEST_SOURCES} ${TEST_MAIN_SRC})
 target_include_directories("${TEST_EXE}" PUBLIC "${SRC_DIR}" "${TEST_DIR}")
 target_link_libraries("${TEST_EXE}" ${GTEST_LIBRARIES} ${GMOCK_LIBRARIES} pthread)
-target_compile_options(${TEST_EXE} PUBLIC ${TEST_CASE_DEBUG_FLAGS})
 
 add_executable("${BENCHMARK_EXE}" ${SOURCES} ${BENCHMARK_SOURCES})
 target_include_directories("${BENCHMARK_EXE}" PUBLIC "${SRC_DIR}" "${BENCHMARK_INCLUDE_DIRS}")
 target_link_libraries("${BENCHMARK_EXE}" ${BENCHMARK_MAIN_LIBRARIES} pthread)
+
+# Use Cases
+set(USE_CASES "FilterAssets" "EvaluateRestrictionResults")
+
+foreach(USE_CASE ${USE_CASES})
+    set(USE_CASE_MAIN "${USE_CASE_DIR}/${USE_CASE}.cc")
+    add_executable("${USE_CASE}" ${USE_CASE_MAIN} ${SOURCES})
+    target_include_directories("${USE_CASE}" PUBLIC "${SRC_DIR}")
+    set_target_properties(${USE_CASE}
+        PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${USE_CASE_BIN_DIR}
+    )
+endforeach(USE_CASE)
 
 if (CLANG_TIDY_EXE)
     set_target_properties(

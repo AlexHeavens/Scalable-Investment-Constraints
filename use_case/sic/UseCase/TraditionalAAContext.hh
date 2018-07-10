@@ -1,9 +1,7 @@
-#include <gtest/gtest.h>
+#ifndef SIC_TRADITIONALAACONTEXT_H_
+#define SIC_TRADITIONALAACONTEXT_H_
 
-#include <chrono>
-#include <iostream>
 #include <random>
-#include <utility>
 
 #include "sic/AAPortfolioFactory.hh"
 #include "sic/EvaluationContext.hh"
@@ -12,15 +10,14 @@
 #include "sic/Model/RegularFilterTreeFactory.hh"
 #include "sic/Portfolio/Asset.hh"
 
-namespace {
+namespace sic {
 
-class TraditionalAA : public testing::Test {
+class TraditionalAAContext {
 
-public:
+private:
 	static constexpr int randomSeed = 34534;
 	std::mt19937 randomGen;
-	static sic::EvaluationContext context;
-	static bool setup;
+	sic::EvaluationContext context;
 
 	static void
 	generateFilterTrees(sic::EvaluationContext *const evaluationContext) {
@@ -161,80 +158,21 @@ public:
 		}
 	}
 
-	void SetUp() override {
-
-		if (setup) {
-			return;
-		}
+public:
+	TraditionalAAContext() {
 
 		randomGen = std::mt19937(randomSeed);
 		generateFilterTrees(&context);
 		generateAssets(&context, &randomGen);
 		generateAssetAllocations(&context);
 		generatePortfolios(&context);
-
-		setup = true;
 	}
+
+	sic::EvaluationContext &getEvaluationContext() { return context; }
 };
 
-constexpr int TraditionalAA::randomSeed;
-sic::EvaluationContext TraditionalAA::context;
-bool TraditionalAA::setup = false;
+constexpr int TraditionalAAContext::randomSeed;
 
-TEST_F(TraditionalAA, FilterAsset) {
+} // namespace sic
 
-	auto startTime = std::chrono::high_resolution_clock::now();
-
-	auto filterTrees = context.getFilterTreeCache().getItems();
-
-	while (filterTrees.remaining()) {
-
-		auto &filterTree = **filterTrees.current();
-
-		auto assets = context.getAssetCache().getItems();
-
-		while (assets.remaining()) {
-
-			auto &asset = **assets.current();
-
-			auto &leaf = filterTree.getLeafNode(asset);
-			unused(leaf);
-
-			assets.current()++;
-		}
-
-		filterTrees.current()++;
-	}
-
-	auto finishTime = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double, std::milli> durationMilliseconds =
-		finishTime - startTime;
-	std::cout << "TraditionalAAUseCase::FilterAsset Wall Time (ms): "
-			  << durationMilliseconds.count() << std::endl;
-}
-
-TEST_F(TraditionalAA, GenerateRestrictionResults) {
-
-	auto startTime = std::chrono::high_resolution_clock::now();
-
-	std::vector<std::string> resultStrings;
-	for (const auto &portfolio : context.getPortfolioCache()) {
-		for (const auto &aa : portfolio->getAssetAllocations()) {
-			auto results = aa->generateRestrictionResults(*portfolio);
-			for (const auto &result : *results) {
-				resultStrings.emplace_back(result->serialise());
-			}
-		}
-	}
-
-	auto finishTime = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double, std::milli> durationMilliseconds =
-		finishTime - startTime;
-	std::cout
-		<< "TraditionalAAUseCase::GenerateRestrictionResults Wall Time (ms): "
-		<< durationMilliseconds.count() << std::endl;
-
-	unused(resultStrings);
-}
-
-} // namespace
+#endif // SIC_TRADITIONALAACONTEXT_H_
