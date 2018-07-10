@@ -1,6 +1,7 @@
 #ifndef SIC_USECASES_H_
 #define SIC_USECASES_H_
 
+#include <mutex>
 #include <thread>
 
 #include "sic/Base/Variable.hh"
@@ -20,26 +21,38 @@ void evaluateRestrictionResults(sic::EvaluationContext &context) {
 	}
 
 	std::vector<std::thread> threads;
+	std::vector<std::string> results;
+	std::mutex resultsMutex;
 
 	std::function<void(const int)> threadEvaluatePortfolio =
 		[&](const int threadID) {
 			int portfolioCount = 0;
-			std::vector<std::string> resultStrings;
 			for (const auto &portfolio : context.getPortfolioCache()) {
 
 				if (portfolioCount % threadCount == threadID) {
+					std::vector<std::string> resultStrings;
+					resultStrings.push_back(
+						"PortfolioResults," +
+						std::to_string(portfolio->getExternalID()) + "\n");
+
 					for (const auto &aa : portfolio->getAssetAllocations()) {
+
 						auto results =
 							aa->generateRestrictionResults(*portfolio);
 						for (const auto &result : *results) {
 							resultStrings.emplace_back(result->serialise());
 						}
 					}
+
+					resultsMutex.lock();
+					for (const auto &result : resultStrings) {
+						results.push_back(result);
+					}
+					resultsMutex.unlock();
 				}
 
 				portfolioCount++;
 			}
-			unused(resultStrings);
 		};
 
 	for (int threadID = 0; threadID < threadCount; threadID++) {
