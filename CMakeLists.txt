@@ -123,6 +123,7 @@ foreach(USE_CASE ${USE_CASES})
     set(USE_CASE_MAIN "${USE_CASE_DIR}/${USE_CASE}.cc")
     add_executable("${USE_CASE}" ${USE_CASE_MAIN} ${SOURCES})
     target_include_directories("${USE_CASE}" PUBLIC "${SRC_DIR}")
+    target_link_libraries(${USE_CASE} pthread)
     set_target_properties(${USE_CASE}
         PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${USE_CASE_BIN_DIR}
