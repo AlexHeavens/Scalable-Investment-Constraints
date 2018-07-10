@@ -13,6 +13,19 @@ void evaluateRestrictionResults(sic::EvaluationContext &context) {
 	std::vector<std::string> resultStrings;
 	for (const auto &portfolio : context.getPortfolioCache()) {
 		for (const auto &aa : portfolio->getAssetAllocations()) {
+			const auto &filterTree = aa->getFilterTree();
+			auto results = filterTree.evaluate(*portfolio);
+			unused(results);
+		}
+	}
+	unused(resultStrings);
+}
+
+void evaluatePortfolios(sic::EvaluationContext &context) {
+
+	std::vector<std::string> resultStrings;
+	for (const auto &portfolio : context.getPortfolioCache()) {
+		for (const auto &aa : portfolio->getAssetAllocations()) {
 			auto results = aa->generateRestrictionResults(*portfolio);
 			for (const auto &result : *results) {
 				resultStrings.emplace_back(result->serialise());

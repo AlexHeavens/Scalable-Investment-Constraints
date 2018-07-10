@@ -22,6 +22,15 @@ int main() {
 
 	startTime = std::chrono::high_resolution_clock::now();
 
+	sic::UseCase::evaluatePortfolios(context);
+
+	finishTime = std::chrono::high_resolution_clock::now();
+	durationMilliseconds = finishTime - startTime;
+	std::cout << "TraditionalAAContext, EvaluatePortfolio, Wall Time (ms), "
+			  << durationMilliseconds.count() << "\n";
+
+	startTime = std::chrono::high_resolution_clock::now();
+
 	sic::UseCase::evaluateRestrictionResults(context);
 
 	finishTime = std::chrono::high_resolution_clock::now();
