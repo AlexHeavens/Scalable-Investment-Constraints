@@ -62,6 +62,19 @@ void evaluateRestrictionResults(sic::EvaluationContext &context) {
 	for (auto &thread : threads) {
 		thread.join();
 	}
+
+	unused(results);
+}
+
+void evaluatePortfolios(sic::EvaluationContext &context) {
+
+	for (const auto &portfolio : context.getPortfolioCache()) {
+		for (const auto &aa : portfolio->getAssetAllocations()) {
+			const auto &filterTree = aa->getFilterTree();
+			auto results = filterTree.evaluate(*portfolio);
+			unused(results);
+		}
+	}
 }
 
 void filterAssets(sic::EvaluationContext &context) {
