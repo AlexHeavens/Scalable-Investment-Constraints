@@ -117,7 +117,7 @@ target_include_directories("${BENCHMARK_EXE}" PUBLIC "${SRC_DIR}" "${BENCHMARK_I
 target_link_libraries("${BENCHMARK_EXE}" ${BENCHMARK_MAIN_LIBRARIES} pthread)
 
 # Use Cases
-set(USE_CASES "FilterAssets" "EvaluateRestrictionResults")
+set(USE_CASES "All" "FilterAssets" "EvaluateRestrictionResults")
 
 foreach(USE_CASE ${USE_CASES})
     set(USE_CASE_MAIN "${USE_CASE_DIR}/${USE_CASE}.cc")
