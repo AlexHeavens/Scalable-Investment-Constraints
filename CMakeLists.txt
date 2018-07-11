@@ -113,7 +113,7 @@ target_include_directories("${TEST_EXE}" PUBLIC "${SRC_DIR}" "${TEST_DIR}")
 target_link_libraries("${TEST_EXE}" ${GTEST_LIBRARIES} ${GMOCK_LIBRARIES} pthread)
 
 add_executable("${BENCHMARK_EXE}" ${SOURCES} ${BENCHMARK_SOURCES})
-target_include_directories("${BENCHMARK_EXE}" PUBLIC "${SRC_DIR}" "${BENCHMARK_INCLUDE_DIRS}")
+target_include_directories("${BENCHMARK_EXE}" PUBLIC "${SRC_DIR}" "${BENCHMARK_INCLUDE_DIRS}"  "${USE_CASE_DIR}")
 target_link_libraries("${BENCHMARK_EXE}" ${BENCHMARK_MAIN_LIBRARIES} pthread)
 
 # Use Cases
@@ -122,7 +122,7 @@ set(USE_CASES "All" "FilterAssets" "EvaluatePortfolio" "EvaluateRestrictionResul
 foreach(USE_CASE ${USE_CASES})
     set(USE_CASE_MAIN "${USE_CASE_DIR}/${USE_CASE}.cc")
     add_executable("${USE_CASE}" ${USE_CASE_MAIN} ${SOURCES})
-    target_include_directories("${USE_CASE}" PUBLIC "${SRC_DIR}")
+    target_include_directories("${USE_CASE}" PUBLIC "${SRC_DIR}" "${USE_CASE_DIR}")
     set_target_properties(${USE_CASE}
         PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${USE_CASE_BIN_DIR}
