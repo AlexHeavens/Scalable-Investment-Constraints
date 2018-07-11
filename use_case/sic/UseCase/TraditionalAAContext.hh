@@ -1,6 +1,7 @@
 #ifndef SIC_TRADITIONALAACONTEXT_H_
 #define SIC_TRADITIONALAACONTEXT_H_
 
+#include <iostream>
 #include <random>
 
 #include "sic/AAPortfolioFactory.hh"
@@ -132,7 +133,7 @@ private:
 		const auto &aaSource = evaluationContext->getAssetAllocationCache();
 		auto &portfolioSource = evaluationContext->getPortfolioCache();
 
-		constexpr int portfoliosPerAA = 1000;
+		constexpr int portfoliosPerAA = 5300;
 		constexpr sic::Value portfolioValue = 1000000.0;
 
 		constexpr int logEvery = 50000;
