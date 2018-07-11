@@ -133,7 +133,7 @@ private:
 		const auto &aaSource = evaluationContext->getAssetAllocationCache();
 		auto &portfolioSource = evaluationContext->getPortfolioCache();
 
-		constexpr int portfoliosPerAA = 1000;
+		constexpr int portfoliosPerAA = 5300;
 		constexpr sic::Value portfolioValue = 1000000.0;
 
 		constexpr int logEvery = 50000;
