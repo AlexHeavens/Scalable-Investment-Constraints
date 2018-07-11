@@ -13,7 +13,7 @@ int main() {
 		[&]() {
 			sic::UseCase::filterAssets(context, maxFilterCount, maxAssetCount);
 		},
-		"EvaluatePortfolio");
+		"FilterAssets");
 
 	return 0;
 }
