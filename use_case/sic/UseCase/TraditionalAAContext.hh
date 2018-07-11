@@ -1,6 +1,7 @@
 #ifndef SIC_TRADITIONALAACONTEXT_H_
 #define SIC_TRADITIONALAACONTEXT_H_
 
+#include <iostream>
 #include <random>
 
 #include "sic/AAPortfolioFactory.hh"
