@@ -21,8 +21,12 @@ set(DOXYGEN_CONFIG "${DOC_DIR}/doxygen-config")
 set(USE_CASE_DIR "${PROJECT_SOURCE_DIR}/use_case")
 set(USE_CASE_BIN_DIR "${BIN_DIR}/use_case")
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(BIN_SUFFIX "_debug")
+endif()
+
 # Build Properties
-set(PROJECT_EXE "project_prog")
+set(PROJECT_EXE "project_prog${BIN_SUFFIX}")
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 14)
 
@@ -34,8 +38,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 ## For profiling, ensure compile with debug flags.
 set(DEBUG_FLAGS, "-mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -ggdb -g3")
 
-set(TEST_EXE "tests")
-set(BENCHMARK_EXE "benchmarks")
+set(TEST_EXE "tests${BIN_SUFFIX}")
+set(BENCHMARK_EXE "benchmarks${BIN_SUFFIX}")
 
 # Required Build Programs
 find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
@@ -120,10 +124,11 @@ target_link_libraries("${BENCHMARK_EXE}" ${BENCHMARK_MAIN_LIBRARIES} pthread)
 set(USE_CASES "All" "FilterAssets" "EvaluatePortfolio" "EvaluateRestrictionResults")
 
 foreach(USE_CASE ${USE_CASES})
+    set(USE_CASE_BIN "${USE_CASE}${BIN_SUFFIX}")
     set(USE_CASE_MAIN "${USE_CASE_DIR}/${USE_CASE}.cc")
-    add_executable("${USE_CASE}" ${USE_CASE_MAIN} ${SOURCES})
-    target_include_directories("${USE_CASE}" PUBLIC "${SRC_DIR}" "${USE_CASE_DIR}")
-    set_target_properties(${USE_CASE}
+    add_executable("${USE_CASE_BIN}" ${USE_CASE_MAIN} ${SOURCES})
+    target_include_directories("${USE_CASE_BIN}" PUBLIC "${SRC_DIR}" "${USE_CASE_DIR}")
+    set_target_properties(${USE_CASE_BIN}
         PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${USE_CASE_BIN_DIR}
     )
