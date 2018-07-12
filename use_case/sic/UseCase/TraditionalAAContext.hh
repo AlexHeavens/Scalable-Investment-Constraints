@@ -20,6 +20,8 @@ private:
 	std::mt19937 randomGen;
 	sic::EvaluationContext context;
 
+	static std::unique_ptr<sic::TraditionalAAContext> singleton;
+
 	static void
 	generateFilterTrees(sic::EvaluationContext *const evaluationContext) {
 
@@ -160,6 +162,13 @@ private:
 	}
 
 public:
+	static sic::TraditionalAAContext &getSingleton() {
+		if (!singleton) {
+			singleton.reset(new sic::TraditionalAAContext());
+		}
+		return *singleton;
+	}
+
 	TraditionalAAContext() {
 
 		randomGen = std::mt19937(randomSeed);
@@ -173,6 +182,7 @@ public:
 };
 
 constexpr int TraditionalAAContext::randomSeed;
+std::unique_ptr<sic::TraditionalAAContext> TraditionalAAContext::singleton;
 
 } // namespace sic
 
