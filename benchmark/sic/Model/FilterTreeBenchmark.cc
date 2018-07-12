@@ -4,8 +4,6 @@
 #include "sic/Model/RegularFilterTreeFactory.hh"
 #include "sic/Portfolio.hh"
 #include "sic/Portfolio/Asset.hh"
-#include "sic/UseCase/TraditionalAAContext.hh"
-#include "sic/UseCases.hh"
 
 static void FilterTree_getLeafNode(benchmark::State &state) {
 
@@ -96,20 +94,3 @@ static void FilterTree_evaluatePortfolio(benchmark::State &state) {
 }
 
 BENCHMARK(FilterTree_evaluatePortfolio)->RangeMultiplier(2)->Ranges({{8, 512}});
-
-static void FilterTree_evaluatePortfolios_BankWide(benchmark::State &state) {
-
-	auto &useCase = sic::TraditionalAAContext::getSingleton();
-	auto &context = useCase.getEvaluationContext();
-	std::size_t maxPortfolioCount = state.range(0);
-
-	state.counters.insert({{"portfolioCount", maxPortfolioCount}});
-
-	for (auto _ : state) {
-		sic::UseCase::evaluateRestrictionResults(context, maxPortfolioCount);
-	}
-}
-
-BENCHMARK(FilterTree_evaluatePortfolios_BankWide)
-	->RangeMultiplier(2)
-	->Ranges({{2 << 10, 2 << 19}});
