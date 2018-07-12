@@ -41,8 +41,10 @@ if [ "${ALL_TESTS_RESULT}" -eq 0 ]; then
 	printf -- "-----------\n"
 	printf "(Warning: limited iterations, noisy results)!\n\n"
 
-	# As only a sanity check, allow short execution.
-	"${PROJECT_BIN_DIR}/benchmarks" --benchmark_min_time=0.01
+	# As only a sanity check, allow short execution.  Exclude long-running use
+	# cases.
+	"${PROJECT_BIN_DIR}/benchmarks" --benchmark_min_time=0.01  \
+		--benchmark_filter=-'!*BankWide*'
 	ALL_TESTS_RESULT="$?"
 fi
 
