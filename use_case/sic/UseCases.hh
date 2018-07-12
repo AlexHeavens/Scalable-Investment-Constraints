@@ -32,7 +32,7 @@ void evaluateRestrictionResults(
 	const sic::ParallelParameters &paraPars = sic::ParallelParameters()) {
 
 	std::vector<std::thread> threads;
-	std::vector<std::string> results;
+	std::vector<std::string> globalResultsStrings;
 	std::mutex resultsMutex;
 	std::size_t threadCount = paraPars.threadCount;
 
@@ -45,9 +45,8 @@ void evaluateRestrictionResults(
 					break;
 				}
 
-				if (portfolioCount % threadCount == threadID) {
-					std::vector<std::string> resultStrings;
-					resultStrings.push_back(
+				if (paraPars.serial) {
+					globalResultsStrings.push_back(
 						"PortfolioResults," +
 						std::to_string(portfolio->getExternalID()) + "\n");
 
@@ -55,32 +54,55 @@ void evaluateRestrictionResults(
 
 						auto results =
 							aa->generateRestrictionResults(*portfolio);
+
 						for (const auto &result : *results) {
-							resultStrings.emplace_back(result->serialise());
+							globalResultsStrings.emplace_back(
+								result->serialise());
 						}
 					}
+				} else {
+					if (portfolioCount % threadCount == threadID) {
+						std::vector<std::string> resultStrings;
+						resultStrings.push_back(
+							"PortfolioResults," +
+							std::to_string(portfolio->getExternalID()) + "\n");
 
-					resultsMutex.lock();
-					for (const auto &result : resultStrings) {
-						results.push_back(result);
+						for (const auto &aa :
+							 portfolio->getAssetAllocations()) {
+
+							auto results =
+								aa->generateRestrictionResults(*portfolio);
+
+							for (const auto &result : *results) {
+								resultStrings.emplace_back(result->serialise());
+							}
+						}
+
+						resultsMutex.lock();
+						for (const auto &result : resultStrings) {
+							globalResultsStrings.push_back(result);
+						}
+						resultsMutex.unlock();
 					}
-					resultsMutex.unlock();
 				}
-
 				portfolioCount++;
 			}
 		};
 
-	for (std::size_t threadID = 0; threadID < paraPars.threadCount;
-		 threadID++) {
-		threads.emplace_back(threadEvaluatePortfolio, threadID);
+	if (paraPars.serial) {
+		threadEvaluatePortfolio(0);
+	} else {
+		for (std::size_t threadID = 0; threadID < paraPars.threadCount;
+			 threadID++) {
+			threads.emplace_back(threadEvaluatePortfolio, threadID);
+		}
+
+		for (auto &thread : threads) {
+			thread.join();
+		}
 	}
 
-	for (auto &thread : threads) {
-		thread.join();
-	}
-
-	unused(results);
+	unused(globalResultsStrings);
 }
 
 void evaluatePortfolios(sic::EvaluationContext &context,
