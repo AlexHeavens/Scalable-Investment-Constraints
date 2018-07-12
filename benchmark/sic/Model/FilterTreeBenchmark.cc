@@ -7,14 +7,6 @@
 #include "sic/UseCase/TraditionalAAContext.hh"
 #include "sic/UseCases.hh"
 
-static std::unique_ptr<sic::TraditionalAAContext> useCase;
-
-static void initUseCase() {
-	if (!useCase) {
-		useCase.reset(new sic::TraditionalAAContext());
-	}
-}
-
 static void FilterTree_getLeafNode(benchmark::State &state) {
 
 	const unsigned treeDepth = state.range(0);
@@ -107,9 +99,8 @@ BENCHMARK(FilterTree_evaluatePortfolio)->RangeMultiplier(2)->Ranges({{8, 512}});
 
 static void FilterTree_evaluatePortfolios_BankWide(benchmark::State &state) {
 
-	initUseCase();
-
-	auto &context = useCase->getEvaluationContext();
+	auto &useCase = sic::TraditionalAAContext::getSingleton();
+	auto &context = useCase.getEvaluationContext();
 	std::size_t maxPortfolioCount = state.range(0);
 
 	state.counters.insert({{"portfolioCount", maxPortfolioCount}});
