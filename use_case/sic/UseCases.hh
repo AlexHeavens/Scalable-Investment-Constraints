@@ -6,6 +6,7 @@
 #include <mutex>
 #include <thread>
 
+#include "sic/Base/Parallelism.hh"
 #include "sic/Base/Variable.hh"
 #include "sic/EvaluationContext.hh"
 
@@ -26,22 +27,17 @@ void timeUseCase(std::function<void()> useCase, const std::string &name) {
 			  << durationMilliseconds.count() << "\n";
 }
 
-void evaluateRestrictionResults(sic::EvaluationContext &context,
-								std::size_t maxPortfolioCount) {
-
-	int threadCount = std::thread::hardware_concurrency();
-
-	// Zero implies thread count is unknown.
-	if (threadCount == 0) {
-		threadCount = 1;
-	}
+void evaluateRestrictionResults(
+	sic::EvaluationContext &context, std::size_t maxPortfolioCount,
+	const sic::ParallelParameters &paraPars = sic::ParallelParameters()) {
 
 	std::vector<std::thread> threads;
 	std::vector<std::string> results;
 	std::mutex resultsMutex;
+	std::size_t threadCount = paraPars.threadCount;
 
 	std::function<void(const int)> threadEvaluatePortfolio =
-		[&](const int threadID) {
+		[&](const std::size_t threadID) {
 			std::size_t portfolioCount = 0;
 			for (const auto &portfolio : context.getPortfolioCache()) {
 
@@ -75,7 +71,8 @@ void evaluateRestrictionResults(sic::EvaluationContext &context,
 			}
 		};
 
-	for (int threadID = 0; threadID < threadCount; threadID++) {
+	for (std::size_t threadID = 0; threadID < paraPars.threadCount;
+		 threadID++) {
 		threads.emplace_back(threadEvaluatePortfolio, threadID);
 	}
 
