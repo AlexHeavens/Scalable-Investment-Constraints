@@ -4,8 +4,11 @@
 #include "sic/UseCase/TraditionalAAContext.hh"
 #include "sic/UseCases.hh"
 
-static void
-AssetAllocation_evaluatePortfolios_BankWide(benchmark::State &state) {
+class AssetAllocationBenchmark : public benchmark::Fixture {};
+
+BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
+				   EvaluatePortfolioRestrictions_BankWide)
+(benchmark::State &state) {
 
 	auto &useCase = sic::TraditionalAAContext::getSingleton();
 	auto &context = useCase.getEvaluationContext();
@@ -18,6 +21,7 @@ AssetAllocation_evaluatePortfolios_BankWide(benchmark::State &state) {
 	}
 }
 
-BENCHMARK(AssetAllocation_evaluatePortfolios_BankWide)
+BENCHMARK_REGISTER_F(AssetAllocationBenchmark,
+					 EvaluatePortfolioRestrictions_BankWide)
 	->RangeMultiplier(2)
 	->Ranges({{2 << 10, 2 << 19}});
