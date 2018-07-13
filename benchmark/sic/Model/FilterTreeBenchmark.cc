@@ -5,7 +5,10 @@
 #include "sic/Portfolio.hh"
 #include "sic/Portfolio/Asset.hh"
 
-static void FilterTree_getLeafNode(benchmark::State &state) {
+class FilterTreeBenchmark : public benchmark::Fixture {};
+
+BENCHMARK_DEFINE_F(FilterTreeBenchmark, GetAssetLeafNode)
+(benchmark::State &state) {
 
 	const unsigned treeDepth = state.range(0);
 	const unsigned nodeDegree = state.range(1);
@@ -36,9 +39,12 @@ static void FilterTree_getLeafNode(benchmark::State &state) {
 	}
 }
 
-BENCHMARK(FilterTree_getLeafNode)->RangeMultiplier(2)->Ranges({{1, 8}, {1, 8}});
+BENCHMARK_REGISTER_F(FilterTreeBenchmark, GetAssetLeafNode)
+	->RangeMultiplier(2)
+	->Ranges({{1, 8}, {1, 8}});
 
-static void FilterTree_evaluatePortfolio(benchmark::State &state) {
+BENCHMARK_DEFINE_F(FilterTreeBenchmark, EvaluatePortfolioValueTree)
+(benchmark::State &state) {
 
 	const int positionCount = state.range(0);
 	constexpr int positionsPerAsset = 4;
@@ -93,4 +99,6 @@ static void FilterTree_evaluatePortfolio(benchmark::State &state) {
 	}
 }
 
-BENCHMARK(FilterTree_evaluatePortfolio)->RangeMultiplier(2)->Ranges({{8, 512}});
+BENCHMARK_REGISTER_F(FilterTreeBenchmark, EvaluatePortfolioValueTree)
+	->RangeMultiplier(2)
+	->Ranges({{8, 512}});
