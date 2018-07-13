@@ -5,6 +5,10 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebugInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(BIN_DIR_SUFFIX "_debug")
+endif()
+
 # Custom Modules
 ## Necessary for finding Google Benchmark
 set(PROJECT_CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/.cmake/Modules/")
@@ -12,7 +16,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_CMAKE_MODULE_PATH})
 
 # Project
 set(SRC_DIR "${PROJECT_SOURCE_DIR}/src")
-set(BIN_DIR "${PROJECT_SOURCE_DIR}/bin")
+set(BIN_DIR "${PROJECT_SOURCE_DIR}/bin${BIN_DIR_SUFFIX}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${BIN_DIR}")
 set(TEST_DIR "${PROJECT_SOURCE_DIR}/test")
 set(BENCHMARK_DIR "${PROJECT_SOURCE_DIR}/benchmark")
@@ -124,10 +128,12 @@ target_link_libraries("${BENCHMARK_EXE}" ${BENCHMARK_MAIN_LIBRARIES} pthread)
 set(USE_CASES "All" "FilterAssets" "EvaluatePortfolio" "EvaluateRestrictionResults")
 
 foreach(USE_CASE ${USE_CASES})
-    set(USE_CASE_BIN "${USE_CASE}${BIN_SUFFIX}")
+    set(USE_CASE_BIN "${USE_CASE}")
     set(USE_CASE_MAIN "${USE_CASE_DIR}/${USE_CASE}.cc")
+
     add_executable("${USE_CASE_BIN}" ${USE_CASE_MAIN} ${SOURCES})
     target_include_directories("${USE_CASE_BIN}" PUBLIC "${SRC_DIR}" "${USE_CASE_DIR}")
+    target_link_libraries(${USE_CASE_BIN} pthread)
     set_target_properties(${USE_CASE_BIN}
         PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${USE_CASE_BIN_DIR}

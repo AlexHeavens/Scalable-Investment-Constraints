@@ -2,17 +2,14 @@
 
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 PROJECT_ROOT_DIR="${SCRIPT_DIR}/.."
-BIN_DIR="${PROJECT_ROOT_DIR}/bin"
-BUILD_DIR="${PROJECT_ROOT_DIR}/build"
+BIN_DIR="${PROJECT_ROOT_DIR}/bin_debug"
+BUILD_DIR="${PROJECT_ROOT_DIR}/build_debug"
 PERF_RES_DIR="$PROJECT_ROOT_DIR/perf_res"
-VIEW_PERF_SCRIPT="$SCRIPT_DIR/view_perf.sh"
 
 USE_CASE_BIN_DIR="$BIN_DIR/use_case"
 
 rm "$PERF_RES_DIR"/* -r
-cd "${BUILD_DIR}"
-cmake .. -DCMAKE_BUILD_TYPE=RelWithDebugInfo -DCMAKE_MAKE_PROGRAM=ninja -G Ninja
-ninja
+"$SCRIPT_DIR/debug_build.sh"
 BUILD_RESULT="$?"
 RESULT=0
 
