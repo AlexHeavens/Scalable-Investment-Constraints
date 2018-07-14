@@ -33,8 +33,9 @@ BENCHMARK_REGISTER_F(AssetAllocationBenchmark,
 	->Ranges({{2 << 10, 2 << 15},
 			  {1, sic::ParallelParameters::getMaxThreadCount()}});
 
-static void
-AssetAllocation_evaluatePortfolios_BankWide_serial(benchmark::State &state) {
+BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
+				   EvaluatePortfolioRestrictions_serial_BankWide)
+(benchmark::State &state) {
 
 	auto &useCase = sic::TraditionalAAContext::getSingleton();
 	auto &context = useCase.getEvaluationContext();
@@ -52,6 +53,7 @@ AssetAllocation_evaluatePortfolios_BankWide_serial(benchmark::State &state) {
 	}
 }
 
-BENCHMARK(AssetAllocation_evaluatePortfolios_BankWide_serial)
+BENCHMARK_REGISTER_F(AssetAllocationBenchmark,
+					 EvaluatePortfolioRestrictions_serial_BankWide)
 	->RangeMultiplier(2)
 	->Ranges({{2 << 10, 2 << 15}});
