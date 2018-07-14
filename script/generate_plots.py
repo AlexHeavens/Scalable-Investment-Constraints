@@ -14,6 +14,10 @@ plot_output_dir = project_root_dir + "/analysis/plots"
 with open(results_path) as results_file:
 	results = json.load(results_file)["benchmarks"]
 
+def real_time_to_milliseconds(result):
+	result["real_time"] = result["real_time"] / 1000000000.0
+	return result
+
 def filter_use_case_results(use_case, use_case_filter = None):
 	regex = re.compile(re.escape(use_case) + "*")
 	use_case_results = [result for result in results if re.match(regex, result["name"])]
@@ -37,9 +41,11 @@ def generate_use_case_trace(use_case_results, x_axis_field, y_axis_field):
 
 	return trace
 
-def generate_use_case_plot(use_case, title, x_axis_field, y_axis_field, x_axis_title, y_axis_title, serial_use_case = None, use_case_filter = None):
+def generate_use_case_plot(use_case, title, x_axis_field, y_axis_field, x_axis_title, y_axis_title, serial_use_case = None, use_case_filter = None, x_transform = None):
 
 	use_case_results = filter_use_case_results(use_case, use_case_filter)
+	if x_transform is not None:
+		use_case_results = [x_transform(result) for result in use_case_results]
 
 	parallel_trace = generate_use_case_trace(use_case_results, x_axis_field, y_axis_field)
 	data = [parallel_trace]
@@ -48,6 +54,9 @@ def generate_use_case_plot(use_case, title, x_axis_field, y_axis_field, x_axis_t
 	layout = {"title": title, "shapes":[], "xaxis":{"title": x_axis_title}, "yaxis":{"title": y_axis_title}}
 	if serial_use_case != None:
 		serial_result = [result for result in results if result["name"] == serial_use_case][0]
+
+		if x_transform is not None:
+			serial_result = x_transform(serial_result)
 
 		# Figure out how long to make the serial offline
 		x_values = [result[x_axis_field] for result in use_case_results]
@@ -84,11 +93,12 @@ def generate_use_case_plot(use_case, title, x_axis_field, y_axis_field, x_axis_t
 
 generate_use_case_plot(
 	use_case ="AssetAllocationBenchmark/EvaluatePortfolioRestrictions_BankWide/",
-	title = "Restriction Evaluation, 65536 Portfolios",
+	title = "Restriction Evaluation, 65536 Portfolios, Intel i7-7700HQ",
 	x_axis_field = "threadCount",
 	y_axis_field = "real_time",
 	x_axis_title = "Thread Count",
-	y_axis_title = "Real Time (ns)",
+	y_axis_title = "Real Time (s)",
 	use_case_filter = (lambda result: result["portfolioCount"] == 65536 and result["serial"] == 0.0),
-	serial_use_case = "AssetAllocationBenchmark/EvaluatePortfolioRestrictions_BankWide_serial/65536"
+	serial_use_case = "AssetAllocationBenchmark/EvaluatePortfolioRestrictions_BankWide_serial/65536",
+	x_transform = real_time_to_milliseconds
 )
