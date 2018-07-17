@@ -51,7 +51,26 @@ def generate_use_case_plot(use_case, title, x_axis_field, y_axis_field, x_axis_t
 	data = [parallel_trace]
 	plot_filepath = plot_output_dir + "/" + use_case.replace("/","_") + ".html"
 
-	layout = {"title": title, "shapes":[], "xaxis":{"title": x_axis_title}, "yaxis":{"title": y_axis_title}}
+	y_values = [result[y_axis_field] for result in use_case_results]
+	max_y = sorted(y_values)[-1]
+
+	layout = {
+		"title": title,
+		"shapes":[],
+		"xaxis":{
+			"title": x_axis_title,
+			"showgrid": False,
+			"zeroline": False,
+			"showline": False
+		},
+		"yaxis":{
+			"title": y_axis_title,
+			"range": [0, max_y * 1.05],
+			"showgrid": False,
+			"zeroline": False,
+			"showline": False,
+		}
+	}
 	if serial_use_case != None:
 		serial_result = [result for result in results if result["name"] == serial_use_case][0]
 
@@ -65,6 +84,9 @@ def generate_use_case_plot(use_case, title, x_axis_field, y_axis_field, x_axis_t
 		max_x = sorted_x_values[-1]
 		x1 = max_x + min_x
 		y = serial_result[y_axis_field]
+		if y > max_y:
+			max_y = y
+			layout["yaxis"]["range"] = [0, max_y * 1.05]
 
 		# Draw serial line
 		serial_trace = {
@@ -93,7 +115,7 @@ def generate_use_case_plot(use_case, title, x_axis_field, y_axis_field, x_axis_t
 
 generate_use_case_plot(
 	use_case ="AssetAllocationBenchmark/EvaluatePortfolioRestrictions_BankWide/",
-	title = "Restriction Evaluation, 65536 Portfolios, Intel i7-7700HQ",
+	title = "Restriction Evaluation, 65536 Portfolios, Intel i7-7700HQ (4 cores, 8 Hyperthreads)",
 	x_axis_field = "threadCount",
 	y_axis_field = "real_time",
 	x_axis_title = "Thread Count",
