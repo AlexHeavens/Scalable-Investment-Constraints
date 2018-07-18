@@ -78,11 +78,12 @@ void evaluateRestrictionResults(
 							}
 						}
 
-						resultsMutex.lock();
-						for (const auto &result : resultStrings) {
-							globalResultsStrings.push_back(result);
+						{
+							std::unique_lock<std::mutex> lock(resultsMutex);
+							for (const auto &result : resultStrings) {
+								globalResultsStrings.push_back(result);
+							}
 						}
-						resultsMutex.unlock();
 					}
 				}
 				portfolioCount++;
