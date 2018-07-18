@@ -55,6 +55,7 @@ void evaluateRestrictionResults(
 						auto results =
 							aa->generateRestrictionResults(*portfolio);
 
+						// No need to lock global reuslts, only one thread.
 						for (const auto &result : *results) {
 							globalResultsStrings.emplace_back(
 								result->serialise());
