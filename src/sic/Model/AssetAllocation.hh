@@ -22,6 +22,10 @@ public:
 private:
 	const sic::AbstractFilterTree &filterTree;
 	const std::unique_ptr<sic::AssetAllocation::FilterNodeMap> filterNodeMap;
+	sic::AbstractAsset::AssetWeightMap modelAssetWeights;
+
+	void getAssetToTopWeights(
+		sic::AbstractAsset::AssetWeightMap *assetWeightMap) const;
 
 public:
 	/**

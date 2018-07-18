@@ -7,6 +7,17 @@
 
 namespace sic {
 
+void AssetAllocation::getAssetToTopWeights(
+	sic::AbstractAsset::AssetWeightMap *assetWeightMap) const {
+
+	for (const auto &filterAANodePair :
+		 sic::Iterators<FilterNodeMap::value_type>(filterNodeMap)) {
+
+		auto &aaNode = *filterAANodePair.second;
+		aaNode.attachToTopAssetWeights(assetWeightMap);
+	}
+}
+
 AssetAllocation::AssetAllocation(
 	const sic::AbstractFilterTree &filterTree,
 	std::unique_ptr<sic::AssetAllocation::FilterNodeMap> filterNodeMap,
@@ -24,6 +35,8 @@ AssetAllocation::AssetAllocation(
 				"filterNodeMap contains FilterNode from an unknown tree.");
 		}
 	}
+
+	getAssetToTopWeights(&modelAssetWeights);
 }
 
 std::unique_ptr<AbstractAssetAllocation::ResultVector>
@@ -69,14 +82,13 @@ AssetAllocation::generateRestrictionResults(
 		}
 	}
 
-	auto modelAssetWeights = getAssetToTopWeights();
 	for (const auto &portfolioAssetWeight : portfolioAssetWeights) {
 
 		const sic::AbstractAsset &asset = *(portfolioAssetWeight.first);
 		const auto &portfolioWeight = portfolioAssetWeight.second;
-		const auto modelAssetWeightLookup = modelAssetWeights->find(&asset);
+		const auto modelAssetWeightLookup = modelAssetWeights.find(&asset);
 
-		if (modelAssetWeightLookup != modelAssetWeights->end()) {
+		if (modelAssetWeightLookup != modelAssetWeights.end()) {
 			sic::WeightRange assetModelWeights(modelAssetWeightLookup->second);
 
 			auto assetResult = std::make_unique<sic::AssetRestrictionResult>(
@@ -91,7 +103,7 @@ AssetAllocation::generateRestrictionResults(
 		}
 	}
 
-	for (const auto &modelAssetWeightPair : *modelAssetWeights) {
+	for (const auto &modelAssetWeightPair : modelAssetWeights) {
 		const auto &asset = *(modelAssetWeightPair.first);
 
 		if (portfolioAssetWeights.find(&asset) == portfolioAssetWeights.end()) {
@@ -108,14 +120,9 @@ AssetAllocation::generateRestrictionResults(
 std::unique_ptr<sic::AbstractAsset::AssetWeightMap>
 AssetAllocation::getAssetToTopWeights() const {
 
+	// Take a copy of the precalculated weights.
 	auto assetToTopWeights =
-		std::make_unique<sic::AbstractAsset::AssetWeightMap>();
-
-	for (const auto &filterAANodePair : getAANodeIterators()) {
-
-		auto &aaNode = *filterAANodePair.second;
-		aaNode.attachToTopAssetWeights(assetToTopWeights.get());
-	}
+		std::make_unique<sic::AbstractAsset::AssetWeightMap>(modelAssetWeights);
 
 	return assetToTopWeights;
 }
