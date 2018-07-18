@@ -35,9 +35,10 @@ void evaluateRestrictionResults(sic::EvaluationContext &context,
 		}
 
 		for (const auto &aa : portfolio->getAssetAllocations()) {
-			const auto &filterTree = aa->getFilterTree();
-			auto results = filterTree.evaluate(*portfolio);
-			unused(results);
+			auto results = aa->generateRestrictionResults(*portfolio);
+			for (const auto &result : *results) {
+				resultStrings.emplace_back(result->serialise());
+			}
 		}
 
 		portfolioCount++;
@@ -56,10 +57,9 @@ void evaluatePortfolios(sic::EvaluationContext &context,
 		}
 
 		for (const auto &aa : portfolio->getAssetAllocations()) {
-			auto results = aa->generateRestrictionResults(*portfolio);
-			for (const auto &result : *results) {
-				resultStrings.emplace_back(result->serialise());
-			}
+			const auto &filterTree = aa->getFilterTree();
+			auto results = filterTree.evaluate(*portfolio);
+			unused(results);
 		}
 
 		portfolioCount++;
