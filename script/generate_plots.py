@@ -71,6 +71,9 @@ def generate_use_case_plot(use_case, title, x_axis_field, y_axis_field, x_axis_t
 			"showline": False,
 		}
 	}
+
+	pprint(serial_use_case)
+	pprint(results)
 	if serial_use_case != None:
 		serial_result = [result for result in results if result["name"] == serial_use_case][0]
 
@@ -121,6 +124,6 @@ generate_use_case_plot(
 	x_axis_title = "Thread Count",
 	y_axis_title = "Real Time (s)",
 	use_case_filter = (lambda result: result["portfolioCount"] == 65536 and result["serial"] == 0.0),
-	serial_use_case = "AssetAllocationBenchmark/EvaluatePortfolioRestrictions_BankWide_serial/65536",
+	serial_use_case = "AssetAllocationBenchmark/EvaluatePortfolioRestrictions_serial_BankWide/65536",
 	x_transform = real_time_to_milliseconds
 )
