@@ -99,11 +99,8 @@ void evaluateRestrictionResults(
 			threads.emplace_back(threadEvaluatePortfolio, threadID);
 		}
 
-		for (const auto &aa : portfolio->getAssetAllocations()) {
-			auto results = aa->generateRestrictionResults(*portfolio);
-			for (const auto &result : *results) {
-				resultStrings.emplace_back(result->serialise());
-			}
+		for (auto &thread : threads) {
+			thread.join();
 		}
 	}
 
