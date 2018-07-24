@@ -1,5 +1,7 @@
 #include "sic/Portfolio/Asset.hh"
 
+#include "sic/Base/Variable.hh"
+
 namespace sic {
 
 Asset::Asset(const sic::Asset &rhs) : sic::AbstractAsset(rhs) {
@@ -9,9 +11,10 @@ Asset::Asset(const sic::Asset &rhs) : sic::AbstractAsset(rhs) {
 }
 
 Asset::Asset(sic::External::ID externalID,
-			 std::experimental::optional<std::unique_ptr<ClassSet>> classes)
+			 boost::optional<std::unique_ptr<ClassSet>> classes)
 	: sic::AbstractAsset(externalID) {
 
+	unused(classes);
 	if (classes) {
 		this->classes = std::move(*classes);
 	} else {
