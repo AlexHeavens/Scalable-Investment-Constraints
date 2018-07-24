@@ -1,5 +1,7 @@
 #include "sic/Model/RegularAAFactory.hh"
 
+#include <random>
+
 #include "sic/Model/AssetAllocationNode.hh"
 #include "sic/Model/Filter/AllAssetsFilter.hh"
 #include "sic/Model/MPFAllocationNode.hh"

@@ -25,7 +25,7 @@ TEST_F(AssetTest, CreateValidAsset) {
 	for (int i = 0; i < expClassCount; i++) {
 		expClasses->emplace(distr(randomGen));
 	}
-	std::experimental::optional<std::unique_ptr<sic::Asset::ClassSet>>
+	boost::optional<std::unique_ptr<sic::Asset::ClassSet>>
 		optExpClasses(std::move(expClasses));
 
 	// Create Asset

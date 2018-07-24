@@ -9,17 +9,16 @@
 #  GMOCK_INCLUDE_DIRS - The GMock include directories
 #  GMOCK_LIBRARIES - The libraries needed to use GMock
 
-
+set(HOME_LOCAL_DIR "$ENV{HOME}/local")
 find_path(GMOCK_INCLUDE_DIR "gmock/gmock.h"
   PATH_SUFFIXES include
+  HINTS ${HOME_LOCAL_DIR}
 )
-find_path(GMOCK_INCLUDE_DIR "gmock/gmock.h")
 
 find_library(GMOCK_LIBRARY NAMES "gmock"
   PATH_SUFFIXES lib lib64
+  HINTS ${HOME_LOCAL_DIR}
 )
-find_library(GMOCK_LIBRARY NAMES "gmock")
-
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set GMOCK_FOUND to TRUE
 # if all listed variables are TRUE
@@ -33,3 +32,4 @@ if(GMOCK_FOUND)
 endif()
 
 mark_as_advanced(GMOCK_INCLUDE_DIR GMOCK_LIBRARY)
+unset(HOME_LOCAL_DIR)

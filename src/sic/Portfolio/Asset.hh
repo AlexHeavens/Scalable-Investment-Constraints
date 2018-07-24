@@ -1,7 +1,7 @@
 #ifndef SIC_PORTFOLIO_ASSET_H_
 #define SIC_PORTFOLIO_ASSET_H_
 
-#include <experimental/optional>
+#include <boost/optional.hpp>
 
 #include "sic/Base/Iterators.hh"
 #include "sic/Base/Types.hh"
@@ -40,7 +40,7 @@ public:
 	 * example, market category.  The Asset takes ownership of this set.
 	 */
 	Asset(sic::External::ID externalID,
-		  std::experimental::optional<std::unique_ptr<ClassSet>> classes = {});
+		  boost::optional<std::unique_ptr<ClassSet>> classes = {});
 
 	/**
 	 * The current and end iterators of the Asset's class set.
