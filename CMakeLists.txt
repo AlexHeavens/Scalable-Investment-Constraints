@@ -32,7 +32,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(COMMON_FLAGS "-Werror -Wall -Wextra")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMMON_FLAGS}")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
 ## For profiling, ensure compile with debug flags.
@@ -77,7 +77,7 @@ else ()
             )
 endif ()
 
-find_package(Doxygen 1.8.11)
+find_package(Doxygen 1.8.5)
 if (DOXYGEN_FOUND)
     option(BUILD_DOC "Build documentation" ON)
     add_custom_target( doc_doxygen ALL
@@ -100,25 +100,39 @@ file(GLOB_RECURSE BENCHMARK_SOURCES "${BENCHMARK_DIR}/*.cc" "${BENCHMARK_DIR}/*.
 
 # Required Libraries
 include(FindGTest)
-find_package(GTest REQUIRED)
+find_package(GTest)
 
 include(FindGMock)
-find_package(GMock REQUIRED)
+find_package(GMock)
 
 include(FindBenchmark)
-find_package(Benchmark REQUIRED)
+find_package(Benchmark)
 
 # Build
 add_executable("${PROJECT_EXE}" ${SOURCES} ${MAIN_SRC})
 target_include_directories("${PROJECT_EXE}" PUBLIC "${SRC_DIR}")
 
-add_executable("${TEST_EXE}" ${SOURCES} ${TEST_SOURCES} ${TEST_MAIN_SRC})
-target_include_directories("${TEST_EXE}" PUBLIC "${SRC_DIR}" "${TEST_DIR}")
-target_link_libraries("${TEST_EXE}" ${GTEST_LIBRARIES} ${GMOCK_LIBRARIES} pthread)
+if (GTEST_FOUND AND GMOCK_FOUND)
+    set(GEN_TEST_EXE True)
 
-add_executable("${BENCHMARK_EXE}" ${SOURCES} ${BENCHMARK_SOURCES})
-target_include_directories("${BENCHMARK_EXE}" PUBLIC "${SRC_DIR}" "${BENCHMARK_INCLUDE_DIRS}"  "${USE_CASE_DIR}")
-target_link_libraries("${BENCHMARK_EXE}" ${BENCHMARK_MAIN_LIBRARIES} pthread)
+    add_executable("${TEST_EXE}" ${SOURCES} ${TEST_SOURCES} ${TEST_MAIN_SRC})
+    target_include_directories("${TEST_EXE}" PUBLIC ${SRC_DIR} ${TEST_DIR} ${GTEST_INCLUDE_DIRS})
+    target_link_libraries("${TEST_EXE}" ${GTEST_LIBRARIES} ${GMOCK_LIBRARIES} pthread)
+
+    enable_testing()
+    add_test(NAME AllTests COMMAND "${TEST_EXE}")
+else ()
+    set(GEN_TEST_EXE False)
+    message("GTest or GMock not found")
+endif ()
+
+if (BENCHMARK_FOUND)
+    add_executable("${BENCHMARK_EXE}" ${SOURCES} ${BENCHMARK_SOURCES})
+    target_include_directories("${BENCHMARK_EXE}" PUBLIC "${SRC_DIR}" "${BENCHMARK_INCLUDE_DIRS}"  "${USE_CASE_DIR}")
+    target_link_libraries("${BENCHMARK_EXE}" ${BENCHMARK_MAIN_LIBRARIES} pthread)
+else ()
+    message("Benchmark not found")
+endif ()
 
 # Use Cases
 set(USE_CASES "All" "FilterAssets" "EvaluatePortfolio" "EvaluateRestrictionResults")
@@ -141,12 +155,11 @@ if (CLANG_TIDY_EXE)
             "${PROJECT_EXE}" PROPERTIES CXX_CLANG_TIDY
             "${CLANG_TIDY_PROPERTIES}"
     )
-    set_target_properties(
-            "${TEST_EXE}" PROPERTIES CXX_CLANG_TIDY
-            "${CLANG_TIDY_TEST_PROPERTIES}"
-    )
-endif (CLANG_TIDY_EXE)
 
-# Testing
-enable_testing()
-add_test(NAME AllTests COMMAND "${TEST_EXE}")
+    if (GEN_TEST_EXE)
+        set_target_properties(
+                "${TEST_EXE}" PROPERTIES CXX_CLANG_TIDY
+                "${CLANG_TIDY_TEST_PROPERTIES}"
+        )
+    endif ()
+endif (CLANG_TIDY_EXE)
