@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <memory>
+#include <random>
 
 #include "sic/Base/Types.hh"
 #include "sic/Model/MPFAllocationNode.hh"
