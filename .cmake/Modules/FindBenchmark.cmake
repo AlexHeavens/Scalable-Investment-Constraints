@@ -9,17 +9,21 @@
 #  BENCHMARK_INCLUDE_DIRS - The benchmark include directories
 #  BENCHMARK_LIBRARIES - The libraries needed to use benchmark
 
-
+set(HOME_LOCAL_DIR "$ENV{HOME}/local")
 find_path(BENCHMARK_INCLUDE_DIR "benchmark/benchmark.h"
   PATH_SUFFIXES include
+  HINTS ${HOME_LOCAL_DIR}
 )
-find_path(BENCHMARK_INCLUDE_DIR "benchmark/benchmark.h")
 
 find_library(BENCHMARK_LIBRARY NAMES "benchmark"
   PATH_SUFFIXES lib lib64
+  HINTS ${HOME_LOCAL_DIR}
 )
-find_library(BENCHMARK_LIBRARY NAMES "benchmark")
-find_library(BENCHMARK_MAIN_LIBRARY NAMES "benchmark_main")
+
+find_library(BENCHMARK_MAIN_LIBRARY NAMES "benchmark_main"
+  PATH_SUFFIXES lib lib64
+  HINTS ${HOME_LOCAL_DIR}
+)
 
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set BENCHMARK_FOUND to TRUE
@@ -35,3 +39,4 @@ if(BENCHMARK_FOUND)
 endif()
 
 mark_as_advanced(BENCHMARK_INCLUDE_DIR BENCHMARK_LIBRARY)
+unset(HOME_LOCAL_DIR)
