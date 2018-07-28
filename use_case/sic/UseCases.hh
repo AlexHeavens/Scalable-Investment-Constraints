@@ -32,8 +32,9 @@ void evaluateRestrictionResults(
 	const sic::ParallelParameters &paraPars = sic::ParallelParameters()) {
 
 	std::vector<std::thread> threads;
-	std::vector<std::string> globalResultsStrings;
-	std::mutex resultsMutex;
+	std::unique_ptr<sic::AbstractAssetAllocation::ResultVector>
+		results[maxPortfolioCount];
+
 	std::size_t threadCount = paraPars.threadCount;
 
 	std::function<void(const int)> threadEvaluatePortfolio =
@@ -41,49 +42,28 @@ void evaluateRestrictionResults(
 			std::size_t portfolioCount = 0;
 			for (const auto &portfolio : context.getPortfolioCache()) {
 
-				if (portfolioCount > maxPortfolioCount) {
+				if (portfolioCount >= maxPortfolioCount) {
 					break;
 				}
 
 				if (paraPars.serial) {
-					globalResultsStrings.push_back(
-						"PortfolioResults," +
-						std::to_string(portfolio->getExternalID()) + "\n");
 
 					for (const auto &aa : portfolio->getAssetAllocations()) {
 
-						auto results =
+						results[portfolioCount] =
 							aa->generateRestrictionResults(*portfolio);
-
-						// No need to lock global reuslts, only one thread.
-						for (const auto &result : *results) {
-							globalResultsStrings.emplace_back(
-								result->serialise());
-						}
 					}
+
 				} else {
+
 					if (portfolioCount % threadCount == threadID) {
-						std::vector<std::string> resultStrings;
-						resultStrings.push_back(
-							"PortfolioResults," +
-							std::to_string(portfolio->getExternalID()) + "\n");
 
 						for (const auto &aa :
 							 portfolio->getAssetAllocations()) {
 
-							auto results =
+							results[portfolioCount] =
 								aa->generateRestrictionResults(*portfolio);
-
-							for (const auto &result : *results) {
-								resultStrings.emplace_back(result->serialise());
-							}
 						}
-
-						resultsMutex.lock();
-						for (const auto &result : resultStrings) {
-							globalResultsStrings.push_back(result);
-						}
-						resultsMutex.unlock();
 					}
 				}
 				portfolioCount++;
@@ -103,7 +83,7 @@ void evaluateRestrictionResults(
 		}
 	}
 
-	unused(globalResultsStrings);
+	unused(results);
 }
 
 void evaluatePortfolios(sic::EvaluationContext &context,
