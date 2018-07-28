@@ -27,13 +27,14 @@ void timeUseCase(std::function<void()> useCase, const std::string &name) {
 			  << durationMilliseconds.count() << "\n";
 }
 
-void evaluateRestrictionResults(
+void evaluateRestrictionResultsCore(
 	sic::EvaluationContext &context, std::size_t maxPortfolioCount,
-	const sic::ParallelParameters &paraPars = sic::ParallelParameters()) {
+	const sic::ParallelParameters &paraPars = sic::ParallelParameters(),
+	std::unique_ptr<sic::AbstractAssetAllocation::ResultVector> results[] =
+		nullptr) {
 
 	std::vector<std::thread> threads;
-	std::vector<std::string> globalResultsStrings;
-	std::mutex resultsMutex;
+
 	std::size_t threadCount = paraPars.threadCount;
 
 	std::function<void(const int)> threadEvaluatePortfolio =
@@ -41,49 +42,27 @@ void evaluateRestrictionResults(
 			std::size_t portfolioCount = 0;
 			for (const auto &portfolio : context.getPortfolioCache()) {
 
-				if (portfolioCount > maxPortfolioCount) {
+				if (portfolioCount >= maxPortfolioCount) {
 					break;
 				}
 
 				if (paraPars.serial) {
-					globalResultsStrings.push_back(
-						"PortfolioResults," +
-						std::to_string(portfolio->getExternalID()) + "\n");
 
 					for (const auto &aa : portfolio->getAssetAllocations()) {
 
-						auto results =
+						results[portfolioCount] =
 							aa->generateRestrictionResults(*portfolio);
-
-						// No need to lock global reuslts, only one thread.
-						for (const auto &result : *results) {
-							globalResultsStrings.emplace_back(
-								result->serialise());
-						}
 					}
+
 				} else {
+
 					if (portfolioCount % threadCount == threadID) {
-						std::vector<std::string> resultStrings;
-						resultStrings.push_back(
-							"PortfolioResults," +
-							std::to_string(portfolio->getExternalID()) + "\n");
 
 						for (const auto &aa :
 							 portfolio->getAssetAllocations()) {
 
-							auto results =
+							results[portfolioCount] =
 								aa->generateRestrictionResults(*portfolio);
-
-							for (const auto &result : *results) {
-								resultStrings.emplace_back(result->serialise());
-							}
-						}
-
-						{
-							std::unique_lock<std::mutex> lock(resultsMutex);
-							for (const auto &result : resultStrings) {
-								globalResultsStrings.push_back(result);
-							}
 						}
 					}
 				}
@@ -103,8 +82,6 @@ void evaluateRestrictionResults(
 			thread.join();
 		}
 	}
-
-	unused(globalResultsStrings);
 }
 
 void evaluatePortfolios(sic::EvaluationContext &context,
@@ -125,6 +102,76 @@ void evaluatePortfolios(sic::EvaluationContext &context,
 
 		portfolioCount++;
 	}
+}
+
+void outputRestrictionResults(
+	sic::EvaluationContext &context, std::size_t maxPortfolioCount,
+	const sic::ParallelParameters &paraPars = sic::ParallelParameters()) {
+
+	std::unique_ptr<sic::AbstractAssetAllocation::ResultVector>
+		results[maxPortfolioCount];
+
+	evaluateRestrictionResultsCore(context, maxPortfolioCount, paraPars,
+								   results);
+
+	std::vector<std::thread> threads;
+	std::size_t threadCount = paraPars.threadCount;
+	std::vector<std::vector<std::string>> globalResultStrings;
+	globalResultStrings.resize(threadCount);
+
+	auto serialiseResults = [&](std::size_t threadId,
+								std::size_t initialPortfolioIndex,
+								std::size_t endPortfolioIndex) {
+		std::vector<std::string> &resultStrings =
+			globalResultStrings.at(threadId);
+
+		for (std::size_t portfolioIndex = initialPortfolioIndex;
+			 portfolioIndex <= endPortfolioIndex; portfolioIndex++) {
+
+			for (auto &resultItem : *results[portfolioIndex]) {
+				resultStrings.emplace_back(resultItem->serialise());
+			}
+		}
+	};
+
+	if (paraPars.serial) {
+		serialiseResults(0, 0, maxPortfolioCount);
+	} else {
+		auto portfoliosPerThread = maxPortfolioCount / threadCount;
+
+		for (std::size_t threadID = 0; threadID < threadCount; threadID++) {
+
+			auto initialPortfolioIndex = threadID * portfoliosPerThread;
+
+			// Last thread mops up the remainder.
+			auto endPortfolioIndex =
+				(threadID < threadCount - 1)
+					? initialPortfolioIndex + portfoliosPerThread - 1
+					: maxPortfolioCount - 1;
+
+			threads.emplace_back(serialiseResults, threadID,
+								 initialPortfolioIndex, endPortfolioIndex);
+		}
+
+		for (auto &thread : threads) {
+			thread.join();
+		}
+	}
+
+	unused(globalResultStrings);
+}
+
+void evaluateRestrictionResults(
+	sic::EvaluationContext &context, std::size_t maxPortfolioCount,
+	const sic::ParallelParameters &paraPars = sic::ParallelParameters()) {
+
+	std::unique_ptr<sic::AbstractAssetAllocation::ResultVector>
+		results[maxPortfolioCount];
+
+	evaluateRestrictionResultsCore(context, maxPortfolioCount, paraPars,
+								   results);
+
+	unused(results);
 }
 
 void filterAssets(sic::EvaluationContext &context,
