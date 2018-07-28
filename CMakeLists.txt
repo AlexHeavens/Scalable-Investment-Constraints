@@ -6,7 +6,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 message("Build type is ${CMAKE_BUILD_TYPE}.")
 
-if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebugInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(BIN_DIR_SUFFIX "_debug")
 endif()
 
