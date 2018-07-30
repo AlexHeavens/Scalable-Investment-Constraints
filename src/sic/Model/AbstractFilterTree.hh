@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "sic/AbstractPortfolio.hh"
+#include "sic/Base/Cache.hh"
 #include "sic/External.hh"
 #include "sic/Model/AbstractFilterNode.hh"
 #include "sic/Portfolio/AbstractAsset.hh"
@@ -21,6 +22,9 @@ namespace sic {
 class AbstractFilterTree : public sic::External {
 
 public:
+	using AssetLeafNodeCache =
+		sic::Cache<const sic::AbstractAsset *, const sic::AbstractFilterNode *>;
+
 	/**
 	 * Iterator for the nodes of the tree.
 	 *
@@ -92,9 +96,11 @@ public:
 	 * @param portfolio client's portfolio.
 	 * @return a mapping of the tree's grouping nodes to the weight of
 	 * portfolio's assets that fall under that node.
+	 * @param leafNodeCache optionally a cache mapping assets to leaf nodes.
 	 */
 	virtual std::unique_ptr<sic::AbstractValueTree>
-	evaluate(const sic::AbstractPortfolio &portfolio) const = 0;
+	evaluate(const sic::AbstractPortfolio &portfolio,
+			 boost::optional<AssetLeafNodeCache *> leafNodeCache) const = 0;
 
 	/**
 	 * Begin iterator for the tree nodes.

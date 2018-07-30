@@ -188,7 +188,7 @@ TEST_F(FilterTreeTest, EvaluatePortfolio) {
 	std::unique_ptr<sic::AbstractValueTree> expValueTree(
 		new sic::ValueTree(std::move(expValueTreeNodeMap)));
 
-	auto valueTree = validTree.evaluate(portfolio);
+	auto valueTree = validTree.evaluate(portfolio, boost::none);
 
 	ASSERT_TRUE(*valueTree == *expValueTree)
 		<< "Generated ValueTree does not match expected.";

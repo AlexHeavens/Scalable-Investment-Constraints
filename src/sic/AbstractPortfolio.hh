@@ -66,7 +66,7 @@ public:
 	/**
 	 * Retrieve the AssetAllocations the Portfolio must follow.
 	 */
-	virtual sic::Iterators<const sic::AbstractAssetAllocation *>
+	virtual sic::Iterators<sic::AbstractAssetAllocation *>
 	getAssetAllocations() const = 0;
 };
 

@@ -66,8 +66,8 @@ public:
 	 * Generate results indicating if a given Portfolio passes the AA weight
 	 * ranges.
 	 */
-	virtual std::unique_ptr<ResultVector> generateRestrictionResults(
-		const sic::AbstractPortfolio &portfolio) const = 0;
+	virtual std::unique_ptr<ResultVector>
+	generateRestrictionResults(const sic::AbstractPortfolio &portfolio) = 0;
 
 	/**
 	 * Retreive the weights of the model Assets as a proportion of total model

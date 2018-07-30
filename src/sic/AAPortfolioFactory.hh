@@ -15,7 +15,7 @@ namespace sic {
 class AAPortfolioFactory : public sic::AbstractPortfolioFactory {
 
 private:
-	const sic::AbstractAssetAllocation &aa;
+	sic::AbstractAssetAllocation &aa;
 	const sic::Value portfolioReferenceValue;
 	sic::External::ID nextPortfolioID, nextPositionID;
 	std::unique_ptr<sic::AbstractAsset::AssetWeightMap> assetToTopWeights;
@@ -26,7 +26,7 @@ public:
 	 *
 	 * @param aa AssetAllocation to use as a template for the portfolio.
 	 */
-	AAPortfolioFactory(const sic::AbstractAssetAllocation &aa,
+	AAPortfolioFactory(sic::AbstractAssetAllocation &aa,
 					   const sic::Value portfolioReferenceValue,
 					   sic::External::ID initialPortfolioID = 0,
 					   sic::External::ID initialPositionID = 0)

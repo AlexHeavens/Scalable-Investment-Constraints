@@ -94,7 +94,7 @@ BENCHMARK_DEFINE_F(FilterTreeBenchmark, EvaluatePortfolioValueTree)
 	sic::Portfolio<> portfolio(std::move(positions), portfolioID);
 
 	for (auto _ : state) {
-		const auto &valueTree = tree.evaluate(portfolio);
+		const auto &valueTree = tree.evaluate(portfolio, boost::none);
 		unused(valueTree);
 	}
 }

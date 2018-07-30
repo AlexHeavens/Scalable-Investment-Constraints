@@ -66,6 +66,26 @@ public:
 		assets.emplace_back(0.1, sic::WeightRange(0.0, 0.0, 0.0), false);
 		assets.emplace_back(0.2, sic::WeightRange(0.09, 0.1, 0.11), true);
 
+		ON_CALL(filterTree, getLeafNode(testing::Ref(assets.at(0).asset)))
+			.WillByDefault(testing::ReturnRef(*filterNodes.at(2)));
+		ON_CALL(filterTree, getLeafNode(testing::Ref(assets.at(1).asset)))
+			.WillByDefault(testing::ReturnRef(*filterNodes.at(2)));
+
+		ON_CALL(filterTree, getLeafNode(testing::Ref(assets.at(2).asset)))
+			.WillByDefault(testing::ReturnRef(*filterNodes.at(3)));
+
+		ON_CALL(filterTree, getLeafNode(testing::Ref(assets.at(3).asset)))
+			.WillByDefault(testing::ReturnRef(*filterNodes.at(4)));
+
+		ON_CALL(filterTree, getLeafNode(testing::Ref(assets.at(4).asset)))
+			.WillByDefault(testing::ReturnRef(*filterNodes.at(5)));
+		ON_CALL(filterTree, getLeafNode(testing::Ref(assets.at(5).asset)))
+			.WillByDefault(testing::ReturnRef(*filterNodes.at(5)));
+		ON_CALL(filterTree, getLeafNode(testing::Ref(assets.at(6).asset)))
+			.WillByDefault(testing::ReturnRef(*filterNodes.at(5)));
+		ON_CALL(filterTree, getLeafNode(testing::Ref(assets.at(7).asset)))
+			.WillByDefault(testing::ReturnRef(*filterNodes.at(5)));
+
 		positions.reserve(positionCount);
 		for (int i = 0; i < positionCount; i++) {
 			positions.emplace_back();

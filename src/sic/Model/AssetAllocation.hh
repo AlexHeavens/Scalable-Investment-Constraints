@@ -1,7 +1,7 @@
 #ifndef SIC_MODEL_ASSETALLOCATION_H_
 #define SIC_MODEL_ASSETALLOCATION_H_
 
-#include "sic/Base/Variable.hh"
+#include "sic/Base/SimpleCache.hh"
 #include "sic/Model/AbstractAssetAllocation.hh"
 
 namespace sic {
@@ -23,9 +23,14 @@ private:
 	const sic::AbstractFilterTree &filterTree;
 	const std::unique_ptr<sic::AssetAllocation::FilterNodeMap> filterNodeMap;
 	sic::AbstractAsset::AssetWeightMap modelAssetWeights;
+	sic::SimpleCache<const sic::AbstractAsset *,
+					 const sic::AbstractFilterNode *>
+		assetLeafNodeCache;
 
 	void getAssetToTopWeights(
 		sic::AbstractAsset::AssetWeightMap *assetWeightMap) const;
+	void getLeafNodeCache(
+		sic::AbstractFilterTree::AssetLeafNodeCache *leafNodeCache) const;
 
 public:
 	/**
@@ -57,7 +62,7 @@ public:
 	};
 
 	std::unique_ptr<ResultVector> generateRestrictionResults(
-		const sic::AbstractPortfolio &portfolio) const override;
+		const sic::AbstractPortfolio &portfolio) override;
 
 	std::unique_ptr<sic::AbstractAsset::AssetWeightMap>
 	getAssetToTopWeights() const override;

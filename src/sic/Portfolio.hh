@@ -22,7 +22,7 @@ class Portfolio : public sic::AbstractPortfolio {
 				  "Position not derived from sic::AbstractPosition");
 
 public:
-	using AAVector = std::vector<const sic::AbstractAssetAllocation *>;
+	using AAVector = std::vector<sic::AbstractAssetAllocation *>;
 
 private:
 	std::unique_ptr<std::vector<Position>> positions;
@@ -86,9 +86,9 @@ public:
 
 	std::size_t getPositionCount() const override { return positions->size(); }
 
-	sic::Iterators<const sic::AbstractAssetAllocation *>
+	sic::Iterators<sic::AbstractAssetAllocation *>
 	getAssetAllocations() const override {
-		return sic::Iterators<const sic::AbstractAssetAllocation *>(aaVector);
+		return sic::Iterators<sic::AbstractAssetAllocation *>(aaVector);
 	}
 };
 

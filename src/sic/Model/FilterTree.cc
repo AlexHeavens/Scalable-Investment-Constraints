@@ -31,8 +31,9 @@ FilterTree::getLeafNode(const sic::AbstractAsset &asset) const {
 	return *returnNode;
 }
 
-std::unique_ptr<sic::AbstractValueTree>
-FilterTree::evaluate(const sic::AbstractPortfolio &portfolio) const {
+std::unique_ptr<sic::AbstractValueTree> FilterTree::evaluate(
+	const sic::AbstractPortfolio &portfolio,
+	boost::optional<AssetLeafNodeCache *> leafNodeCache) const {
 
 	auto nodeWeightMap = std::make_unique<sic::ValueTree::NodeWeightMap>();
 
@@ -43,12 +44,23 @@ FilterTree::evaluate(const sic::AbstractPortfolio &portfolio) const {
 		const auto &position = *positions.current();
 
 		const auto &asset = position.getAsset();
-		const auto &assetLeafNode = getLeafNode(asset);
+
+		const sic::AbstractFilterNode *leafNode = nullptr;
+		if (leafNodeCache) {
+			if (auto cachedLeafNode = (*leafNodeCache)->get(&asset)) {
+				leafNode = *cachedLeafNode;
+			} else {
+				leafNode = &getLeafNode(asset);
+			}
+		} else {
+			leafNode = &getLeafNode(asset);
+		}
+
 		const sic::Weight positionWeight =
 			position.getReferenceValue() / totalPortfolioValue;
 
 		// Add position weight to all nodes in its tree path.
-		const sic::AbstractFilterNode *pathNode = &assetLeafNode;
+		const sic::AbstractFilterNode *pathNode = leafNode;
 		while (pathNode != nullptr) {
 
 			auto mapNodeLookup = nodeWeightMap->find(pathNode);

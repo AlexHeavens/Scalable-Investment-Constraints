@@ -19,7 +19,7 @@ public:
 	MOCK_CONST_METHOD0(getTotalReferenceValue, sic::Value());
 	MOCK_CONST_METHOD0(getPositionCount, std::size_t());
 	MOCK_CONST_METHOD0(getAssetAllocations,
-					   sic::Iterators<const sic::AbstractAssetAllocation *>());
+					   sic::Iterators<sic::AbstractAssetAllocation *>());
 };
 
 } // namespace sic

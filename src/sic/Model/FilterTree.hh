@@ -42,8 +42,9 @@ public:
 	const sic::AbstractFilterNode &
 	getLeafNode(const sic::AbstractAsset &asset) const override;
 
-	std::unique_ptr<sic::AbstractValueTree>
-	evaluate(const sic::AbstractPortfolio &portfolio) const override;
+	std::unique_ptr<sic::AbstractValueTree> evaluate(
+		const sic::AbstractPortfolio &portfolio,
+		boost::optional<AssetLeafNodeCache *> leafNodeCache) const override;
 
 	node_iterator begin_nodes() const override {
 		return node_iterator(&getRootNode());

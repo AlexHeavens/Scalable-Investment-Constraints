@@ -18,6 +18,17 @@ void AssetAllocation::getAssetToTopWeights(
 	}
 }
 
+void AssetAllocation::getLeafNodeCache(
+	sic::AbstractFilterTree::AssetLeafNodeCache *leafNodeCache) const {
+
+	for (const auto &modelAssetWeightPair : modelAssetWeights) {
+		const auto &asset = *(modelAssetWeightPair.first);
+
+		auto &leafNode = filterTree.getLeafNode(asset);
+		leafNodeCache->add(&asset, &leafNode);
+	}
+}
+
 AssetAllocation::AssetAllocation(
 	const sic::AbstractFilterTree &filterTree,
 	std::unique_ptr<sic::AssetAllocation::FilterNodeMap> filterNodeMap,
@@ -37,15 +48,19 @@ AssetAllocation::AssetAllocation(
 	}
 
 	getAssetToTopWeights(&modelAssetWeights);
+	getLeafNodeCache(static_cast<sic::AbstractFilterTree::AssetLeafNodeCache *>(
+		&assetLeafNodeCache));
 }
 
 std::unique_ptr<AbstractAssetAllocation::ResultVector>
 AssetAllocation::generateRestrictionResults(
-	const sic::AbstractPortfolio &portfolio) const {
+	const sic::AbstractPortfolio &portfolio) {
 
 	auto results = std::make_unique<ResultVector>();
 
-	auto valueTree = filterTree.evaluate(portfolio);
+	boost::optional<sic::AbstractFilterTree::AssetLeafNodeCache *>
+		leafNodeCacheOptional(&assetLeafNodeCache);
+	auto valueTree = filterTree.evaluate(portfolio, leafNodeCacheOptional);
 
 	auto nodeWeightIts = valueTree->getNodeWeightIterators();
 	while (nodeWeightIts.remaining()) {

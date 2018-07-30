@@ -48,7 +48,7 @@ void evaluateRestrictionResultsCore(
 
 				if (paraPars.serial) {
 
-					for (const auto &aa : portfolio->getAssetAllocations()) {
+					for (auto &aa : portfolio->getAssetAllocations()) {
 
 						results[portfolioCount] =
 							aa->generateRestrictionResults(*portfolio);
@@ -96,7 +96,7 @@ void evaluatePortfolios(sic::EvaluationContext &context,
 
 		for (const auto &aa : portfolio->getAssetAllocations()) {
 			const auto &filterTree = aa->getFilterTree();
-			auto results = filterTree.evaluate(*portfolio);
+			auto results = filterTree.evaluate(*portfolio, boost::none);
 			unused(results);
 		}
 

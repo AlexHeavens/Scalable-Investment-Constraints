@@ -3,6 +3,7 @@
 
 #include <gmock/gmock.h>
 
+#include "sic/Base/Variable.hh"
 #include "sic/Model/AbstractFilterTree.hh"
 
 namespace sic {
@@ -29,8 +30,10 @@ public:
 	/**
 	 * GMock-compatible wrapper for evaluate.
 	 */
-	std::unique_ptr<sic::AbstractValueTree>
-	evaluate(const sic::AbstractPortfolio &portfolio) const override {
+	std::unique_ptr<sic::AbstractValueTree> evaluate(
+		const sic::AbstractPortfolio &portfolio,
+		boost::optional<AssetLeafNodeCache *> leafNodeCache) const override {
+		unused(leafNodeCache);
 		auto *valueTreeRawPtr = evaluateRaw(portfolio);
 		return std::unique_ptr<sic::AbstractValueTree>(valueTreeRawPtr);
 	}
