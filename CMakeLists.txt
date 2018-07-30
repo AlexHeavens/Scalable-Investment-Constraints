@@ -2,7 +2,12 @@ cmake_minimum_required(VERSION 3.6)
 project(ScalableInvestmentConstraints)
 
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
+    set(CMAKE_BUILD_TYPE "release")
+endif()
+message("Build type is ${CMAKE_BUILD_TYPE}.")
+
+if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(BIN_DIR_SUFFIX "_debug")
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebugInfo" OR CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -26,20 +31,20 @@ set(USE_CASE_DIR "${PROJECT_SOURCE_DIR}/use_case")
 set(USE_CASE_BIN_DIR "${BIN_DIR}/use_case")
 
 # Build Properties
-set(PROJECT_EXE "project_prog")
+set(PROJECT_EXE "project_prog${BIN_SUFFIX}")
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 14)
 
+set(TEST_EXE "tests${BIN_SUFFIX}")
+set(BENCHMARK_EXE "benchmarks${BIN_SUFFIX}")
+
+# Compile Flags
 set(COMMON_FLAGS "-Werror -Wall -Wextra")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMMON_FLAGS}")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
-
-## For profiling, ensure compile with debug flags.
-set(DEBUG_FLAGS, "-mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -ggdb -g3")
-
-set(TEST_EXE "tests")
-set(BENCHMARK_EXE "benchmarks")
+set(CMAKE_CXX_FLAGS_DEBUG "-mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -ggdb -g3")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} ${CMAKE_CXX_FLAGS_DEBUG}")
 
 # Required Build Programs
 find_program(CLANG_TIDY_EXE NAMES "clang-tidy")

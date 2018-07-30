@@ -7,7 +7,7 @@ BIN_DIR="${PROJECT_ROOT_DIR}/bin_debug"
 
 mkdir --parents ${BUILD_DIR} ${BIN_DIR}
 cd "${BUILD_DIR}"
-cmake -DCMAKE_BUILD_TYPE=RelWithDebugInfo -DCMAKE_MAKE_PROGRAM=ninja -G Ninja ..
+cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_MAKE_PROGRAM=ninja -G Ninja ..
 ninja
 
 BUILD_RESULT="$?"
