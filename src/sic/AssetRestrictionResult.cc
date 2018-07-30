@@ -1,33 +1,19 @@
 #include "sic/AssetRestrictionResult.hh"
 
-#include <sstream>
-
 namespace sic {
 
 std::string AssetRestrictionResult::serialise() const {
 
-	std::ostringstream stringStream;
-	stringStream.precision(sic::RestrictionResult::weightDecimalPointPrecision);
-	stringStream.flags(std::ostringstream::fixed);
-
+	// The use of stringstream forces locked access to a common locale object,
+	// making it unsuitable for efficient parallel use.  Hence we stick to
+	// simple std::to_string, even if it lacks precision specification.
 	const auto stateString = std::to_string(static_cast<int>(getState()));
 	const auto idString = std::to_string(asset.getExternalID());
 
-	stringStream << toTopWeight;
-	const auto toTopWeightStr = stringStream.str();
-	stringStream.str("");
-
-	stringStream << weightRange.min;
-	const auto minAssetWeightString = stringStream.str();
-	stringStream.str("");
-
-	stringStream << weightRange.target;
-	const auto targetAssetWeightString = stringStream.str();
-	stringStream.str("");
-
-	stringStream << weightRange.max;
-	const auto maxAssetWeightString = stringStream.str();
-	stringStream.str("");
+	const auto toTopWeightStr = std::to_string(toTopWeight);
+	const auto minAssetWeightString = std::to_string(weightRange.min);
+	const auto targetAssetWeightString = std::to_string(weightRange.target);
+	const auto maxAssetWeightString = std::to_string(weightRange.max);
 
 	return "Asset," + stateString + "," + idString + "," + toTopWeightStr +
 		   "," + minAssetWeightString + "," + targetAssetWeightString + "," +
