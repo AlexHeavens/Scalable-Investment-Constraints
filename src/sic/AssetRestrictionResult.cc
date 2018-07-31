@@ -1,23 +1,25 @@
 #include "sic/AssetRestrictionResult.hh"
 
+#include <cstdio>
+
 namespace sic {
 
 std::string AssetRestrictionResult::serialise() const {
 
 	// The use of stringstream forces locked access to a common locale object,
-	// making it unsuitable for efficient parallel use.  Hence we stick to
-	// simple std::to_string, even if it lacks precision specification.
-	const auto stateString = std::to_string(static_cast<int>(getState()));
-	const auto idString = std::to_string(asset.getExternalID());
+	// making it unsuitable for efficient parallel use.  std::to_string also
+	// ended up being a time bottleneck. Hence we stick to sprintf, even if it
+	// lacks precision specification.
 
-	const auto toTopWeightStr = std::to_string(toTopWeight);
-	const auto minAssetWeightString = std::to_string(weightRange.min);
-	const auto targetAssetWeightString = std::to_string(weightRange.target);
-	const auto maxAssetWeightString = std::to_string(weightRange.max);
+	static const int maxOutputLength = 255;
+	char outputString[maxOutputLength];
 
-	return "Asset," + stateString + "," + idString + "," + toTopWeightStr +
-		   "," + minAssetWeightString + "," + targetAssetWeightString + "," +
-		   maxAssetWeightString + "\n";
+	std::sprintf(static_cast<char *>(outputString), // NOLINT
+				 "Asset,%i,%lu,%f,%f,%f,%f\n", static_cast<int>(getState()),
+				 asset.getExternalID(), toTopWeight, weightRange.min,
+				 weightRange.target, weightRange.max);
+
+	return std::string(static_cast<char *>(outputString));
 }
 
 } // namespace sic
