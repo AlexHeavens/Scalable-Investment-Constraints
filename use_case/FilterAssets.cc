@@ -9,11 +9,9 @@ int main() {
 	std::size_t maxAssetCount = context.getAssetCache().size();
 	std::size_t maxFilterCount = context.getFilterTreeCache().size();
 
-	sic::UseCase::timeUseCase(
-		[&]() {
-			sic::UseCase::filterAssets(context, maxFilterCount, maxAssetCount);
-		},
-		"FilterAssets");
+	sic::UseCase::time("FilterAssets", [&]() {
+		sic::UseCase::filterAssets(context, maxFilterCount, maxAssetCount);
+	});
 
 	return 0;
 }
