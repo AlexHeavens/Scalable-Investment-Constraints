@@ -14,17 +14,15 @@ namespace sic {
 
 namespace UseCase {
 
-void timeUseCase(std::function<void()> useCase, const std::string &name) {
+void time(const std::string &message, std::function<void()> useCase) {
 
 	auto startTime = std::chrono::high_resolution_clock::now();
 
 	useCase();
 
 	auto finishTime = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double, std::milli> durationMilliseconds =
-		finishTime - startTime;
-	std::cout << "TraditionalAAUseCase," << name << ",Wall Time (ms), "
-			  << durationMilliseconds.count() << "\n";
+	std::chrono::duration<double, std::milli> duration = finishTime - startTime;
+	std::cout << message << ", Wall Time, " << duration.count() << "\n";
 }
 
 void evaluateRestrictionResults(
@@ -38,57 +36,68 @@ void evaluateRestrictionResults(
 
 	std::function<void(const int)> threadEvaluatePortfolio =
 		[&](const std::size_t threadID) {
-			std::size_t portfolioCount = 0;
-			for (const auto &portfolio : context.getPortfolioCache()) {
-
-				if (portfolioCount > maxPortfolioCount) {
-					break;
-				}
-
-				if (paraPars.serial) {
-					globalResultsStrings.push_back(
-						"PortfolioResults," +
-						std::to_string(portfolio->getExternalID()) + "\n");
-
-					for (const auto &aa : portfolio->getAssetAllocations()) {
-
-						auto results =
-							aa->generateRestrictionResults(*portfolio);
-
-						// No need to lock global reuslts, only one thread.
-						for (const auto &result : *results) {
-							globalResultsStrings.emplace_back(
-								result->serialise());
+			time(
+				"evaluateRestrictionResults, thread " +
+					std::to_string(threadID),
+				[&]() {
+					std::size_t portfolioCount = 0;
+					for (const auto &portfolio : context.getPortfolioCache()) {
+						if (portfolioCount > maxPortfolioCount) {
+							break;
 						}
-					}
-				} else {
-					if (portfolioCount % threadCount == threadID) {
-						std::vector<std::string> resultStrings;
-						resultStrings.push_back(
-							"PortfolioResults," +
-							std::to_string(portfolio->getExternalID()) + "\n");
 
-						for (const auto &aa :
-							 portfolio->getAssetAllocations()) {
+						if (paraPars.serial) {
+							globalResultsStrings.push_back(
+								"PortfolioResults," +
+								std::to_string(portfolio->getExternalID()) +
+								"\n");
 
-							auto results =
-								aa->generateRestrictionResults(*portfolio);
+							for (const auto &aa :
+								 portfolio->getAssetAllocations()) {
 
-							for (const auto &result : *results) {
-								resultStrings.emplace_back(result->serialise());
+								auto results =
+									aa->generateRestrictionResults(*portfolio);
+
+								// No need to lock global reuslts, only one
+								// thread.
+								for (const auto &result : *results) {
+									globalResultsStrings.emplace_back(
+										result->serialise());
+								}
+							}
+						} else {
+							if (portfolioCount % threadCount == threadID) {
+								std::vector<std::string> resultStrings;
+								resultStrings.push_back(
+									"PortfolioResults," +
+									std::to_string(portfolio->getExternalID()) +
+									"\n");
+
+								for (const auto &aa :
+									 portfolio->getAssetAllocations()) {
+
+									auto results =
+										aa->generateRestrictionResults(
+											*portfolio);
+
+									for (const auto &result : *results) {
+										resultStrings.emplace_back(
+											result->serialise());
+									}
+								}
+
+								{
+									std::unique_lock<std::mutex> lock(
+										resultsMutex);
+									for (const auto &result : resultStrings) {
+										globalResultsStrings.push_back(result);
+									}
+								}
 							}
 						}
-
-						{
-							std::unique_lock<std::mutex> lock(resultsMutex);
-							for (const auto &result : resultStrings) {
-								globalResultsStrings.push_back(result);
-							}
-						}
-					}
-				}
-				portfolioCount++;
-			}
+						portfolioCount++;
+					};
+				});
 		};
 
 	if (paraPars.serial) {
