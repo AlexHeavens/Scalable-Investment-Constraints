@@ -9,23 +9,17 @@ int main() {
 	std::size_t maxAssetCount = context.getAssetCache().size();
 	std::size_t maxFilterTreeCount = context.getFilterTreeCache().size();
 
-	sic::UseCase::timeUseCase(
-		[&]() {
-			sic::UseCase::filterAssets(context, maxFilterTreeCount,
-									   maxAssetCount);
-		},
-		"FilterAssets");
+	sic::UseCase::time("FilterAssets", [&]() {
+		sic::UseCase::filterAssets(context, maxFilterTreeCount, maxAssetCount);
+	});
 
-	sic::UseCase::timeUseCase(
-		[&]() { sic::UseCase::evaluatePortfolios(context, maxPortfolioCount); },
-		"EvaluatePortfolio");
+	sic::UseCase::time("EvaluatePortfolio", [&]() {
+		sic::UseCase::evaluatePortfolios(context, maxPortfolioCount);
+	});
 
-	sic::UseCase::timeUseCase(
-		[&]() {
-			sic::UseCase::evaluateRestrictionResults(context,
-													 maxPortfolioCount);
-		},
-		"EvaluateRestrictions");
+	sic::UseCase::time("EvaluateRestrictions", [&]() {
+		sic::UseCase::evaluateRestrictionResults(context, maxPortfolioCount);
+	});
 
 	return 0;
 }
