@@ -7,12 +7,9 @@ int main() {
 	auto &context = useCase.getEvaluationContext();
 	std::size_t maxPortfolioCount = context.getPortfolioCache().size();
 
-	sic::UseCase::timeUseCase(
-		[&]() {
-			sic::UseCase::evaluateRestrictionResults(context,
-													 maxPortfolioCount);
-		},
-		"EvaluateRestrictions");
+	sic::UseCase::time("EvaluateRestrictions", [&]() {
+		sic::UseCase::evaluateRestrictionResults(context, maxPortfolioCount);
+	});
 
 	return 0;
 }

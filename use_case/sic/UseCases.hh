@@ -14,17 +14,15 @@ namespace sic {
 
 namespace UseCase {
 
-void timeUseCase(std::function<void()> useCase, const std::string &name) {
+void time(const std::string &message, std::function<void()> useCase) {
 
 	auto startTime = std::chrono::high_resolution_clock::now();
 
 	useCase();
 
 	auto finishTime = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double, std::milli> durationMilliseconds =
-		finishTime - startTime;
-	std::cout << "TraditionalAAUseCase," << name << ",Wall Time (ms), "
-			  << durationMilliseconds.count() << "\n";
+	std::chrono::duration<double, std::milli> duration = finishTime - startTime;
+	std::cout << message << ", Wall Time, " << duration.count() << "\n";
 }
 
 void evaluateRestrictionResultsCore(
@@ -38,44 +36,60 @@ void evaluateRestrictionResultsCore(
 	std::size_t threadCount = paraPars.threadCount;
 
 	std::function<void(const int)> threadEvaluatePortfolio =
-		[&](const std::size_t threadID) {
-			std::size_t portfolioCount = 0;
-			for (const auto &portfolio : context.getPortfolioCache()) {
+		[&](const std::size_t threadId) {
+			time("evaluateRestrictionResults, thread " +
+					 std::to_string(threadId),
+				 [&]() {
+					 std::size_t portfolioCount = 0;
+					 for (const auto &portfolio : context.getPortfolioCache()) {
 
-				if (portfolioCount >= maxPortfolioCount) {
-					break;
-				}
+						 if (portfolioCount >= maxPortfolioCount) {
+							 break;
+						 }
 
-				if (paraPars.serial) {
+						 if (paraPars.serial) {
 
-					for (auto &aa : portfolio->getAssetAllocations()) {
+							 for (auto &aa : portfolio->getAssetAllocations()) {
 
-						results[portfolioCount] =
-							aa->generateRestrictionResults(*portfolio);
-					}
+								 results[portfolioCount] =
+									 aa->generateRestrictionResults(*portfolio);
+							 }
 
-				} else {
+						 } else {
 
-					if (portfolioCount % threadCount == threadID) {
+							 if (portfolioCount % threadCount == threadId) {
 
-						for (const auto &aa :
-							 portfolio->getAssetAllocations()) {
+								 for (const auto &aa :
+									  portfolio->getAssetAllocations()) {
 
-							results[portfolioCount] =
-								aa->generateRestrictionResults(*portfolio);
-						}
-					}
-				}
-				portfolioCount++;
-			}
+									 results[portfolioCount] =
+										 aa->generateRestrictionResults(
+											 *portfolio);
+								 }
+							 } else {
+								 if (portfolioCount % threadCount == threadId) {
+
+									 for (const auto &aa :
+										  portfolio->getAssetAllocations()) {
+
+										 results[portfolioCount] =
+											 aa->generateRestrictionResults(
+												 *portfolio);
+									 }
+								 }
+							 }
+							 portfolioCount++;
+						 };
+					 }
+				 });
 		};
 
 	if (paraPars.serial) {
 		threadEvaluatePortfolio(0);
 	} else {
-		for (std::size_t threadID = 0; threadID < paraPars.threadCount;
-			 threadID++) {
-			threads.emplace_back(threadEvaluatePortfolio, threadID);
+		for (std::size_t threadId = 0; threadId < paraPars.threadCount;
+			 threadId++) {
+			threads.emplace_back(threadEvaluatePortfolio, threadId);
 		}
 
 		for (auto &thread : threads) {
@@ -122,16 +136,19 @@ void outputRestrictionResults(
 	auto serialiseResults = [&](std::size_t threadId,
 								std::size_t initialPortfolioIndex,
 								std::size_t endPortfolioIndex) {
-		std::vector<std::string> &resultStrings =
-			globalResultStrings.at(threadId);
+		time("outputRestrictionResults, thread " + std::to_string(threadId),
+			 [&]() {
+				 std::vector<std::string> &resultStrings =
+					 globalResultStrings.at(threadId);
 
-		for (std::size_t portfolioIndex = initialPortfolioIndex;
-			 portfolioIndex <= endPortfolioIndex; portfolioIndex++) {
+				 for (std::size_t portfolioIndex = initialPortfolioIndex;
+					  portfolioIndex <= endPortfolioIndex; portfolioIndex++) {
 
-			for (auto &resultItem : *results[portfolioIndex]) {
-				resultStrings.emplace_back(resultItem->serialise());
-			}
-		}
+					 for (auto &resultItem : *results[portfolioIndex]) {
+						 resultStrings.emplace_back(resultItem->serialise());
+					 }
+				 }
+			 });
 	};
 
 	if (paraPars.serial) {
@@ -139,17 +156,17 @@ void outputRestrictionResults(
 	} else {
 		auto portfoliosPerThread = maxPortfolioCount / threadCount;
 
-		for (std::size_t threadID = 0; threadID < threadCount; threadID++) {
+		for (std::size_t threadId = 0; threadId < threadCount; threadId++) {
 
-			auto initialPortfolioIndex = threadID * portfoliosPerThread;
+			auto initialPortfolioIndex = threadId * portfoliosPerThread;
 
 			// Last thread mops up the remainder.
 			auto endPortfolioIndex =
-				(threadID < threadCount - 1)
+				(threadId < threadCount - 1)
 					? initialPortfolioIndex + portfoliosPerThread - 1
 					: maxPortfolioCount - 1;
 
-			threads.emplace_back(serialiseResults, threadID,
+			threads.emplace_back(serialiseResults, threadId,
 								 initialPortfolioIndex, endPortfolioIndex);
 		}
 
@@ -201,7 +218,6 @@ void filterAssets(sic::EvaluationContext &context,
 		filterTreeCount++;
 	}
 }
-
 } // namespace UseCase
 
 } // namespace sic
