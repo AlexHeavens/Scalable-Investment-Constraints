@@ -14,17 +14,15 @@ namespace UseCase {
 static constexpr int fullBankPortfolioCount = 1000000;
 static constexpr int rebalancerPortfolioCount = 50000;
 
-void timeUseCase(std::function<void()> useCase, const std::string &name) {
+void time(const std::string &message, std::function<void()> useCase) {
 
 	auto startTime = std::chrono::high_resolution_clock::now();
 
 	useCase();
 
 	auto finishTime = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double, std::milli> durationMilliseconds =
-		finishTime - startTime;
-	std::cout << "TraditionalAAUseCase," << name << ",Wall Time (ms), "
-			  << durationMilliseconds.count() << "\n";
+	std::chrono::duration<double, std::milli> duration = finishTime - startTime;
+	std::cout << message << ", Wall Time, " << duration.count() << "\n";
 }
 
 std::unique_ptr<std::vector<std::string>>
