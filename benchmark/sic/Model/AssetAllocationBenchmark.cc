@@ -68,14 +68,23 @@ BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
 	std::size_t threadCount = state.range(1);
 	sic::ParallelParameters paraPars(threadCount);
 
+	std::vector<std::vector<std::string>> globalResultStrings;
+	globalResultStrings.resize(threadCount);
+
+	std::unique_ptr<sic::AbstractAssetAllocation::ResultVector>
+		results[maxPortfolioCount];
+
 	state.counters.insert({{"portfolioCount", maxPortfolioCount},
 						   {"threadCount", threadCount},
 						   {"serial", false}});
 
 	for (auto _ : state) {
 		sic::UseCase::outputRestrictionResults(context, maxPortfolioCount,
-											   paraPars);
+											   paraPars, &globalResultStrings,
+											   results);
 	}
+
+	unused(globalResultStrings);
 }
 
 BENCHMARK_REGISTER_F(AssetAllocationBenchmark,
