@@ -131,41 +131,31 @@ void outputRestrictionResults(
 	std::vector<std::thread> threads;
 	std::size_t threadCount = paraPars.threadCount;
 
-	auto serialiseResults = [&](std::size_t threadId,
-								std::size_t initialPortfolioIndex,
-								std::size_t endPortfolioIndex) {
+	auto serialiseResults = [&](std::size_t threadId) {
 		time("outputRestrictionResults, thread " + std::to_string(threadId),
 			 [&]() {
 				 std::vector<std::string> &resultStrings =
 					 globalResultsStrings->at(threadId);
 
-				 for (std::size_t portfolioIndex = initialPortfolioIndex;
-					  portfolioIndex <= endPortfolioIndex; portfolioIndex++) {
+				 for (std::size_t portfolioIndex = 0;
+					  portfolioIndex < maxPortfolioCount; portfolioIndex++) {
 
-					 for (auto &resultItem : *results[portfolioIndex]) {
-						 resultStrings.emplace_back(resultItem->serialise());
+					 if (portfolioIndex % threadCount == threadId) {
+						 for (auto &resultItem : *results[portfolioIndex]) {
+							 resultStrings.emplace_back(
+								 resultItem->serialise());
+						 }
 					 }
 				 }
 			 });
 	};
 
 	if (paraPars.serial) {
-		serialiseResults(0, 0, maxPortfolioCount);
+		serialiseResults(0);
 	} else {
-		auto portfoliosPerThread = maxPortfolioCount / threadCount;
 
 		for (std::size_t threadId = 0; threadId < threadCount; threadId++) {
-
-			auto initialPortfolioIndex = threadId * portfoliosPerThread;
-
-			// Last thread mops up the remainder.
-			auto endPortfolioIndex =
-				(threadId < threadCount - 1)
-					? initialPortfolioIndex + portfoliosPerThread - 1
-					: maxPortfolioCount - 1;
-
-			threads.emplace_back(serialiseResults, threadId,
-								 initialPortfolioIndex, endPortfolioIndex);
+			threads.emplace_back(serialiseResults, threadId);
 		}
 
 		for (auto &thread : threads) {
