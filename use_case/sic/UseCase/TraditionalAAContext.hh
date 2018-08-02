@@ -141,6 +141,8 @@ private:
 		constexpr int logEvery = 50000;
 		int portfolioCount = 0;
 
+		constexpr int maxPortfolioCount = 65536;
+
 		for (const auto &aa : aaSource) {
 
 			sic::AAPortfolioFactory factory(*aa, portfolioValue,
@@ -157,6 +159,14 @@ private:
 				portfolioSource.add(std::move(newPortfolio));
 
 				portfolioCount++;
+
+				if (portfolioCount >= maxPortfolioCount) {
+					break;
+				}
+			}
+
+			if (portfolioCount >= maxPortfolioCount) {
+				break;
 			}
 		}
 	}

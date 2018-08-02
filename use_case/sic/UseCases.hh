@@ -31,6 +31,8 @@ void evaluateRestrictionResultsCore(
 	std::unique_ptr<sic::AbstractAssetAllocation::ResultVector> results[] =
 		nullptr) {
 
+	unused(maxPortfolioCount);
+
 	std::vector<std::thread> threads;
 
 	std::size_t threadCount = paraPars.threadCount;
@@ -43,43 +45,16 @@ void evaluateRestrictionResultsCore(
 					 std::size_t portfolioCount = 0;
 					 for (const auto &portfolio : context.getPortfolioCache()) {
 
-						 if (portfolioCount >= maxPortfolioCount) {
-							 break;
-						 }
+						 if (portfolioCount % threadCount == threadId) {
 
-						 if (paraPars.serial) {
-
-							 for (auto &aa : portfolio->getAssetAllocations()) {
+							 for (const auto &aa :
+								  portfolio->getAssetAllocations()) {
 
 								 results[portfolioCount] =
 									 aa->generateRestrictionResults(*portfolio);
 							 }
-
-						 } else {
-
-							 if (portfolioCount % threadCount == threadId) {
-
-								 for (const auto &aa :
-									  portfolio->getAssetAllocations()) {
-
-									 results[portfolioCount] =
-										 aa->generateRestrictionResults(
-											 *portfolio);
-								 }
-							 } else {
-								 if (portfolioCount % threadCount == threadId) {
-
-									 for (const auto &aa :
-										  portfolio->getAssetAllocations()) {
-
-										 results[portfolioCount] =
-											 aa->generateRestrictionResults(
-												 *portfolio);
-									 }
-								 }
-							 }
-							 portfolioCount++;
-						 };
+						 }
+						 portfolioCount++;
 					 }
 				 });
 		};
@@ -103,10 +78,9 @@ void evaluatePortfolios(sic::EvaluationContext &context,
 
 	std::size_t portfolioCount = 0;
 
+	unused(maxPortfolioCount);
+
 	for (const auto &portfolio : context.getPortfolioCache()) {
-		if (portfolioCount > maxPortfolioCount) {
-			break;
-		}
 
 		for (const auto &aa : portfolio->getAssetAllocations()) {
 			const auto &filterTree = aa->getFilterTree();
@@ -137,14 +111,12 @@ void outputRestrictionResults(
 				 std::vector<std::string> &resultStrings =
 					 globalResultsStrings->at(threadId);
 
-				 for (std::size_t portfolioIndex = 0;
-					  portfolioIndex < maxPortfolioCount; portfolioIndex++) {
+				 for (std::size_t portfolioIndex = threadId;
+					  portfolioIndex < maxPortfolioCount;
+					  portfolioIndex += threadCount) {
 
-					 if (portfolioIndex % threadCount == threadId) {
-						 for (auto &resultItem : *results[portfolioIndex]) {
-							 resultStrings.emplace_back(
-								 resultItem->serialise());
-						 }
+					 for (auto &resultItem : *results[portfolioIndex]) {
+						 resultStrings.emplace_back(resultItem->serialise());
 					 }
 				 }
 			 });
