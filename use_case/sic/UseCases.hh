@@ -35,7 +35,12 @@ evaluateRestrictionResults(sic::EvaluationContext &context,
 			break;
 		}
 
+		resultStrings->push_back("PortfolioResults," +
+								 std::to_string(portfolio->getExternalID()) +
+								 "\n");
+
 		for (const auto &aa : portfolio->getAssetAllocations()) {
+
 			auto results = aa->generateRestrictionResults(*portfolio);
 			for (const auto &result : *results) {
 				resultStrings->emplace_back(result->serialise());
