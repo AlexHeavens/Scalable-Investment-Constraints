@@ -1,5 +1,6 @@
 #include "sic/AAPortfolioFactory.hh"
 
+#include "sic/Base/Variable.hh"
 #include "sic/Portfolio.hh"
 
 namespace sic {
@@ -10,13 +11,31 @@ std::unique_ptr<sic::AbstractPortfolio> AAPortfolioFactory::create() {
 	positions->reserve(assetToTopWeights->size());
 
 	for (const auto &assetWeightPair : *assetToTopWeights) {
-		const sic::AbstractAsset &asset = *(assetWeightPair.first);
+		const sic::AbstractAsset &asset = *assetWeightPair.first;
 		const auto &toTopWeights = assetWeightPair.second;
 		const sic::Value positionRefValue =
 			portfolioReferenceValue * toTopWeights.target;
+
 		const sic::External::ID positionID = nextPositionID++;
 
 		positions->emplace_back(asset, positionRefValue, positionID);
+	}
+
+	auto validPortfolio =
+		(percentDistribution(randomGenerator) <= validPortfolioPercent);
+
+	// Add in extra non model position for invalid portfolios
+	if (!validPortfolio) {
+		for (int i = 0; i < invalidPositionCount; i++) {
+
+			const auto assetIndex = randomGenerator() % nonModelAssets.size();
+			const sic::AbstractAsset &asset = *nonModelAssets.at(assetIndex);
+			const sic::Value positionRefValue = portfolioReferenceValue * 0.01;
+
+			const sic::External::ID positionID = nextPositionID++;
+
+			positions->emplace_back(asset, positionRefValue, positionID);
+		}
 	}
 
 	auto aaVector = std::make_unique<sic::Portfolio<>::AAVector>();
