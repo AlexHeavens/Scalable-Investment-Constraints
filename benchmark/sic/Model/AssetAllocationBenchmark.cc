@@ -1,5 +1,7 @@
 #include <benchmark/benchmark.h>
 
+#include <boost/functional/hash.hpp>
+
 #include "sic/Base/Parallelism.hh"
 #include "sic/Model/AssetAllocation.hh"
 #include "sic/UseCase/TraditionalAAContext.hh"
@@ -21,10 +23,19 @@ BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
 						   {"threadCount", threadCount},
 						   {"serial", false}});
 
+	std::unique_ptr<std::vector<std::string>> result;
 	for (auto _ : state) {
-		sic::UseCase::evaluateRestrictionResults(context, maxPortfolioCount,
-												 paraPars);
+		result = sic::UseCase::evaluateRestrictionResults(
+			context, maxPortfolioCount, paraPars);
 	}
+
+	// Sanity check the output.  We sort to allow for non-sequential ordering
+	// due to parallelisation.
+	std::sort(result->begin(), result->end());
+	const auto hash = boost::hash_range(result->begin(), result->end());
+
+	std::cout << "Result Count: " << result->size() << " hash: " << hash
+			  << "\n";
 }
 
 BENCHMARK_REGISTER_F(AssetAllocationBenchmark,

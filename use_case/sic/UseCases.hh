@@ -25,12 +25,12 @@ void time(const std::string &message, std::function<void()> useCase) {
 	std::cout << message << ", Wall Time, " << duration.count() << "\n";
 }
 
-void evaluateRestrictionResults(
+std::unique_ptr<std::vector<std::string>> evaluateRestrictionResults(
 	sic::EvaluationContext &context, std::size_t maxPortfolioCount,
 	const sic::ParallelParameters &paraPars = sic::ParallelParameters()) {
 
 	std::vector<std::thread> threads;
-	std::vector<std::string> globalResultsStrings;
+	auto globalResultsStrings = std::make_unique<std::vector<std::string>>();
 	std::mutex resultsMutex;
 	std::size_t threadCount = paraPars.threadCount;
 
@@ -47,7 +47,7 @@ void evaluateRestrictionResults(
 						}
 
 						if (paraPars.serial) {
-							globalResultsStrings.push_back(
+							globalResultsStrings->push_back(
 								"PortfolioResults," +
 								std::to_string(portfolio->getExternalID()) +
 								"\n");
@@ -61,7 +61,7 @@ void evaluateRestrictionResults(
 								// No need to lock global reuslts, only one
 								// thread.
 								for (const auto &result : *results) {
-									globalResultsStrings.emplace_back(
+									globalResultsStrings->emplace_back(
 										result->serialise());
 								}
 							}
@@ -90,7 +90,7 @@ void evaluateRestrictionResults(
 									std::unique_lock<std::mutex> lock(
 										resultsMutex);
 									for (const auto &result : resultStrings) {
-										globalResultsStrings.push_back(result);
+										globalResultsStrings->push_back(result);
 									}
 								}
 							}
@@ -112,8 +112,7 @@ void evaluateRestrictionResults(
 			thread.join();
 		}
 	}
-
-	unused(globalResultsStrings);
+	return globalResultsStrings;
 }
 
 void evaluatePortfolios(sic::EvaluationContext &context,
@@ -129,7 +128,6 @@ void evaluatePortfolios(sic::EvaluationContext &context,
 		for (const auto &aa : portfolio->getAssetAllocations()) {
 			const auto &filterTree = aa->getFilterTree();
 			auto results = filterTree.evaluate(*portfolio);
-			unused(results);
 		}
 
 		portfolioCount++;
