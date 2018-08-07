@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <random>
+#include <vector>
 
 #include "sic/AAPortfolioFactory.hh"
 #include "sic/EvaluationContext.hh"
@@ -19,6 +20,8 @@ private:
 	static constexpr int randomSeed = 34534;
 	std::mt19937 randomGen;
 	sic::EvaluationContext context;
+	std::vector<std::unique_ptr<sic::AbstractAsset>> nonModelAssets;
+	static constexpr int nonModelAssetCount = 20;
 
 	static std::unique_ptr<sic::TraditionalAAContext> singleton;
 
@@ -60,8 +63,10 @@ private:
 		}
 	}
 
-	static void generateAssets(sic::EvaluationContext *const evaluationContext,
-							   std::mt19937 *const randomGen) {
+	static void generateAssets(
+		sic::EvaluationContext *const evaluationContext,
+		std::mt19937 *const randomGen,
+		std::vector<std::unique_ptr<sic::AbstractAsset>> *nonModelAssets) {
 
 		// 100 class groups, up to 4 classes per group.
 		constexpr unsigned classGroupCount = 100;
@@ -74,8 +79,9 @@ private:
 
 		constexpr sic::External::ID assetIDsFrom = 1000;
 		constexpr unsigned assetCount = 100000;
-		for (sic::Asset::ID assetID = assetIDsFrom;
-			 assetID < assetIDsFrom + assetCount; assetID++) {
+		sic::Asset::ID assetID = 0;
+		for (assetID = assetIDsFrom; assetID < assetIDsFrom + assetCount;
+			 assetID++) {
 
 			std::unique_ptr<sic::AbstractAsset::ClassSet> assetClasses(
 				new sic::AbstractAsset::ClassSet);
@@ -89,6 +95,11 @@ private:
 			auto asset =
 				std::make_unique<sic::Asset>(assetID, std::move(assetClasses));
 			evaluationContext->getAssetCache().add(std::move(asset));
+		}
+
+		// Generate Assets guaranteed to be in no model.
+		for (int i = 0; i < nonModelAssetCount; i++) {
+			nonModelAssets->emplace_back(new sic::Asset(assetID++));
 		}
 	}
 
@@ -130,7 +141,9 @@ private:
 		}
 	}
 
-	static void generatePortfolios(sic::EvaluationContext *evaluationContext) {
+	static void generatePortfolios(
+		const std::vector<std::unique_ptr<sic::AbstractAsset>> &nonModelAssets,
+		sic::EvaluationContext *evaluationContext) {
 
 		const auto &aaSource = evaluationContext->getAssetAllocationCache();
 		auto &portfolioSource = evaluationContext->getPortfolioCache();
@@ -143,8 +156,12 @@ private:
 
 		for (const auto &aa : aaSource) {
 
-			sic::AAPortfolioFactory factory(*aa, portfolioValue,
-											portfolioCount);
+			const float validPortfolioRate = 0.9;
+			const float validPositionRate = 0.9;
+
+			sic::AAPortfolioFactory factory(*aa, portfolioValue, portfolioCount,
+											0, validPortfolioRate,
+											validPositionRate, nonModelAssets);
 
 			for (int i = 0; i < portfoliosPerAA; i++) {
 
@@ -173,9 +190,9 @@ public:
 
 		randomGen = std::mt19937(randomSeed);
 		generateFilterTrees(&context);
-		generateAssets(&context, &randomGen);
+		generateAssets(&context, &randomGen, &nonModelAssets);
 		generateAssetAllocations(&context);
-		generatePortfolios(&context);
+		generatePortfolios(nonModelAssets, &context);
 	}
 
 	sic::EvaluationContext &getEvaluationContext() { return context; }
