@@ -1,5 +1,6 @@
 #include "sic/AAPortfolioFactory.hh"
 
+#include "sic/Base/Variable.hh"
 #include "sic/Portfolio.hh"
 
 namespace sic {
@@ -9,43 +10,32 @@ std::unique_ptr<sic::AbstractPortfolio> AAPortfolioFactory::create() {
 	auto positions = std::make_unique<std::vector<sic::Position>>();
 	positions->reserve(assetToTopWeights->size());
 
-	auto validPortfolio =
-		(percentDistribution(randomGenerator) <= validPortfolioPercent);
-
 	for (const auto &assetWeightPair : *assetToTopWeights) {
-		const sic::AbstractAsset *asset = nullptr;
+		const sic::AbstractAsset &asset = *assetWeightPair.first;
 		const auto &toTopWeights = assetWeightPair.second;
-
-		auto validPosition =
-			(validPortfolio or
-			 percentDistribution(randomGenerator) <= validPositionPercent);
-
-		sic::Value positionRefValue = 0.0;
-		if (validPosition) {
-			positionRefValue = portfolioReferenceValue * toTopWeights.target;
-			asset = assetWeightPair.first;
-		} else {
-
-			auto modelPosition = (percentDistribution(randomGenerator) >=
-								  invalidPositionModelPercent);
-
-			if (modelPosition) {
-				positionRefValue =
-					portfolioReferenceValue * toTopWeights.min - 0.01;
-				asset = assetWeightPair.first;
-			} else {
-				positionRefValue =
-					portfolioReferenceValue * toTopWeights.target;
-
-				const std::size_t nonModelAssetIndex =
-					randomGenerator() % nonModelAssets.size();
-				asset = nonModelAssets.at(nonModelAssetIndex).get();
-			}
-		}
+		const sic::Value positionRefValue =
+			portfolioReferenceValue * toTopWeights.target;
 
 		const sic::External::ID positionID = nextPositionID++;
 
-		positions->emplace_back(*asset, positionRefValue, positionID);
+		positions->emplace_back(asset, positionRefValue, positionID);
+	}
+
+	auto validPortfolio =
+		(percentDistribution(randomGenerator) <= validPortfolioPercent);
+
+	// Add in extra non model position for invalid portfolios
+	if (!validPortfolio) {
+		for (int i = 0; i < invalidPositionCount; i++) {
+
+			const auto assetIndex = randomGenerator() % nonModelAssets.size();
+			const sic::AbstractAsset &asset = *nonModelAssets.at(assetIndex);
+			const sic::Value positionRefValue = portfolioReferenceValue * 0.01;
+
+			const sic::External::ID positionID = nextPositionID++;
+
+			positions->emplace_back(asset, positionRefValue, positionID);
+		}
 	}
 
 	auto aaVector = std::make_unique<sic::Portfolio<>::AAVector>();

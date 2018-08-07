@@ -167,11 +167,11 @@ private:
 		for (const auto &aa : aaSource) {
 
 			const float validPortfolioRate = 0.9;
-			const float validPositionRate = 0.9;
+			const int invalidPositionCount = 10;
 
-			sic::AAPortfolioFactory factory(*aa, portfolioValue, portfolioCount,
-											0, validPortfolioRate,
-											validPositionRate, nonModelAssets);
+			sic::AAPortfolioFactory factory(
+				*aa, portfolioValue, portfolioCount, 0, validPortfolioRate,
+				invalidPositionCount, nonModelAssets);
 
 			for (int i = 0; i < portfoliosPerAA; i++) {
 

@@ -19,11 +19,7 @@ class AAPortfolioFactory : public sic::AbstractPortfolioFactory {
 
 public:
 	static constexpr float defaultValidPortfolioRate = 1.0;
-	static constexpr float defaultValidPositionRate = 0.9;
-
-	/// For invalid portfolios, the ratio of invalid positions that are still
-	/// part of the model, as opposed to off-model positions.
-	static constexpr float invalidPortfolioPositionModelRatio = 0.5;
+	static constexpr int defaultInvalidPositionCount = 0;
 
 private:
 	const sic::AbstractAssetAllocation &aa;
@@ -32,15 +28,12 @@ private:
 	std::unique_ptr<sic::AbstractAsset::AssetWeightMap> assetToTopWeights;
 
 	static constexpr int randomSeed = 232434;
-	std::random_device randomDevice;
 	std::mt19937 randomGenerator;
 
 	// Distribution for 1% granularity.
 	std::uniform_int_distribution<int> percentDistribution;
 	const int validPortfolioPercent;
-	const int validPositionPercent;
-	static const int invalidPositionModelPercent =
-		static_cast<int>(100.0 * invalidPortfolioPositionModelRatio);
+	const int invalidPositionCount;
 	const std::vector<std::unique_ptr<sic::AbstractAsset>> &nonModelAssets;
 
 public:
@@ -54,19 +47,19 @@ public:
 					   sic::External::ID initialPortfolioID = 0,
 					   sic::External::ID initialPositionID = 0,
 					   float validPortfolioRate = defaultValidPortfolioRate,
-					   float validPositionRate = defaultValidPositionRate,
+					   int invalidPositionCount = defaultInvalidPositionCount,
 					   const std::vector<std::unique_ptr<sic::AbstractAsset>>
 						   &nonModelAssets = {})
 		: aa(aa), portfolioReferenceValue(portfolioReferenceValue),
 		  nextPortfolioID(initialPortfolioID),
-		  nextPositionID(initialPositionID), randomDevice(),
-		  randomGenerator(randomSeed), percentDistribution(0, 100),
+		  nextPositionID(initialPositionID), percentDistribution(0, 100),
 		  validPortfolioPercent(static_cast<int>(100.0 * validPortfolioRate)),
-		  validPositionPercent(static_cast<int>(100.0 * validPositionRate)),
+		  invalidPositionCount(invalidPositionCount),
 		  nonModelAssets(nonModelAssets) {
 
 		auto toTopWeights = aa.getAssetToTopWeights();
 		assetToTopWeights = std::move(toTopWeights);
+		randomGenerator.seed(randomSeed);
 	}
 
 	std::unique_ptr<sic::AbstractPortfolio> create() override;
