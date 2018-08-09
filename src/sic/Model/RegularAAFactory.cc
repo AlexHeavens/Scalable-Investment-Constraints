@@ -162,7 +162,7 @@ void RegularAAFactory::genChildAANodes(
 RegularAAFactory::RegularAAFactory(
 	const sic::Source<std::unique_ptr<sic::AbstractFilterTree>>
 		&filterTreeSource,
-	const sic::Source<std::unique_ptr<sic::AbstractAsset>> &assetSource,
+	const sic::Source<const sic::AbstractAsset *> &assetSource,
 	const std::size_t mpfAssetCount, sic::External::ID initialAAID,
 	sic::External::ID initialNodeID, sic::External::ID initialMPFID)
 	: filterTrees(filterTreeSource.getItems()), assetSource(assetSource),
