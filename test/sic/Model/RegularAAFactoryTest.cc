@@ -94,12 +94,11 @@ public:
 		MOCK_CONST_METHOD0(size, std::size_t());
 	};
 
-	class MockAssetSource
-		: public sic::Source<std::unique_ptr<sic::AbstractAsset>> {
+	class MockAssetSource : public sic::Source<const sic::AbstractAsset *> {
 
 	public:
-		MOCK_CONST_METHOD0(
-			getItems, sic::Iterators<std::unique_ptr<sic::AbstractAsset>>());
+		MOCK_CONST_METHOD0(getItems,
+						   sic::Iterators<const sic::AbstractAsset *>());
 		MOCK_CONST_METHOD0(size, std::size_t());
 	};
 };
@@ -153,7 +152,13 @@ TEST_F(RegularAAFactoryTest, CreateValid) {
 		assets.emplace_back(new sic::Asset(assetID, std::move(assetClasses)));
 	}
 
-	sic::Iterators<std::unique_ptr<sic::AbstractAsset>> assetIt(assets);
+	std::vector<const sic::AbstractAsset *> assetPtrs;
+	assetPtrs.reserve(assets.size());
+	for (auto &asset : assets) {
+		assetPtrs.push_back(asset.get());
+	}
+
+	sic::Iterators<const sic::AbstractAsset *> assetIt(assetPtrs);
 
 	testing::NiceMock<MockAssetSource> assetSource;
 	ON_CALL(assetSource, getItems()).WillByDefault(testing::Return(assetIt));
