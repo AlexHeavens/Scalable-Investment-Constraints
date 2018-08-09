@@ -11,6 +11,9 @@ namespace sic {
 
 namespace UseCase {
 
+static constexpr int fullBankPortfolioCount = 1000000;
+static constexpr int rebalancerPortfolioCount = 50000;
+
 void timeUseCase(std::function<void()> useCase, const std::string &name) {
 
 	auto startTime = std::chrono::high_resolution_clock::now();
