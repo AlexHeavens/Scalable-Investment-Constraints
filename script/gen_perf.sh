@@ -32,7 +32,7 @@ if [ "$RESULT" -eq 0 ]; then
 		mkdir --parents "$USE_CASE_PERF_RES_DIR"
 		cd "$USE_CASE_PERF_RES_DIR"
 
-		perf record --call-graph fp --all-cpus -- $USE_CASE_BIN --benchmark_filter="$USE_CASE" --benchmark_min_time=0.1
+		perf record --call-graph fp -- $USE_CASE_BIN --benchmark_filter="$USE_CASE"
 	done
 
 fi
