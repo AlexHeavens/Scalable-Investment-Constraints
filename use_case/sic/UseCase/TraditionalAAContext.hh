@@ -5,6 +5,7 @@
 #include <random>
 
 #include "sic/AAPortfolioFactory.hh"
+#include "sic/Base/Collection.hh"
 #include "sic/EvaluationContext.hh"
 #include "sic/Model/FilterTree.hh"
 #include "sic/Model/RegularAAFactory.hh"
@@ -97,7 +98,16 @@ private:
 
 		const sic::Source<std::unique_ptr<sic::AbstractFilterTree>>
 			&filterTreeSource = evaluationContext->getFilterTreeCache();
-		const auto &assetSource = evaluationContext->getAssetCache();
+		const auto &assetCache = evaluationContext->getAssetCache();
+
+		std::vector<const sic::AbstractAsset *> assetVector;
+		assetVector.reserve(assetCache.size());
+		for (auto &assetPtr : assetCache) {
+			assetVector.emplace_back(assetPtr.get());
+		}
+
+		sic::VectorCollection<const sic::AbstractAsset *> assetSource(
+			assetVector);
 		auto &aaSource = evaluationContext->getAssetAllocationCache();
 		auto &mpfSource = evaluationContext->getModelPortfolioCache();
 
