@@ -29,7 +29,7 @@ public:
 
 private:
 	sic::Iterators<std::unique_ptr<sic::AbstractFilterTree>> filterTrees;
-	const sic::Source<std::unique_ptr<sic::AbstractAsset>> &assetSource;
+	const sic::Source<const sic::AbstractAsset *> &assetSource;
 	const size_t mpfAssetCount;
 	sic::External::ID nextAAID, nextNodeID, nextMPFID;
 
@@ -61,13 +61,13 @@ public:
 	 * @param initialNodeID  ID from which node IDs will be assigned.
 	 * @param initialMPFID ID from which MPF IDs will be assigned.
 	 */
-	RegularAAFactory(
-		const sic::Source<std::unique_ptr<sic::AbstractFilterTree>>
-			&filterTreeSource,
-		const sic::Source<std::unique_ptr<sic::AbstractAsset>> &assetSource,
-		const std::size_t mpfAssetCount, sic::External::ID initialAAID = 0,
-		sic::External::ID initialNodeID = 0,
-		sic::External::ID initialMPFID = 0);
+	RegularAAFactory(const sic::Source<std::unique_ptr<sic::AbstractFilterTree>>
+						 &filterTreeSource,
+					 const sic::Source<const sic::AbstractAsset *> &assetSource,
+					 const std::size_t mpfAssetCount,
+					 sic::External::ID initialAAID = 0,
+					 sic::External::ID initialNodeID = 0,
+					 sic::External::ID initialMPFID = 0);
 
 	Result create() override;
 }; // namespace sic
