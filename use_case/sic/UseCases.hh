@@ -15,7 +15,7 @@ namespace sic {
 namespace UseCase {
 
 static constexpr int fullBankPortfolioCount = 1000000;
-static constexpr int rebalancerPortfolioCount = 50000;
+static constexpr int rebalancerPortfolioCount = 65536;
 
 void time(const std::string &message, std::function<void()> useCase) {
 
