@@ -5,7 +5,7 @@ int main() {
 
 	sic::TraditionalAAContext useCase;
 	auto &context = useCase.getEvaluationContext();
-	std::size_t maxPortfolioCount = context.getPortfolioCache().size();
+	std::size_t maxPortfolioCount = sic::UseCase::rebalancerPortfolioCount;
 	std::size_t maxAssetCount = context.getAssetCache().size();
 	std::size_t maxFilterTreeCount = context.getFilterTreeCache().size();
 
