@@ -1,6 +1,9 @@
 #ifndef SIC_AAPORTFOLIOFACTORY_H_
 #define SIC_AAPORTFOLIOFACTORY_H_
 
+#include <random>
+#include <vector>
+
 #include "sic/AbstractPortfolioFactory.hh"
 #include "sic/Model/AbstractAssetAllocation.hh"
 
