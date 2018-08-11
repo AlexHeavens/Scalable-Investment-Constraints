@@ -10,7 +10,7 @@
 class AssetAllocationBenchmark : public benchmark::Fixture {};
 
 BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
-				   EvaluatePortfolioRestrictions_BankWide)
+				   OutputPortfolioRestrictions_BankWide)
 (benchmark::State &state) {
 
 	auto &useCase = sic::TraditionalAAContext::getSingleton();
@@ -25,7 +25,7 @@ BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
 
 	std::unique_ptr<std::vector<std::string>> result;
 	for (auto _ : state) {
-		result = sic::UseCase::evaluateRestrictionResults(
+		result = sic::UseCase::outputRestrictionResults(
 			context, maxPortfolioCount, paraPars);
 	}
 
@@ -39,13 +39,13 @@ BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
 }
 
 BENCHMARK_REGISTER_F(AssetAllocationBenchmark,
-					 EvaluatePortfolioRestrictions_BankWide)
+					 OutputPortfolioRestrictions_BankWide)
 	->RangeMultiplier(2)
-	->Ranges({{2 << 10, 2 << 15},
+	->Ranges({{2 << 10, 2 << 19},
 			  {1, sic::ParallelParameters::getMaxThreadCount()}});
 
 BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
-				   EvaluatePortfolioRestrictions_serial_BankWide)
+				   OutputPortfolioRestrictions_serial_BankWide)
 (benchmark::State &state) {
 
 	auto &useCase = sic::TraditionalAAContext::getSingleton();
@@ -59,12 +59,12 @@ BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
 		{{"portfolioCount", maxPortfolioCount}, {"serial", true}});
 
 	for (auto _ : state) {
-		sic::UseCase::evaluateRestrictionResults(context, maxPortfolioCount,
-												 paraPars);
+		sic::UseCase::outputRestrictionResults(context, maxPortfolioCount,
+											   paraPars);
 	}
 }
 
 BENCHMARK_REGISTER_F(AssetAllocationBenchmark,
-					 EvaluatePortfolioRestrictions_serial_BankWide)
+					 OutputPortfolioRestrictions_serial_BankWide)
 	->RangeMultiplier(2)
-	->Ranges({{2 << 10, 2 << 15}});
+	->Ranges({{2 << 10, 2 << 19}});

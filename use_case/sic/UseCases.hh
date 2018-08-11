@@ -28,7 +28,26 @@ void time(const std::string &message, std::function<void()> useCase) {
 	std::cout << message << ", Wall Time, " << duration.count() << "\n";
 }
 
-std::unique_ptr<std::vector<std::string>> evaluateRestrictionResults(
+void evaluatePortfolios(sic::EvaluationContext &context,
+						std::size_t maxPortfolioCount) {
+
+	std::size_t portfolioCount = 0;
+	for (const auto &portfolio : context.getPortfolioCache()) {
+		if (portfolioCount > maxPortfolioCount) {
+			break;
+		}
+
+		for (const auto &aa : portfolio->getAssetAllocations()) {
+			const auto &filterTree = aa->getFilterTree();
+			auto results = filterTree.evaluate(*portfolio);
+			unused(results);
+		}
+
+		portfolioCount++;
+	}
+}
+
+std::unique_ptr<std::vector<std::string>> outputRestrictionResults(
 	sic::EvaluationContext &context, std::size_t maxPortfolioCount,
 	const sic::ParallelParameters &paraPars = sic::ParallelParameters()) {
 
@@ -116,25 +135,6 @@ std::unique_ptr<std::vector<std::string>> evaluateRestrictionResults(
 		}
 	}
 	return globalResultsStrings;
-}
-
-void evaluatePortfolios(sic::EvaluationContext &context,
-						std::size_t maxPortfolioCount) {
-
-	std::size_t portfolioCount = 0;
-
-	for (const auto &portfolio : context.getPortfolioCache()) {
-		if (portfolioCount > maxPortfolioCount) {
-			break;
-		}
-
-		for (const auto &aa : portfolio->getAssetAllocations()) {
-			const auto &filterTree = aa->getFilterTree();
-			auto results = filterTree.evaluate(*portfolio);
-		}
-
-		portfolioCount++;
-	}
 }
 
 void filterAssets(sic::EvaluationContext &context,
