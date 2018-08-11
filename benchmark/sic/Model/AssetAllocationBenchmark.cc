@@ -1,5 +1,7 @@
 #include <benchmark/benchmark.h>
 
+#include <boost/functional/hash.hpp>
+
 #include "sic/Base/Parallelism.hh"
 #include "sic/Model/AssetAllocation.hh"
 #include "sic/UseCase/TraditionalAAContext.hh"
@@ -30,11 +32,11 @@ BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
 BENCHMARK_REGISTER_F(AssetAllocationBenchmark,
 					 EvaluatePortfolioRestrictions_BankWide)
 	->RangeMultiplier(2)
-	->Ranges({{2 << 10, 2 << 15},
+	->Ranges({{2 << 10, 2 << 19},
 			  {1, sic::ParallelParameters::getMaxThreadCount()}});
 
 BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
-				   EvaluatePortfolioRestrictions_serial_BankWide)
+				   OutputPortfolioRestrictions_serial_BankWide)
 (benchmark::State &state) {
 
 	auto &useCase = sic::TraditionalAAContext::getSingleton();
@@ -48,15 +50,15 @@ BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
 		{{"portfolioCount", maxPortfolioCount}, {"serial", true}});
 
 	for (auto _ : state) {
-		sic::UseCase::evaluateRestrictionResults(context, maxPortfolioCount,
-												 paraPars);
+		sic::UseCase::outputRestrictionResults(context, maxPortfolioCount,
+											   paraPars);
 	}
 }
 
 BENCHMARK_REGISTER_F(AssetAllocationBenchmark,
-					 EvaluatePortfolioRestrictions_serial_BankWide)
+					 OutputPortfolioRestrictions_serial_BankWide)
 	->RangeMultiplier(2)
-	->Ranges({{2 << 10, 2 << 15}});
+	->Ranges({{2 << 10, 2 << 19}});
 
 BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
 				   OutputPortfolioRestrictions_BankWide)
@@ -78,17 +80,31 @@ BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
 						   {"threadCount", threadCount},
 						   {"serial", false}});
 
+	std::unique_ptr<std::vector<std::vector<std::string>>> result;
 	for (auto _ : state) {
 		sic::UseCase::outputRestrictionResults(context, maxPortfolioCount,
 											   paraPars, &globalResultStrings,
 											   results);
 	}
 
-	unused(globalResultStrings);
+	// Sanity check the output.  We sort to allow for non-sequential ordering
+	// due to parallelisation.
+	std::vector<std::string> orderedResults;
+	for (auto &resultVector : globalResultStrings) {
+		for (auto &resultString : resultVector) {
+			orderedResults.emplace_back(resultString);
+		}
+	}
+	std::sort(orderedResults.begin(), orderedResults.end());
+	const auto hash =
+		boost::hash_range(orderedResults.begin(), orderedResults.end());
+
+	std::cout << "Result Count: " << orderedResults.size() << " hash: " << hash
+			  << "\n";
 }
 
 BENCHMARK_REGISTER_F(AssetAllocationBenchmark,
 					 OutputPortfolioRestrictions_BankWide)
 	->RangeMultiplier(2)
-	->Ranges({{2 << 10, 2 << 15},
+	->Ranges({{2 << 10, 2 << 19},
 			  {1, sic::ParallelParameters::getMaxThreadCount()}});
