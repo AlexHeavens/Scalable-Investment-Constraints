@@ -7,8 +7,8 @@ int main() {
 	auto &context = useCase.getEvaluationContext();
 	std::size_t maxPortfolioCount = sic::UseCase::rebalancerPortfolioCount;
 
-	sic::UseCase::time("EvaluateRestrictionResults", [&]() {
-		sic::UseCase::evaluateRestrictionResults(context, maxPortfolioCount);
+	sic::UseCase::time("EvaluatePortfolios", [&]() {
+		sic::UseCase::evaluatePortfolios(context, maxPortfolioCount);
 	});
 
 	return 0;
