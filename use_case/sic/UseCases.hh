@@ -121,7 +121,7 @@ void evaluatePortfolios(sic::EvaluationContext &context,
 	}
 }
 
-void outputRestrictionResults(
+std::unique_ptr<std::vector<std::vector<std::string>>> outputRestrictionResults(
 	sic::EvaluationContext &context, std::size_t maxPortfolioCount,
 	const sic::ParallelParameters &paraPars = sic::ParallelParameters()) {
 
@@ -133,8 +133,9 @@ void outputRestrictionResults(
 
 	std::vector<std::thread> threads;
 	std::size_t threadCount = paraPars.threadCount;
-	std::vector<std::vector<std::string>> globalResultStrings;
-	globalResultStrings.resize(threadCount);
+	auto globalResultStrings =
+		std::make_unique<std::vector<std::vector<std::string>>>();
+	globalResultStrings->resize(threadCount);
 
 	auto serialiseResults = [&](std::size_t threadId,
 								std::size_t initialPortfolioIndex,
@@ -178,7 +179,7 @@ void outputRestrictionResults(
 		}
 	}
 
-	unused(globalResultStrings);
+	return globalResultStrings;
 }
 
 void evaluateRestrictionResults(
