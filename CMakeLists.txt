@@ -136,7 +136,7 @@ else ()
 endif ()
 
 # Use Cases
-set(USE_CASES "All" "FilterAssets" "EvaluatePortfolio" "EvaluateRestrictionResults")
+set(USE_CASES "All" "FilterAssets" "EvaluatePortfolios" "EvaluateRestrictionResults" "OutputRestrictionResults")
 
 foreach(USE_CASE ${USE_CASES})
     set(USE_CASE_BIN "${USE_CASE}")
