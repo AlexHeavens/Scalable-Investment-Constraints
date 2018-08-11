@@ -9,7 +9,7 @@
 class AssetAllocationBenchmark : public benchmark::Fixture {};
 
 BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
-				   EvaluatePortfolioRestrictions_BankWide)
+				   OutputPortfolioRestrictions_BankWide)
 (benchmark::State &state) {
 
 	auto &useCase = sic::TraditionalAAContext::getSingleton();
@@ -20,8 +20,8 @@ BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
 
 	std::unique_ptr<std::vector<std::string>> result;
 	for (auto _ : state) {
-		result = sic::UseCase::evaluateRestrictionResults(context,
-														  maxPortfolioCount);
+		result =
+			sic::UseCase::outputRestrictionResults(context, maxPortfolioCount);
 	}
 
 	// Sanity check the output.  We sort to allow for non-sequential ordering
@@ -34,6 +34,6 @@ BENCHMARK_DEFINE_F(AssetAllocationBenchmark,
 }
 
 BENCHMARK_REGISTER_F(AssetAllocationBenchmark,
-					 EvaluatePortfolioRestrictions_BankWide)
+					 OutputPortfolioRestrictions_BankWide)
 	->RangeMultiplier(2)
 	->Ranges({{2 << 10, 2 << 19}});

@@ -1,3 +1,4 @@
+#include "sic/Base/Variable.hh"
 #include "sic/UseCase/TraditionalAAContext.hh"
 #include "sic/UseCases.hh"
 
@@ -7,8 +8,10 @@ int main() {
 	auto &context = useCase.getEvaluationContext();
 	std::size_t maxPortfolioCount = sic::UseCase::rebalancerPortfolioCount;
 
-	sic::UseCase::time("EvaluateRestrictions", [&]() {
-		sic::UseCase::evaluateRestrictionResults(context, maxPortfolioCount);
+	sic::UseCase::time("OutputRestrictionResults", [&]() {
+		auto results =
+			sic::UseCase::outputRestrictionResults(context, maxPortfolioCount);
+		unused(results);
 	});
 
 	return 0;
