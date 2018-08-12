@@ -143,7 +143,7 @@ std::unique_ptr<std::vector<std::vector<std::string>>> outputRestrictionResults(
 		time("outputRestrictionResults, thread " + std::to_string(threadId),
 			 [&]() {
 				 std::vector<std::string> &resultStrings =
-					 globalResultStrings.at(threadId);
+					 globalResultStrings->at(threadId);
 
 				 for (std::size_t portfolioIndex = initialPortfolioIndex;
 					  portfolioIndex <= endPortfolioIndex; portfolioIndex++) {
