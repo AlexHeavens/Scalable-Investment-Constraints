@@ -2,8 +2,9 @@
 analysis/*
 
 ## IDE Files
-.idea/*
+.idea/
 *.code-workspace
+.vscode
 
 ## C++
 # Prerequisites
