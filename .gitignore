@@ -3,6 +3,7 @@ analysis/*
 
 ## IDE Files
 .idea/*
+*.code-workspace
 
 ## C++
 # Prerequisites
